@@ -44,29 +44,48 @@ cc.Class {
         # do your update here
 
     onLoad: ->
-        @_answer = {}
+        @_answerResult = {}
+        @_answerCount = 4
         @_initAnswer()
 
     _initAnswer: ->
-    	for answerIndex in [1..4]
+    	for answerIndex in [1..@_answerCount]
 	        answer = @m_content_node.getChildByName("answer_#{answerIndex}")
 	        answerLabel = answer.getChildByName("answer").getComponent(cc.Label)
 	        answerTable = allAnswerTable["answer_#{answerIndex}"]
 	        answerLabel.string = answerTable[0]
 	        @_setSelectLabel(answer, answerTable)
+	        @_setToggleHandler(answer, answerIndex)
+	        @_resetChecked(answer)
+	    return
 
-    _setSelectLabel: (answer, answerTable)->
+	_resetChecked: (answer)->
+		for toggleIndex in [1..4]
+			toggle = answer.getChildByName("toggle#{toggleIndex}").getComponent(cc.Toggle)
+			toggle.isChecked = false
+		return
+
+	_setSelectLabel: (answer, answerTable)->
     	for index in [1..4]
-        	toggleLabel = @_getSelectLabel(answer, "toggle#{index}")
+        	toggleLabel = answer.getChildByName("toggle#{index}").getChildByName("content").getComponent(cc.Label)
         	toggleLabel.string = answerTable[index]
         return
 
-    _getSelectLabel: (answer, toggleName)->
-    	answer.getChildByName(toggleName).getChildByName("content").getComponent(cc.Label)
+	_setToggleHandler: (answer, answerIndex)->
+		for toggleIndex in [1..4]
+			checkEventHandler = new cc.Component.EventHandler();
+			checkEventHandler.target = @node
+			checkEventHandler.component = "onlineAnswer"
+			checkEventHandler.handler = "callback"
+			checkEventHandler.customEventData = {answerIndex, answerResult: toggleIndex}
+			toggle = answer.getChildByName("toggle#{toggleIndex}").getComponent(cc.Toggle)
+			toggle.checkEvents.push(checkEventHandler)
+		return
 
-    onAnswer_1: (toggle)->
-        @_answer["1"] = toggle
-        index = @radioButton.indexOf(toggle)
-        TDGA?.onEvent("answer_1", {"score": index + ""})
-        console.log("toggle:#{index}")
+	callback: (toggle, customEventData)->
+		@_answerResult[customEventData.answerIndex] = customEventData.answerResult
+		console.log("customEventData:#{JSON.stringify customEventData}")
+
+	onSubmit: ->
+		console.log(JSON.stringify @_answerResult)
 }
