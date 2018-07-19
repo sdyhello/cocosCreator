@@ -33,10 +33,6 @@ cc.Class {
     extends: cc.Component
 
     properties: {
-        radioButton: {
-            default: [],
-            type: cc.Toggle
-        }
         m_content_node: cc.Node,
     }
 
@@ -61,8 +57,8 @@ cc.Class {
 
 	_resetChecked: (answer)->
 		for toggleIndex in [1..4]
-			toggle = answer.getChildByName("toggle#{toggleIndex}").getComponent(cc.Toggle)
-			toggle.isChecked = false
+			checkmark = answer.getChildByName("toggle#{toggleIndex}").getChildByName("checkmark")
+			checkmark.visible = false
 		return
 
 	_setSelectLabel: (answer, answerTable)->

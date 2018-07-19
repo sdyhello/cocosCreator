@@ -748,7 +748,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -1184,7 +1184,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -1618,7 +1618,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -2054,7 +2054,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -2664,7 +2664,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -2837,7 +2837,7 @@
     },
     "_children": [],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 87
@@ -2977,7 +2977,7 @@
         "__id__": 90
       }
     ],
-    "_N$isChecked": false
+    "_N$isChecked": true
   },
   {
     "__type__": "cc.ClickEvent",
@@ -3100,7 +3100,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -3536,7 +3536,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -3972,7 +3972,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -4582,7 +4582,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -4755,7 +4755,7 @@
     },
     "_children": [],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 149
@@ -4895,7 +4895,7 @@
         "__id__": 152
       }
     ],
-    "_N$isChecked": false
+    "_N$isChecked": true
   },
   {
     "__type__": "cc.ClickEvent",
@@ -5018,7 +5018,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -5454,7 +5454,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -5890,7 +5890,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -6500,7 +6500,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -6673,7 +6673,7 @@
     },
     "_children": [],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 211
@@ -6813,7 +6813,7 @@
         "__id__": 214
       }
     ],
-    "_N$isChecked": false
+    "_N$isChecked": true
   },
   {
     "__type__": "cc.ClickEvent",
@@ -6936,7 +6936,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -7372,7 +7372,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -7808,7 +7808,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 98,
-      "height": 40
+      "height": 28
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -8529,20 +8529,6 @@
       "__id__": 2
     },
     "_enabled": true,
-    "radioButton": [
-      {
-        "__id__": 27
-      },
-      {
-        "__id__": 41
-      },
-      {
-        "__id__": 55
-      },
-      {
-        "__id__": 69
-      }
-    ],
     "m_content_node": {
       "__id__": 9
     }
