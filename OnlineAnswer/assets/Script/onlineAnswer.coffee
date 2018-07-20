@@ -41,6 +41,8 @@ cc.Class {
 
     properties: {
         m_content_node: cc.Node,
+        m_result_node: cc.Node,
+        m_result_label: cc.Label,
     }
 
     update: (dt) ->
@@ -84,6 +86,7 @@ cc.Class {
 		console.log("customEventData:#{JSON.stringify customEventData}")
 
 	onSubmit: ->
+		@m_result_node.active = true
 		totalScore = 0
 		console.log(JSON.stringify @_answerResult)
 		for standardAnswer, index in @_standardAnswerTable
@@ -91,7 +94,9 @@ cc.Class {
 			if @_answerResult[index + ""] is standardAnswer
 				totalScore += 20
 				console.log("#{index} is correct")
-		cc.sys.localStorage.setItem("totalScore", totalScore)
-		cc.director.loadScene('result')
+		@m_result_label.string = "恭喜你完成测试，你的得分是：#{totalScore}"
 		return
+
+	onReturn: ->
+		@m_result_node.active = false
 }
