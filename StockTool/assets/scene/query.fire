@@ -347,7 +347,7 @@
     "target": {
       "__id__": 2
     },
-    "component": "main",
+    "component": "query",
     "handler": "onClickButton",
     "customEventData": ""
   },
