@@ -1,3 +1,4 @@
+StockInfoTable = require '../StockInfoTable'
 cc.Class {
     extends: cc.Component
 
@@ -17,6 +18,7 @@ cc.Class {
 
     onLoad: ->
         TDGA?.onEvent("welcome")
+        StockInfoTable.initStockInfo()
 
     onQuery: ->
         cc.director.loadScene('query')

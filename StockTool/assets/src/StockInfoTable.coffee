@@ -5299,6 +5299,10 @@ nameAllA = [
 	["SZ300750","宁德时代","--","电气设备","--",],
 
 ]
+utils = require './tools/utils'
+csvTable = []
+
+
 nameTable = 
 	getHs300: ->
 		name300
@@ -5310,6 +5314,14 @@ nameTable =
 		namezz1000
 
 	getAllA : ->
-		nameAllA
+		csvTable
+
+	initStockInfo: ->
+		cc.loader.loadRes("stockInfo", (error, data)=>
+			unless data?
+				console.log("load stockInfo failed !!")
+			csvTable = utils.csvToArray(data)
+		)
+		
 		
 module.exports = nameTable

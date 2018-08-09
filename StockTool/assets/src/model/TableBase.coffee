@@ -1,5 +1,6 @@
 StockInfoTable = require '../StockInfoTable'
 global = require "../globalValue"
+utils = require '../tools/utils'
 
 class TableBase
 	constructor: (@_stockCode)->
@@ -7,7 +8,6 @@ class TableBase
 		@_stockInfo = []
 		@_dataObj = {}
 		@_setStockInfo()
-		@_setStockInfoFromCsv()
 		@_loadJson()
 
 	getFilePath: ->
@@ -25,7 +25,7 @@ class TableBase
 		cc.loader.loadRes(filePath, (error, data)=>
 			unless data?
 				console.log("load #{@_stockCode} failed !!")
-			dataTable = @_csvToArray(data)
+			dataTable = utils.csvToArray(data)
 			@_data = dataTable
 			@_data.unshift(@_stockInfo)
 			@_initTable(@getFirstColTitle())
@@ -57,29 +57,6 @@ class TableBase
 			continue unless item[0]?
 			@_dataObj[item[0]] = item.slice(1, item.length)
 		@_data = @_dataObj
-
-	_csvToArray : (strData, strDelimiter )->
-	    strDelimiter = (strDelimiter || ",");
-	    objPattern = new RegExp(
-	        (
-	            "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-	            "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-	            "([^\"\\" + strDelimiter + "\\r\\n]*))"
-	            ),
-	        "gi"
-	    )
-	    arrData = [[]];
-	    arrMatches = null;
-	    while (arrMatches = objPattern.exec( strData ))
-	        strMatchedDelimiter = arrMatches[ 1 ]
-	        if (strMatchedDelimiter.length &&(strMatchedDelimiter != strDelimiter))
-	            arrData.push( [] );
-	        if (arrMatches[ 2 ])
-	            strMatchedValue = arrMatches[ 2 ].replace(new RegExp( "\"\"", "g" ),"\"")
-	        else
-	            strMatchedValue = arrMatches[ 3 ];
-	        arrData[ arrData.length - 1 ].push( strMatchedValue );
-	    return arrData
 
 	getStockName: -> @_data["资料"][0]
 
@@ -136,24 +113,6 @@ class TableBase
 	_setStockInfo: ->
 		infoTable = StockInfoTable.getAllA()
 		for info in infoTable
-			if info[0].indexOf("" + @_stockCode) isnt -1
-				for value in info
-					@_stockInfo.push value
-				break
-		return
-
-	_setStockInfoFromCsv: ->
-		unless @_priceCsvInfo
-			cc.loader.loadRes("price", (error, data)=>
-				unless data?
-					console.log("load #{@_stockCode} failed !!")
-				@_priceCsvInfo = @_csvToArray(data)
-				console.log("_priceCsvInfo:#{JSON.stringify @_priceCsvInfo}")
-			)
-		unless @_priceCsvInfo?
-			console.log("_setStockInfoFromCsv is null")
-			return
-		for info in @_priceCsvInfo
 			if info[0].indexOf("" + @_stockCode) isnt -1
 				for value in info
 					@_stockInfo.push value

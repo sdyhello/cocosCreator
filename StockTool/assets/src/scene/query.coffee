@@ -97,24 +97,24 @@ cc.Class {
             @_loadFileToObj(stockCode)
             return "loadFile ok, try again!"
         infoTable.push "基本信息:   " + @_profitObj[stockCode].getBaseInfo()
-        infoTable.push "\nPE:   " + @_profitObj[stockCode].getPE()
+        infoTable.push "\nPE:   " + @_profitObj[stockCode].getPE() + "\t对应股价:#{@_profitObj[stockCode].getSharePrice()}"
         infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
         infoTable.push "\n总资产：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalAssets()[0])}"
         infoTable.push "\n总市值：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalMarketValue() / 10000)}"
-        infoTable.push "\n Top10: #{@_balanceObj[stockCode].getTop10()}"
-        infoTable.push "\n有息负债: #{@_balanceObj[stockCode].getInterestDebt()}%"
-        infoTable.push "\n应收账款周转天数: #{@_getReceivableTurnOverDays(stockCode)}, #{@_getIndustryAverage(stockCode, "应收账款")}"
-        infoTable.push "\n预收账款占总资产比例: #{@_getAdvanceReceiptsPercent(stockCode)}%， #{@_getIndustryAverage(stockCode, "预收账款")}"
-        infoTable.push "\n存货周转率:#{@_getInventoryTurnoverRatio(stockCode)}%, #{@_getIndustryAverage(stockCode, "存货")}%"
-        infoTable.push "\n净利润： " + utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())
-        infoTable.push "\n毛利率: #{@_profitObj[stockCode].getSingleYearGrossProfitRatio()}, #{@_getIndustryAverage(stockCode, "毛利率")}%"
-        infoTable.push "\n净利率: #{@_profitObj[stockCode].getSingleYearNetProfitRatio()}, #{@_getIndustryAverage(stockCode, "净利率")}%"
+        infoTable.push "\n Top10（最新期）: #{@_balanceObj[stockCode].getTop10()}"
+        infoTable.push "\n有息负债（单）: #{@_balanceObj[stockCode].getInterestDebt()}%"
+        infoTable.push "\n应收账款周转天数(历年平均): #{@_getReceivableTurnOverDays(stockCode)}, #{@_getIndustryAverage(stockCode, "应收账款")}"
+        infoTable.push "\n预收账款占总资产比例（历年平均）: #{@_getAdvanceReceiptsPercent(stockCode)}%， #{@_getIndustryAverage(stockCode, "预收账款")}"
+        infoTable.push "\n存货周转率（单）:#{@_getInventoryTurnoverRatio(stockCode)}%, #{@_getIndustryAverage(stockCode, "存货")}%"
+        infoTable.push "\n净利润（多）： " + utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())
+        infoTable.push "\n毛利率（单）: #{@_profitObj[stockCode].getSingleYearGrossProfitRatio()}, #{@_getIndustryAverage(stockCode, "毛利率")}%"
+        infoTable.push "\n净利率（单）: #{@_profitObj[stockCode].getSingleYearNetProfitRatio()}, #{@_getIndustryAverage(stockCode, "净利率")}%"
         infoTable.push "\n年净利润增长率:   " + @_profitObj[stockCode].getNetProfitYoy()
         infoTable.push "\n净利润复合增长率:   " + @_profitObj[stockCode].getNetProfitAddRatio() + "%"
         infoTable.push "\n现金流量比净利润:   " + @_getNetProfitQuality(stockCode) + "平均:#{utils.getAverage(@_getNetProfitQuality(stockCode))}"
         infoTable.push "\n历年ROE:   " + @_getROE(stockCode) + "平均: #{utils.getAverage(@_getROE(stockCode))}%"
         infoTable.push "\n统计时间： #{@_balanceObj[stockCode].getExistYears()}"
-        TDGA?.onEvent("getStockInfo", {"info": @_profitObj[stockCode].getBaseInfo()})
+        TDGA?.onEvent("queryStockInfo", {"info": @_profitObj[stockCode].getBaseInfo()})
         console.log(infoTable)
         infoTable
 

@@ -638,7 +638,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 222
+      "y": 195
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -737,9 +737,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 12,
-      "g": 97,
-      "b": 145,
+      "r": 27,
+      "g": 19,
+      "b": 7,
       "a": 255
     },
     "_cascadeOpacityEnabled": true,
@@ -750,7 +750,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1102,
+      "width": 1000,
       "height": 75
     },
     "_rotationX": 0,
@@ -759,7 +759,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -557,
+      "x": -504,
       "y": 0
     },
     "_skewX": 0,
@@ -786,7 +786,7 @@
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_N$string": "ScrollView content\n\n",
-    "_N$horizontalAlign": 1,
+    "_N$horizontalAlign": 0,
     "_N$verticalAlign": 0,
     "_N$fontFamily": "Arial",
     "_N$overflow": 3
