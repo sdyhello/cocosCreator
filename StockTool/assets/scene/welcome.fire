@@ -237,7 +237,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 200,
-      "height": 280
+      "height": 300
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -246,7 +246,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 0
+      "y": -42
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -305,7 +305,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 100
+      "y": 110
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -382,7 +382,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "button",
+    "_N$string": "\b查询",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -618,7 +618,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "button",
+    "_N$string": "\b筛选",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -777,7 +777,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -100
+      "y": -110
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -854,7 +854,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "button",
+    "_N$string": "\b帮助",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -1000,7 +1000,7 @@
     "_layoutSize": {
       "__type__": "cc.Size",
       "width": 200,
-      "height": 280
+      "height": 300
     },
     "_resize": 1,
     "_N$layoutType": 2,
@@ -1016,7 +1016,7 @@
     "_N$paddingTop": 0,
     "_N$paddingBottom": 0,
     "_N$spacingX": 0,
-    "_N$spacingY": 20,
+    "_N$spacingY": 30,
     "_N$verticalDirection": 1,
     "_N$horizontalDirection": 0
   },
@@ -1040,9 +1040,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 27,
+      "g": 228,
+      "b": 0,
       "a": 255
     },
     "_cascadeOpacityEnabled": true,
@@ -1053,7 +1053,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 104,
+      "width": 264,
       "height": 40
     },
     "_rotationX": 0,
@@ -1088,7 +1088,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "Arkad",
+    "_N$string": "Arkad的小工具",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
