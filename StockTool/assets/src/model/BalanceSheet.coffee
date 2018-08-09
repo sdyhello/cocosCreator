@@ -81,5 +81,11 @@ class BalanceSheet extends TableBase
 		averageInventory = (inventoryTable[0] + inventoryTable[1]) / 2
 		averageInventory
 
+	getInvestAssets: ->
+		financial = @getValue(@_data["可供出售金融资产(万元)"])[0]
+		endInvest = @getValue(@_data["持有至到期投资(万元)"])[0]
+		longInvest = @getValue(@_data["长期股权投资(万元)"])[0]
+		return ((financial + endInvest + longInvest) / @getTotalAssets()[0] * 100).toFixed(2)
+
 
 module.exports = BalanceSheet

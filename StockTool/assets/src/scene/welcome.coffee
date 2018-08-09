@@ -15,6 +15,9 @@ cc.Class {
     update: (dt) ->
         # do your update here
 
+    onLoad: ->
+        TDGA?.onEvent("welcome")
+
     onQuery: ->
         cc.director.loadScene('query')
     onFilter: ->

@@ -7,6 +7,7 @@ class TableBase
 		@_stockInfo = []
 		@_dataObj = {}
 		@_setStockInfo()
+		@_setStockInfoFromCsv()
 		@_loadJson()
 
 	getFilePath: ->
@@ -135,6 +136,24 @@ class TableBase
 	_setStockInfo: ->
 		infoTable = StockInfoTable.getAllA()
 		for info in infoTable
+			if info[0].indexOf("" + @_stockCode) isnt -1
+				for value in info
+					@_stockInfo.push value
+				break
+		return
+
+	_setStockInfoFromCsv: ->
+		unless @_priceCsvInfo
+			cc.loader.loadRes("price", (error, data)=>
+				unless data?
+					console.log("load #{@_stockCode} failed !!")
+				@_priceCsvInfo = @_csvToArray(data)
+				console.log("_priceCsvInfo:#{JSON.stringify @_priceCsvInfo}")
+			)
+		unless @_priceCsvInfo?
+			console.log("_setStockInfoFromCsv is null")
+			return
+		for info in @_priceCsvInfo
 			if info[0].indexOf("" + @_stockCode) isnt -1
 				for value in info
 					@_stockInfo.push value

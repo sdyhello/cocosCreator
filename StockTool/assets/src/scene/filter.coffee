@@ -27,6 +27,7 @@ cc.Class {
     }
 
     onLoad: ->
+        TDGA?.onEvent("filter")
         @_editboxObjTable = []
         @_editboxDataObj = {}
         @_filterNameTable = [
@@ -41,17 +42,21 @@ cc.Class {
             {name: "待开发...", key: ""},
             {name: "待开发...", key: ""},
         ]
-        @_editboxDataObj = cc.sys.localStorage.getItem("filterObj") or {
-            profitAddRatio: "12"
-            roe: "15"
-            pe: "60"
-            advanceReceipt: "5"
-            receivableTurnoverDays: "30"
-            netProfitQuality: "0.8"
-            debt: "-1"
-            time: global.year
-            "": "-1"
-        }
+        @_editboxDataObj = cc.sys.localStorage.getItem("filterObj")
+        unless @_editboxDataObj?
+            @_editboxDataObj =  {
+                profitAddRatio: "12"
+                roe: "15"
+                pe: "60"
+                advanceReceipt: "5"
+                receivableTurnoverDays: "30"
+                netProfitQuality: "0.8"
+                debt: "-1"
+                time: global.year
+                "": "-1"
+            }
+        else
+            @_editboxDataObj = JSON.parse(@_editboxDataObj)
         for index in [1..5]
             @_setEventHandler(@m_filter_1, index)
             @_setEventHandler(@m_filter_2, index)
@@ -61,6 +66,7 @@ cc.Class {
         @_balanceObj = {}
         @_profitObj = {}
         @_cashFlowObj = {}
+        global.canLoad = true
         @_loadTable("hs300")
 
     _setEventHandler: (node, index)->
@@ -103,7 +109,16 @@ cc.Class {
         @m_input_node.active = false
         @m_display_node.active = true
         @_filterStock()
-        cc.sys.localStorage.setItem("filterObj", JSON.strinfigy(@_editboxDataObj))
+
+        profitAddRatio          = @_editboxDataObj.profitAddRatio
+        roe                     = @_editboxDataObj.roe
+        pe                      = @_editboxDataObj.pe
+        advanceReceipt          = @_editboxDataObj.advanceReceipt
+        receivableTurnoverDays  = @_editboxDataObj.receivableTurnoverDays
+        netProfitQuality        = @_editboxDataObj.netProfitQuality
+        debt                    = @_editboxDataObj.debt
+        TDGA?.onEvent("onFilter", {profitAddRatio, roe, pe, advanceReceipt, receivableTurnoverDays, netProfitQuality, debt})
+        cc.sys.localStorage.setItem("filterObj", JSON.stringify @_editboxDataObj)
 
     _filterStock: ->
         options = @_editboxDataObj

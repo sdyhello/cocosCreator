@@ -22,13 +22,15 @@ cc.Class {
     }
  
     onLoad: ->
+        TDGA?.onEvent("query")
         @_balanceObj = {}
         @_profitObj = {}
         @_cashFlowObj = {}
-        @_stockCode = "600519"
+        @_stockCode = cc.sys.localStorage.getItem("stockCode") or "600519"
         @_addEditBoxEventHandler(@m_input_code, "code")
         @_addEditBoxEventHandler(@m_input_time, "time")
         @m_input_time.placeholder = global.year
+        @m_input_code.placeholder = @_stockCode
 
     _addEditBoxEventHandler: (editboxObj, type)->
         editboxEventHandler = new cc.Component.EventHandler()
@@ -50,6 +52,7 @@ cc.Class {
 
     onClickButton: ->
         info = @getStockDetailInfo(@_stockCode)
+        cc.sys.localStorage.setItem("stockCode", @_stockCode)
         @m_info.string = info
 
     _getAdvanceReceiptsPercent: (stockCode)->
@@ -95,6 +98,7 @@ cc.Class {
             return "loadFile ok, try again!"
         infoTable.push "基本信息:   " + @_profitObj[stockCode].getBaseInfo()
         infoTable.push "\nPE:   " + @_profitObj[stockCode].getPE()
+        infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
         infoTable.push "\n总资产：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalAssets()[0])}"
         infoTable.push "\n总市值：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalMarketValue() / 10000)}"
         infoTable.push "\n Top10: #{@_balanceObj[stockCode].getTop10()}"
