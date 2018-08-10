@@ -57,6 +57,9 @@ cc.Class {
             }
         else
             @_editboxDataObj = JSON.parse(@_editboxDataObj)
+
+        @m_input_node.active = true
+        @m_display_node.active = false
         for index in [1..5]
             @_setEventHandler(@m_filter_1, index)
             @_setEventHandler(@m_filter_2, index)

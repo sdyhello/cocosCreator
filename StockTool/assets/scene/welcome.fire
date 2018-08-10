@@ -1053,7 +1053,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 264,
+      "width": 280,
       "height": 40
     },
     "_rotationX": 0,
@@ -1088,7 +1088,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "Arkad的小工具",
+    "_N$string": "\b财务分析小工具",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
