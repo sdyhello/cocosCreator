@@ -36,7 +36,7 @@ cc.Class {
             {name: "市盈率(例：30)", key: "pe"},
             {name: "应收账款周转天数(例：30)", key: "receivableTurnoverDays"},
             {name: "预收账款占总资产比例(例：5)", key: "advanceReceipt"},
-            {name: "经营现金流量与净利润比值(例：0.8)", key: "netProfitQuality"},
+            {name: "经营现金与净利润比(例：0.8)", key: "netProfitQuality"},
             {name: "有息负债占总资产比例(例：5)", key: "debt"},
             {name: "统计时间(例：6)", key: "time"},
             {name: "待开发...", key: ""},

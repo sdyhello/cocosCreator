@@ -18,6 +18,9 @@ cc.Class {
 
     onLoad: ->
         TDGA?.onEvent("welcome")
+        cocosAnalytics?.CAAccount?.loginStart()
+        cocosAnalytics?.CAEvent?.onEvent({eventName:"欢迎界面"})
+        CAEvent?.onEvent({eventName:"进入欢迎界面"})
         StockInfoTable.initStockInfo()
 
     onQuery: ->
