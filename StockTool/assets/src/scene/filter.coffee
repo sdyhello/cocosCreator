@@ -42,7 +42,7 @@ cc.Class {
             {name: "待开发...", key: ""},
             {name: "待开发...", key: ""},
         ]
-        @_editboxDataObj = cc.sys.localStorage.getItem("filterObj")
+        @_editboxDataObj = cc.sys.localStorage.getItem("filterObj_new")
         unless @_editboxDataObj?
             @_editboxDataObj =  {
                 profitAddRatio: "12"
@@ -118,7 +118,7 @@ cc.Class {
         netProfitQuality        = @_editboxDataObj.netProfitQuality
         debt                    = @_editboxDataObj.debt
         TDGA?.onEvent("onFilter", {profitAddRatio, roe, pe, advanceReceipt, receivableTurnoverDays, netProfitQuality, debt})
-        cc.sys.localStorage.setItem("filterObj", JSON.stringify @_editboxDataObj)
+        cc.sys.localStorage.setItem("filterObj_new", JSON.stringify @_editboxDataObj)
 
     _filterStock: ->
         options = @_editboxDataObj
@@ -279,7 +279,23 @@ cc.Class {
         ratioTable
 
     _getStockTableInfo: (matchStockTable)->
-        stockInfoTable = ["股票代码 \t 基本信息 \t 所属行业 \t 利润增长率 \t 平均ROE \t PE \t 应收 \t 预收 \t 现金流 \t  总数:#{matchStockTable.length}"]
+        profitAddRatio          = @_editboxDataObj.profitAddRatio
+        roe                     = @_editboxDataObj.roe
+        pe                      = @_editboxDataObj.pe
+        advanceReceipt          = @_editboxDataObj.advanceReceipt
+        receivableTurnoverDays  = @_editboxDataObj.receivableTurnoverDays
+        netProfitQuality        = @_editboxDataObj.netProfitQuality
+        debt                    = @_editboxDataObj.debt
+        stockInfoTable = []
+        stockInfoTable.push "筛选条件：净利润复合增长率: #{@_editboxDataObj.profitAddRatio}"
+        stockInfoTable.push "历年平均ROE: #{@_editboxDataObj.roe}"
+        stockInfoTable.push "静态PE: #{@_editboxDataObj.pe}"
+        stockInfoTable.push "\n预收账款占总资产比例: #{@_editboxDataObj.advanceReceipt}"
+        stockInfoTable.push "应收账款周转天数: #{@_editboxDataObj.receivableTurnoverDays}"
+        stockInfoTable.push "经营现金流量与净利润比值: #{@_editboxDataObj.netProfitQuality}"
+        stockInfoTable.push "有息负债占总资产比例: #{@_editboxDataObj.debt}"
+
+        stockInfoTable.push "\n股票代码 \t 基本信息 \t 所属行业 \t 利润增长率 \t 平均ROE \t PE \t 应收 \t 预收 \t 现金流 \t  总数:#{matchStockTable.length}"
         for stockCode in matchStockTable
             stockInfoTable.push @_getStockInfo(stockCode)
         console.log(stockInfoTable)

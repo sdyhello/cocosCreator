@@ -26,7 +26,7 @@ cc.Class {
         @_balanceObj = {}
         @_profitObj = {}
         @_cashFlowObj = {}
-        @_stockCode = cc.sys.localStorage.getItem("stockCode") or "600519"
+        @_stockCode = cc.sys.localStorage.getItem("stockCode_new") or "600519"
         @_addEditBoxEventHandler(@m_input_code, "code")
         @_addEditBoxEventHandler(@m_input_time, "time")
         @m_input_time.placeholder = global.year
@@ -52,7 +52,7 @@ cc.Class {
 
     onClickButton: ->
         info = @getStockDetailInfo(@_stockCode)
-        cc.sys.localStorage.setItem("stockCode", @_stockCode)
+        cc.sys.localStorage.setItem("stockCode_new", @_stockCode)
         @m_info.string = info
 
     _getAdvanceReceiptsPercent: (stockCode)->
@@ -95,7 +95,7 @@ cc.Class {
         infoTable = []
         unless @_isAllTableLoadFinish(stockCode)
             @_loadFileToObj(stockCode)
-            return "loadFile ok, try again!"
+            return "\n\n\n\n\n\n\t\t\t\t\t加载了------#{stockCode}------所需文件，请重新点击----“获取信息”-----来查看信息！"
         infoTable.push "基本信息:   " + @_profitObj[stockCode].getBaseInfo()
         infoTable.push "\nPE:   " + @_profitObj[stockCode].getPE() + "\t对应股价:#{@_profitObj[stockCode].getSharePrice()}"
         infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
