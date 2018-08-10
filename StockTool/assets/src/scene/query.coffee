@@ -19,16 +19,24 @@ cc.Class {
         m_input_code: cc.EditBox,
         m_input_time: cc.EditBox,
         m_tips: cc.Label,
+        m_query_node: cc.Node,
+        m_industry_node: cc.Node,
+        m_industry_info: cc.Label,
     }
  
     onLoad: ->
+        @_init()
+        @_addEditBoxEventHandler(@m_input_code, "code")
+        @_addEditBoxEventHandler(@m_input_time, "time")
+    _init: ->
+        @m_query_node.active = true
+        @m_industry_node.active = false
         TDGA?.onEvent("query")
         @_balanceObj = {}
         @_profitObj = {}
         @_cashFlowObj = {}
+        @_industryInfo = {}
         @_stockCode = cc.sys.localStorage.getItem("stockCode_new") or "600519"
-        @_addEditBoxEventHandler(@m_input_code, "code")
-        @_addEditBoxEventHandler(@m_input_time, "time")
         @m_input_time.placeholder = global.year
         @m_input_code.placeholder = @_stockCode
 
@@ -44,16 +52,41 @@ cc.Class {
         if customEventData is "code"
             @_stockCode = editbox.string
         else if customEventData is "time"
-            global.year = parseInt(editbox.string)
+            year = parseInt(editbox.string)
+            if isNaN(year)
+                return
+            global.year = year
         return
 
     onReturn: ->
         cc.director.loadScene('welcome')
 
+    onLookIndustryInfo: ->
+        @m_query_node.active = false
+        @m_industry_node.active = true
+        @onClickButton()
+        @m_industry_info.string = JSON.stringify(@_industryInfo, null, 4)
+
+    onIndustryReturn: ->
+        @m_query_node.active = true
+        @m_industry_node.active = false
+
     onClickButton: ->
-        info = @getStockDetailInfo(@_stockCode)
-        cc.sys.localStorage.setItem("stockCode_new", @_stockCode)
-        @m_info.string = info
+        if isNaN(Number(@_stockCode)) or @_stockCode is ""
+            @m_info.string = "\n\n\n请输入纯数字的股票代码,不能含有其他符号，且暂时不支持股票名称查询。"
+        else if @isStockExist(@_stockCode)
+            cc.sys.localStorage.setItem("stockCode_new", @_stockCode)
+            info = @getStockDetailInfo(@_stockCode)
+            @m_info.string = info
+        else
+            @m_info.string = "你输入的股票代码在系统中不存在，请检查重新输入。"
+
+    isStockExist: (stockCode)->
+        stockTable = utils.getStockTable("allA")
+        for stock in stockTable
+            if stock.indexOf("" + stockCode) isnt -1
+                return true
+        return false
 
     _getAdvanceReceiptsPercent: (stockCode)->
         return @_balanceObj[stockCode].getAdvanceReceiptsPercent()
@@ -165,18 +198,19 @@ cc.Class {
         info2 = "平均值：" + utils.getAverage(sameIndustryInfo)
         sortedObjKeys = Object.keys(sameIndustryInfoObj).sort(
             (a, b)->
+                if type is "应收账款"
+                    return sameIndustryInfoObj[a] - sameIndustryInfoObj[b]
                 return sameIndustryInfoObj[b] - sameIndustryInfoObj[a]
         )
         topStockCode = sortedObjKeys[0]
-        if type is "应收账款"
-            topStockCode = sortedObjKeys[sortedObjKeys.length - 1]
         info3 = "\t最高:" + topStockCode + "---" + @_balanceObj[topStockCode].getStockName() + "：#{sameIndustryInfoObj[topStockCode]}"
         
         orderInfo = []
-        for key in sortedObjKeys
-            orderInfo.push @_balanceObj[key].getBaseInfo() + "\t" + sameIndustryInfoObj[key]
+        for key, index in sortedObjKeys
+            orderInfo.push "#{index + 1}、" + @_balanceObj[key].getBaseInfo() + ":    " + sameIndustryInfoObj[key]
 
         console.log(type, orderInfo)
+        @_industryInfo[type] = orderInfo
         return info1 + info2 + info3
 
     _loadTable: (dir)->
