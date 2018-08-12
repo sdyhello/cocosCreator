@@ -3,6 +3,7 @@ ProfitStatement    = require '../model/ProfitStatement'
 CashFlowStatement    = require '../model/CashFlowStatement'
 utils = require '../tools/utils'
 global = require "../globalValue"
+StockInfoTable = require '../StockInfoTable'
 cc.Class {
     extends: cc.Component
 
@@ -74,13 +75,27 @@ cc.Class {
 
     onClickButton: ->
         if isNaN(Number(@_stockCode)) or @_stockCode is ""
-            @m_info.string = "\n\n\n请输入纯数字的股票代码,不能含有其他符号，且暂时不支持股票名称查询。"
+            if @_queryByName(@_stockCode)
+                cc.sys.localStorage.setItem("stockCode_new", @_stockCode)
+                info = @getStockDetailInfo(@_stockCode)
+                @m_info.string = info
+            else
+                @m_info.string = "\n\n\n请输入数字的股票代码,或正确的股票名称，不能含有其他符号"
         else if @isStockExist(@_stockCode)
             cc.sys.localStorage.setItem("stockCode_new", @_stockCode)
             info = @getStockDetailInfo(@_stockCode)
             @m_info.string = info
         else
             @m_info.string = "你输入的股票代码在系统中不存在，请检查重新输入。"
+
+    _queryByName: (name)->
+        infoTable = StockInfoTable.getAllA()
+        for info in infoTable
+            if info[1].indexOf(name) isnt -1
+                @_stockCode = info[0].slice(2, 8)
+                console.log("stockCode:#{@_stockCode}, type:#{typeof @_stockCode}")
+                return true
+        return false
 
     isStockExist: (stockCode)->
         stockTable = utils.getStockTable("allA")
