@@ -39,7 +39,7 @@ class BalanceSheet extends TableBase
 				return assetsPercentTable[b] - assetsPercentTable[a]
 		)
 		useAbleTable = []
-		disAbleTable = ["未分配利润(万元)", "盈余公积(万元)", "资本公积(万元)", "少数股东权益(万元)"]
+		disAbleTable = ["未分配利润(万元)", "盈余公积(万元)", "资本公积(万元)", "少数股东权益(万元)", "实收资本(或股本)(万元)"]
 		for key in sortedObjKeys
 			continue if key.indexOf("计") isnt -1
 			continue if key in disAbleTable

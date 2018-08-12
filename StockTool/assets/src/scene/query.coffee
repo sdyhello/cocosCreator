@@ -51,7 +51,8 @@ cc.Class {
 
     onTextChanged: (editbox, customEventData)->
         if customEventData is "code"
-            @_stockCode = editbox.string
+            if editbox.string isnt ""
+                @_stockCode = editbox.string
         else if customEventData is "time"
             year = parseInt(editbox.string)
             if isNaN(year)
@@ -75,7 +76,7 @@ cc.Class {
 
     onClickButton: ->
         if isNaN(Number(@_stockCode)) or @_stockCode is ""
-            if @_queryByName(@_stockCode)
+            if @_queryByName(@_stockCode) and @_stockCode isnt ""
                 cc.sys.localStorage.setItem("stockCode_new", @_stockCode)
                 info = @getStockDetailInfo(@_stockCode)
                 @m_info.string = info
@@ -147,10 +148,10 @@ cc.Class {
             return "\n\n\n\n\n\n\t\t\t\t\t加载了------#{stockCode}------所需文件，请重新点击----“获取信息”-----来查看信息！"
         infoTable.push "基本信息:   " + @_profitObj[stockCode].getBaseInfo()
         infoTable.push "\nPE:   " + @_profitObj[stockCode].getPE() + "\t对应股价:#{@_profitObj[stockCode].getSharePrice()}"
-        infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
         infoTable.push "\n总资产：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalAssets()[0])}"
         infoTable.push "\n总市值：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalMarketValue() / 10000)}"
-        infoTable.push "\n Top10（最新期）: #{@_balanceObj[stockCode].getTop10()}"
+        infoTable.push "\n资产负债表Top10（最新期）: #{@_balanceObj[stockCode].getTop10()}"
+        infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
         infoTable.push "\n有息负债（单）: #{@_balanceObj[stockCode].getInterestDebt()}%"
         infoTable.push "\n应收账款周转天数(历年平均): #{@_getReceivableTurnOverDays(stockCode)}, #{@_getIndustryAverage(stockCode, "应收账款")}"
         infoTable.push "\n预收账款占总资产比例（历年平均）: #{@_getAdvanceReceiptsPercent(stockCode)}%， #{@_getIndustryAverage(stockCode, "预收账款")}"
