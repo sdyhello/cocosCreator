@@ -31,14 +31,14 @@ cc.Class {
         @_editboxObjTable = []
         @_editboxDataObj = {}
         @_filterNameTable = [
-            {name: "净利润复合收益率(例：12)", key: "profitAddRatio"},
-            {name: "平均ROE(例：15)", key: "roe"},
-            {name: "市盈率(例：30)", key: "pe"},
-            {name: "应收账款周转天数(例：30)", key: "receivableTurnoverDays"},
-            {name: "预收账款占总资产比例(例：5)", key: "advanceReceipt"},
-            {name: "经营现金与净利润比(例：0.8)", key: "netProfitQuality"},
-            {name: "有息负债占总资产比例(例：5)", key: "debt"},
-            {name: "统计时间(例：6)", key: "time"},
+            {name: "净利润复合收益率(例:12)", key: "profitAddRatio"},
+            {name: "平均ROE(例:15)", key: "roe"},
+            {name: "市盈率(例:30)", key: "pe"},
+            {name: "应收账款周转天数(例:30)", key: "receivableTurnoverDays"},
+            {name: "预收账款占总资产比例(例:5)", key: "advanceReceipt"},
+            {name: "经营现金与净利润比(例:0.8)", key: "netProfitQuality"},
+            {name: "有息负债占总资产比例(例:5)", key: "debt"},
+            {name: "统计时间(例:6)", key: "time"},
             {name: "待开发...", key: ""},
             {name: "待开发...", key: ""},
         ]

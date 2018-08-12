@@ -62,6 +62,7 @@ cc.Class {
         cc.director.loadScene('welcome')
 
     onLookIndustryInfo: ->
+        TDGA?.onEvent("lookIndustryInfo")
         @m_query_node.active = false
         @m_industry_node.active = true
         @onClickButton()
@@ -207,6 +208,9 @@ cc.Class {
         
         orderInfo = []
         for key, index in sortedObjKeys
+            if key is @_stockCode
+                orderInfo.push "--------#{index + 1}、" + @_balanceObj[key].getBaseInfo() + ":    " + sameIndustryInfoObj[key] + "--------"
+                continue
             orderInfo.push "#{index + 1}、" + @_balanceObj[key].getBaseInfo() + ":    " + sameIndustryInfoObj[key]
 
         console.log(type, orderInfo)

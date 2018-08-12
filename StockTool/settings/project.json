@@ -2,9 +2,9 @@
   "cocos-analytics": {
     "appID": "621582014",
     "appSecret": "a67d88e3dd0e98a725fe4fe0f69baec6",
-    "channel": "12",
+    "channel": "first",
     "enable": true,
-    "version": "123"
+    "version": "0.0.1"
   },
   "collision-matrix": [
     [
