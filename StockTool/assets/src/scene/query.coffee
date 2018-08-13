@@ -33,6 +33,7 @@ cc.Class {
         @m_query_node.active = true
         @m_industry_node.active = false
         TDGA?.onEvent("query")
+        cocosAnalytics?.CAEvent?.onEvent({eventName:"打开查询界面"})
         @_balanceObj = {}
         @_profitObj = {}
         @_cashFlowObj = {}
@@ -65,6 +66,7 @@ cc.Class {
 
     onLookIndustryInfo: ->
         TDGA?.onEvent("lookIndustryInfo")
+        cocosAnalytics?.CAEvent?.onEvent({eventName:"查看行业对比"})
         @m_query_node.active = false
         @m_industry_node.active = true
         @onClickButton()
@@ -165,6 +167,7 @@ cc.Class {
         infoTable.push "\n历年ROE:   " + @_getROE(stockCode) + "平均: #{utils.getAverage(@_getROE(stockCode))}%"
         infoTable.push "\n统计时间： #{@_balanceObj[stockCode].getExistYears()}"
         TDGA?.onEvent("queryStockInfo", {"info": @_profitObj[stockCode].getBaseInfo()})
+        cocosAnalytics?.CAEvent?.onEvent({eventName:"查询个股", info: @_profitObj[stockCode].getBaseInfo()})
         console.log(infoTable)
         infoTable
 

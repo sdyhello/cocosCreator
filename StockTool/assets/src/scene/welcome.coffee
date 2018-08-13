@@ -11,6 +11,7 @@ cc.Class {
         #   visible: true      # [optional], default is true
         #   displayName: 'Foo' # [optional], default is property name
         #   readonly: false    # [optional], default is false
+        m_exit_node: cc.Node,
     }
 
     update: (dt) ->
@@ -18,6 +19,11 @@ cc.Class {
 
     onLoad: ->
         TDGA?.onEvent("welcome")
+        cocosAnalytics?.CAEvent?.onEvent({eventName:"打开欢迎界面"})
+        if cc.sys.isNative
+            @m_exit_node.active = true
+        else
+            @m_exit_node.active = false
         StockInfoTable.initStockInfo()
 
     onQuery: ->
@@ -26,4 +32,6 @@ cc.Class {
         cc.director.loadScene('filter')
     onHelp: ->
         cc.director.loadScene('help')
-}   
+    onExit: ->
+        cc.director.popScene()
+}       

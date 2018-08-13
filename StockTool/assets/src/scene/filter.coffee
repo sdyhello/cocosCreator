@@ -28,6 +28,7 @@ cc.Class {
 
     onLoad: ->
         TDGA?.onEvent("filter")
+        cocosAnalytics?.CAEvent?.onEvent({eventName:"筛选个股"})
         @_editboxObjTable = []
         @_editboxDataObj = {}
         @_filterNameTable = [

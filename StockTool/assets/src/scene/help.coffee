@@ -32,6 +32,7 @@ cc.Class {
 \n如果有需要，可以下载安卓版本，安卓版因为数据都在包内，所以加载起来非常快。以后如果有需要可以再编译一个windows版。
 \n详情请关注微信公众号，回复“小工具”。"
         TDGA?.onEvent("help")
+        cocosAnalytics?.CAEvent?.onEvent({eventName:"打开帮助"})
 
     onReturn: ->
         cc.director.loadScene("welcome")
