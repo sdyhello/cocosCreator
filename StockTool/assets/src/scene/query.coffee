@@ -227,10 +227,11 @@ cc.Class {
         
         orderInfo = []
         for key, index in sortedObjKeys
+            info = "#{index + 1}、" + @_balanceObj[key].getBaseInfo() + ":    " + sameIndustryInfoObj[key] + " --> PE: #{@_profitObj[key].getPE()}"
             if key is @_stockCode
-                orderInfo.push "--------#{index + 1}、" + @_balanceObj[key].getBaseInfo() + ":    " + sameIndustryInfoObj[key] + "--------"
+                orderInfo.push "--------" + info + "--------"
                 continue
-            orderInfo.push "#{index + 1}、" + @_balanceObj[key].getBaseInfo() + ":    " + sameIndustryInfoObj[key]
+            orderInfo.push info
 
         console.log(type, orderInfo)
         @_industryInfo[type] = orderInfo
