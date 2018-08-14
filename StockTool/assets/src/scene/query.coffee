@@ -188,11 +188,13 @@ cc.Class {
     _getIndustryAverage: (stockCode, type)->
         industry = @_balanceObj[stockCode].getIndustry()
         sameIndustryInfo = []
+        sameIndustryStockCode = []
         sameIndustryInfoObj = {}
         for stockCode in utils.getStockTable("allA")
             stockCode = stockCode.slice(2, 8)
             continue unless @_isAllTableLoadFinish(stockCode)
             if (@_balanceObj[stockCode].getIndustry() is industry)
+                sameIndustryStockCode.push stockCode
                 switch type
                     when "存货"
                         value = @_getInventoryTurnoverRatio(stockCode)
@@ -227,15 +229,30 @@ cc.Class {
         
         orderInfo = []
         for key, index in sortedObjKeys
-            info = "#{index + 1}、" + @_balanceObj[key].getBaseInfo() + ":    " + sameIndustryInfoObj[key] + " --> PE: #{@_profitObj[key].getPE()}"
+            info = "#{index + 1}、" + @_balanceObj[key].getBaseInfo() + ":    " + sameIndustryInfoObj[key] 
             if key is @_stockCode
                 orderInfo.push "--------" + info + "--------"
                 continue
             orderInfo.push info
 
         console.log(type, orderInfo)
+        @_industryInfo["总市值排行"] = @_getIndustryBaseInfo(sameIndustryStockCode)
         @_industryInfo[type] = orderInfo
         return info1 + info2 + info3
+
+    _getIndustryBaseInfo: (sameIndustryStockCode)->
+        sameIndustryStockCode.sort(
+            (a, b)=>
+                return @_balanceObj[b].getTotalMarketValue() - @_balanceObj[a].getTotalMarketValue()
+        )
+        infoTable = []
+        for stock, index in sameIndustryStockCode
+            info = "#{index + 1}、" + "#{@_balanceObj[stock].getBaseInfo()} + <-- PE: #{@_profitObj[stock].getPE()}--总市值：#{utils.getValueDillion(@_balanceObj[stock].getTotalMarketValue() / 10000)}-->"
+            if stock is @_stockCode
+                infoTable.push "--------" + info + "--------"
+                continue
+            infoTable.push info
+        return infoTable
 
     _loadTable: (dir)->
         totalIndex = 0
