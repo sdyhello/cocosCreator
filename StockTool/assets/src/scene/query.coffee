@@ -165,11 +165,18 @@ cc.Class {
         infoTable.push "\n净利润复合增长率:   " + @_profitObj[stockCode].getNetProfitAddRatio() + "%"
         infoTable.push "\n现金流量比净利润:   " + @_getNetProfitQuality(stockCode) + "平均:#{utils.getAverage(@_getNetProfitQuality(stockCode))}"
         infoTable.push "\n历年ROE:   " + @_getROE(stockCode) + "平均: #{utils.getAverage(@_getROE(stockCode))}%"
+        infoTable.push "\n职工总薪酬： " + @_getAllPayStaffMoney(stockCode) + "万元"
         infoTable.push "\n统计时间： #{@_balanceObj[stockCode].getExistYears()}"
         TDGA?.onEvent("queryStockInfo", {"info": @_profitObj[stockCode].getBaseInfo()})
         cocosAnalytics?.CAEvent?.onEvent({eventName:"查询个股", info: @_profitObj[stockCode].getBaseInfo()})
         console.log(infoTable)
         infoTable
+
+    _getAllPayStaffMoney: (stockCode)->
+        value1 = @_balanceObj[stockCode].getStaffPayment()
+        value2 = @_cashFlowObj[stockCode].getPayStaffCash()
+        console.log(value1)
+        return value1 + value2
 
     _getNetProfitQuality: (stockCode)->
         netProfitTable = @_profitObj[stockCode].getNetProfitTable()

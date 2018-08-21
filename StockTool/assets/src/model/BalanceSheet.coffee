@@ -19,6 +19,11 @@ class BalanceSheet extends TableBase
 
 	getReceivableValue: -> @getValue(@_data["应收账款(万元)"])
 
+	getStaffPayment: -> 
+		valueTable = @getValue(@_data["应付职工薪酬(万元)"])
+		console.log("pay :#{valueTable}, #{typeof(valueTable[0])}, #{valueTable[0]}")
+		return valueTable[0] - valueTable[1]
+
 	getInterestDebt: ->
 		value1 = @getValue(@_data["短期借款(万元)"])[0]
 		value2 = @getValue(@_data["长期借款(万元)"])[0]
