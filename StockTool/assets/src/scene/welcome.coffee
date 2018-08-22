@@ -24,7 +24,7 @@ cc.Class {
             @m_exit_node.active = true
         else
             @m_exit_node.active = false
-        StockInfoTable.initStockInfo()
+        StockInfoTable.preloadCsv()
 
     onQuery: ->
         cc.director.loadScene('query')

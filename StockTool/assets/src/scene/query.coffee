@@ -165,18 +165,30 @@ cc.Class {
         infoTable.push "\n净利润复合增长率:   " + @_profitObj[stockCode].getNetProfitAddRatio() + "%"
         infoTable.push "\n现金流量比净利润:   " + @_getNetProfitQuality(stockCode) + "平均:#{utils.getAverage(@_getNetProfitQuality(stockCode))}"
         infoTable.push "\n历年ROE:   " + @_getROE(stockCode) + "平均: #{utils.getAverage(@_getROE(stockCode))}%"
-        infoTable.push "\n职工总薪酬： " + @_getAllPayStaffMoney(stockCode) + "万元"
+        infoTable.push "\n员工信息： " + @_getStaffInfo(stockCode)
         infoTable.push "\n统计时间： #{@_balanceObj[stockCode].getExistYears()}"
         TDGA?.onEvent("queryStockInfo", {"info": @_profitObj[stockCode].getBaseInfo()})
         cocosAnalytics?.CAEvent?.onEvent({eventName:"查询个股", info: @_profitObj[stockCode].getBaseInfo()})
         console.log(infoTable)
         infoTable
 
-    _getAllPayStaffMoney: (stockCode)->
+    _getStaffInfo: (stockCode)->
+        staffNumber = 0
+        staffInfoTable = StockInfoTable.getStaffInfo()
+        for staffInfo in staffInfoTable
+            if(staffInfo[0].indexOf(stockCode) isnt -1)
+                staffNumber = staffInfo[2]
+                console.log(staffInfo[2])
+                break
+        @_getAllPayStaffMoney(stockCode, staffNumber)
+
+    _getAllPayStaffMoney: (stockCode, staffNumber)->
         value1 = @_balanceObj[stockCode].getStaffPayment()
         value2 = @_cashFlowObj[stockCode].getPayStaffCash()
-        console.log(value1)
-        return value1 + value2
+        totalValue = value1 + value2
+        average = (totalValue / staffNumber / 12).toFixed(2)
+        string = "员工人数：#{staffNumber}人, 平均月薪：#{average}万元"
+        return string
 
     _getNetProfitQuality: (stockCode)->
         netProfitTable = @_profitObj[stockCode].getNetProfitTable()

@@ -5301,7 +5301,7 @@ nameAllA = [
 ]
 utils = require './tools/utils'
 csvTable = []
-
+staffInfoTable = []
 
 nameTable = 
 	getHs300: ->
@@ -5316,11 +5316,25 @@ nameTable =
 	getAllA : ->
 		csvTable
 
-	initStockInfo: ->
+	getStaffInfo: ->
+		staffInfoTable
+
+	preloadCsv: ->
+		nameTable._initStaffInfo()
+		nameTable._initStockInfo()
+
+	_initStockInfo: ->
 		cc.loader.loadRes("stockInfo", (error, data)=>
 			unless data?
 				console.log("load stockInfo failed !!")
 			csvTable = utils.csvToArray(data)
+		)
+
+	_initStaffInfo: ->
+		cc.loader.loadRes("staffInfo", (error, data)=>
+			unless data?
+				console.log("load staffInfo failed !!")
+			staffInfoTable = utils.csvToArray(data)
 		)
 		
 		
