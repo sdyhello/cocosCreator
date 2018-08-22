@@ -165,7 +165,7 @@ cc.Class {
         infoTable.push "\n净利润复合增长率:   " + @_profitObj[stockCode].getNetProfitAddRatio() + "%"
         infoTable.push "\n现金流量比净利润:   " + @_getNetProfitQuality(stockCode) + "平均:#{utils.getAverage(@_getNetProfitQuality(stockCode))}"
         infoTable.push "\n历年ROE:   " + @_getROE(stockCode) + "平均: #{utils.getAverage(@_getROE(stockCode))}%"
-        infoTable.push "\n员工信息： " + @_getStaffInfo(stockCode)
+        infoTable.push "\n" + @_getStaffInfo(stockCode)
         infoTable.push "\n统计时间： #{@_balanceObj[stockCode].getExistYears()}"
         TDGA?.onEvent("queryStockInfo", {"info": @_profitObj[stockCode].getBaseInfo()})
         cocosAnalytics?.CAEvent?.onEvent({eventName:"查询个股", info: @_profitObj[stockCode].getBaseInfo()})
@@ -187,7 +187,7 @@ cc.Class {
         value2 = @_cashFlowObj[stockCode].getPayStaffCash()
         totalValue = value1 + value2
         average = (totalValue / staffNumber / 12).toFixed(2)
-        string = "员工人数：#{staffNumber}人, 平均月薪：#{average}万元"
+        string = "薪酬总额：#{utils.getValueDillion(totalValue)}，占净利润比例：#{(totalValue / @_profitObj[stockCode].getNetProfitTable()[0]).toFixed(2)}，员工人数：#{staffNumber}人, 平均月薪：#{average}万元"
         return string
 
     _getNetProfitQuality: (stockCode)->
