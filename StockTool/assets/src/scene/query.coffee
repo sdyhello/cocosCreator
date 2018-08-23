@@ -239,7 +239,7 @@ cc.Class {
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
                     when "平均月薪"
-                        value = @_getStaffInfo(stockCode, true) * 10000
+                        value = (@_getStaffInfo(stockCode, true) * 10000).toFixed(2)
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
 
