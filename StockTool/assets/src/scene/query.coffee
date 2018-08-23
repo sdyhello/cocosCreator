@@ -167,12 +167,13 @@ cc.Class {
         infoTable.push "\n历年ROE:   " + @_getROE(stockCode) + "平均: #{utils.getAverage(@_getROE(stockCode))}%"
         infoTable.push "\n" + @_getStaffInfo(stockCode)
         infoTable.push "\n统计时间： #{@_balanceObj[stockCode].getExistYears()}"
+        @_getIndustryAverage(stockCode, "平均月薪")
         TDGA?.onEvent("queryStockInfo", {"info": @_profitObj[stockCode].getBaseInfo()})
         cocosAnalytics?.CAEvent?.onEvent({eventName:"查询个股", info: @_profitObj[stockCode].getBaseInfo()})
         console.log(infoTable)
         infoTable
 
-    _getStaffInfo: (stockCode)->
+    _getStaffInfo: (stockCode, isGetNumber)->
         staffNumber = 0
         staffInfoTable = StockInfoTable.getStaffInfo()
         for staffInfo in staffInfoTable
@@ -180,14 +181,16 @@ cc.Class {
                 staffNumber = staffInfo[2]
                 console.log(staffInfo[2])
                 break
-        @_getAllPayStaffMoney(stockCode, staffNumber)
+        @_getAllPayStaffMoney(stockCode, staffNumber, isGetNumber)
 
-    _getAllPayStaffMoney: (stockCode, staffNumber)->
+    _getAllPayStaffMoney: (stockCode, staffNumber, isGetNumber)->
         value1 = @_balanceObj[stockCode].getStaffPayment()
         value2 = @_cashFlowObj[stockCode].getPayStaffCash()
         totalValue = value1 + value2
         average = (totalValue / staffNumber / 12).toFixed(2)
         string = "薪酬总额：#{utils.getValueDillion(totalValue)}，占净利润比例：#{(totalValue / @_profitObj[stockCode].getNetProfitTable()[0]).toFixed(2)}，员工人数：#{staffNumber}人, 平均月薪：#{average}万元"
+        if isGetNumber
+            return average
         return string
 
     _getNetProfitQuality: (stockCode)->
@@ -235,6 +238,11 @@ cc.Class {
                         value = @_profitObj[stockCode].getSingleYearNetProfitRatio()
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
+                    when "平均月薪"
+                        value = @_getStaffInfo(stockCode, true) * 10000
+                        sameIndustryInfoObj[stockCode] = value
+                        sameIndustryInfo.push value
+
         info1 = "\t#{sameIndustryInfo.length}家同行"
         info2 = "平均值：" + utils.getAverage(sameIndustryInfo)
         sortedObjKeys = Object.keys(sameIndustryInfoObj).sort(
