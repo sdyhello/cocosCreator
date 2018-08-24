@@ -261,6 +261,7 @@ cc.Class {
                 orderInfo.push "--------" + info + "--------"
                 continue
             orderInfo.push info
+            break if index >= 49
 
         console.log(type, orderInfo)
         @_industryInfo["总市值排行"] = @_getIndustryBaseInfo(sameIndustryStockCode)
@@ -279,6 +280,7 @@ cc.Class {
                 infoTable.push "--------" + info + "--------"
                 continue
             infoTable.push info
+            break if index >= 49
         return infoTable
 
     _loadTable: (dir)->
