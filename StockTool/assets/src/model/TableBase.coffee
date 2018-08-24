@@ -23,17 +23,23 @@ class TableBase
 	_loadJson: ->
 		filePath = @getFilePath()
 		cc.loader.loadRes(filePath, (error, data)=>
-			unless data?
+			if error?
 				console.log("load #{@_stockCode} failed !!")
+				@_setLoadStatus()
+				return
 			dataTable = utils.csvToArray(data)
 			@_data = dataTable
 			@_data.unshift(@_stockInfo)
 			@_initTable(@getFirstColTitle())
-			global.count += 1
-			if global.count is 3
-				global.count = 0
-				global.canLoad = true
+			@_setLoadStatus()
 		)
+
+	_setLoadStatus: ->
+		global.count += 1
+		if global.count is 3
+			global.count = 0
+			global.canLoad = true
+		return
 
 	_initTable: (title)->
 		@_replaceFirstColTitle(title)
