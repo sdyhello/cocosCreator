@@ -40,7 +40,7 @@ cc.Class {
         playerPos = this.player.convertToWorldSpaceAR(cc.Vec2.ZERO)
         for existPlatform in @_platformList
             if playerPos.y - existPlatform.getPosition().y > cc.winSize.width * 4
-                console.log("remove platform")
+                # console.log("remove platform")
                 existPlatform.removeFromParent()
             else
                 existPlatformList.push existPlatform
@@ -51,7 +51,7 @@ cc.Class {
         playerPos = this.player.convertToWorldSpaceAR(cc.Vec2.ZERO)
         platformPos = @lastPlatform.getPosition()
         if (platformPos.y - playerPos.y ) < cc.winSize.height * 0.8
-            console.log("create new platform:#{++@_createCount}")
+            # console.log("create new platform:#{++@_createCount}")
             newPlatform = @_createPlatform(platformPos.y)
             @_platformList.push newPlatform
             @lastPlatform = newPlatform
@@ -95,7 +95,7 @@ cc.Class {
         playerPos = this.player.convertToWorldSpaceAR(cc.Vec2.ZERO)
         firstPlarform = @_platformList[0]
         if playerPos.y + 200 < firstPlarform.getPosition().y
-            console.log("game over")
+            # console.log("game over")
             cc.director.emit("set_score",
                 { score: @_score }
             )
