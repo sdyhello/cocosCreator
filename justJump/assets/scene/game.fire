@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.1,
-      "y": 0.1,
+      "x": 0.22973967099940687,
+      "y": 0.22973967099940687,
       "z": 1
     },
     "_quat": {
@@ -240,8 +240,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 768,
-      "height": 1024
+      "width": 1024,
+      "height": 580
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -251,13 +251,13 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -1024,
+      "y": -1060,
       "z": 0
     },
     "_scale": {
       "__type__": "cc.Vec3",
       "x": 1,
-      "y": 1,
+      "y": 2,
       "z": 1
     },
     "_rotationX": 0,
@@ -286,7 +286,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "28eb5ada-7c32-4eb1-ba7e-cda39600ac85"
+      "__uuid__": "db04f299-51d3-41a8-9e39-122f67defc8c"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -329,8 +329,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 768,
-      "height": 1024
+      "width": 1024,
+      "height": 580
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -346,7 +346,7 @@
     "_scale": {
       "__type__": "cc.Vec3",
       "x": 1,
-      "y": 1,
+      "y": 2,
       "z": 1
     },
     "_rotationX": 0,
@@ -375,7 +375,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "28eb5ada-7c32-4eb1-ba7e-cda39600ac85"
+      "__uuid__": "db04f299-51d3-41a8-9e39-122f67defc8c"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -418,8 +418,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 768,
-      "height": 1024
+      "width": 1024,
+      "height": 580
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -429,13 +429,13 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 1024,
+      "y": 1060,
       "z": 0
     },
     "_scale": {
       "__type__": "cc.Vec3",
       "x": 1,
-      "y": 1,
+      "y": 2,
       "z": 1
     },
     "_rotationX": 0,
@@ -464,7 +464,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "28eb5ada-7c32-4eb1-ba7e-cda39600ac85"
+      "__uuid__": "db04f299-51d3-41a8-9e39-122f67defc8c"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -507,8 +507,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 768,
-      "height": 1024
+      "width": 1024,
+      "height": 580
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -518,13 +518,13 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -2048,
+      "y": -2120,
       "z": 0
     },
     "_scale": {
       "__type__": "cc.Vec3",
       "x": 1,
-      "y": 1,
+      "y": 2,
       "z": 1
     },
     "_rotationX": 0,
@@ -553,7 +553,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "28eb5ada-7c32-4eb1-ba7e-cda39600ac85"
+      "__uuid__": "db04f299-51d3-41a8-9e39-122f67defc8c"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -596,8 +596,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 768,
-      "height": 1024
+      "width": 1024,
+      "height": 580
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -607,13 +607,13 @@
     "_position": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -3072,
+      "y": -3180,
       "z": 0
     },
     "_scale": {
       "__type__": "cc.Vec3",
       "x": 1,
-      "y": 1,
+      "y": 2,
       "z": 1
     },
     "_rotationX": 0,
@@ -642,7 +642,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "28eb5ada-7c32-4eb1-ba7e-cda39600ac85"
+      "__uuid__": "db04f299-51d3-41a8-9e39-122f67defc8c"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -965,11 +965,6 @@
       "__id__": 15
     },
     "_enabled": true,
-    "maxSpeed": 100,
-    "jumps": 2,
-    "acceleration": 400,
-    "jumpSpeed": 500,
-    "drag": 600,
     "_id": "36uAs/Fv9BVYvup0w6HokL"
   },
   {
