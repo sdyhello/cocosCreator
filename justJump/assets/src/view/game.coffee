@@ -106,9 +106,6 @@ cc.Class {
         firstPlarform = @_platformList[0]
         if playerPos.y + 200 < firstPlarform.getPosition().y
             # console.log("game over")
-            cc.director.emit("set_score",
-                { score: @_score }
-            )
             cc.director.loadScene("gameOver")
         return
 
@@ -119,6 +116,9 @@ cc.Class {
             @_score = Math.floor(playerPos.y / 10)
             @scoreLabel.string = "得分: #{@_score}"
             @_lastHigh = playerPos.y
+            cc.director.emit("set_score",
+                { score: @_score }
+            )
         return
 
 }

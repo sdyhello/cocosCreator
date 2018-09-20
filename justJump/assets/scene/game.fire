@@ -1290,7 +1290,7 @@
     "impulse": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 15000
+      "y": 10000
     },
     "_id": "b6j/WSTDtE5ZZzMtfsDqV2"
   },

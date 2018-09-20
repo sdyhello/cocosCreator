@@ -26,4 +26,8 @@ cc.Class {
             (event) =>
                 event.cb(@_score)
         )
+        cc.director.on("game_over",
+            ->
+                cc.director.loadScene("gameOver")
+        )
 }
