@@ -8,6 +8,8 @@ cc.Class {
         lastPlatform: cc.Node
         scoreLabel: cc.Label
         monsterPrefab: cc.Prefab
+        bulletPrefab: cc.Prefab
+        touchNode: cc.Node
     }
 
     _getRandomNum: ->
@@ -21,7 +23,10 @@ cc.Class {
     onLoad: ->
         @_createCount = 0
         @_platformList = [@lastPlatform]
+        @_bulletList = []
+        @_monsterList = []
         @_usePhysics()
+        @_createListener()
 
     _usePhysics: ->
         cc.director.getPhysicsManager().enabled = true
@@ -33,6 +38,7 @@ cc.Class {
         monster = cc.instantiate(this.monsterPrefab)
         this.platformRootNode.addChild(monster)
         monster.setPosition(0, posY)
+        @_monsterList.push monster
 
     _createPlatform: (posY) ->
         platform = cc.instantiate(this.platform_prefab[@_getRandomNum()])
@@ -44,7 +50,7 @@ cc.Class {
         platform.setPosition(@_getRandomInt(-300, 300), posY)
         platform
 
-    _removeOlgPlatform: ->
+    _removeOldPlatform: ->
         existPlatformList = []
         playerPos = this.player.convertToWorldSpaceAR(cc.Vec2.ZERO)
         for existPlatform in @_platformList
@@ -68,12 +74,21 @@ cc.Class {
         return
 
     update: (dt) ->
-        @_removeOlgPlatform()
         @_createNewPlatform()
         @_changeRigidBodyActive(dt)
         @_checkGameOver()
         @_addScore()
+        @_cleanItems(dt)
         return
+
+    _cleanItems: (dt) ->
+        @_cleanTime ?= 0
+        @_cleanTime += dt
+        return if @_cleanTime < 1
+        @_cleanTime = 0
+        @_cleanBullets()
+        @_removeOldPlatform()
+        @_cleanMonster()
 
     _getPlayerDir: ->
         @_lastPlayerY ?= 0
@@ -121,4 +136,49 @@ cc.Class {
             )
         return
 
+    _createBullet: ->
+        bullet = cc.instantiate(this.bulletPrefab)
+        this.platformRootNode.addChild(bullet)
+        bullet.setPosition(this.player.x, this.player.y + this.player.height * 1.5)
+        body = bullet.getComponent(cc.RigidBody)
+        body.linearVelocity = cc.v2()
+        speedY = this.player.getComponent(cc.RigidBody).linearVelocity.y / 3
+        body.applyLinearImpulse(cc.v2(10, Math.max(speedY, 200)), body.getWorldCenter(), true)
+        @_bulletList.push bullet
+
+
+    _createListener: ->
+        this.touchNode.on(cc.Node.EventType.MOUSE_DOWN,
+            =>
+                @_createBullet()
+        )
+        this.touchNode.on(cc.Node.EventType.TOUCH_END,
+            =>
+                @_createBullet()
+        )
+
+    _cleanBullets: ->
+        existBullet = []
+        for bullet in @_bulletList
+            unless bullet
+                console.log("bullet is null")
+                continue
+            isNearPlayer = (bullet.y - this.player.y) < this.player.height
+            if this.player.y - bullet.y > cc.winSize.height or isNearPlayer
+                # console.log("remove bullet")
+                bullet.removeFromParent()
+            else
+                existBullet.push bullet
+        @_bulletList = existBullet
+        return
+
+    _cleanMonster: ->
+        existMonster = []
+        for monster in @_monsterList
+            if this.player.y - monster.y > cc.winSize.height * 3
+                monster.removeFromParent()
+            else
+                existMonster.push monster
+        @_monsterList = existMonster
+        return
 }

@@ -10,21 +10,21 @@ cc.Class {
         #   visible: true      # [optional], default is true
         #   displayName: 'Foo' # [optional], default is property name
         #   readonly: false    # [optional], default is false
+        player: cc.Node
     }
+
     onLoad: ->
-        this.node.getComponent(cc.PhysicsBoxCollider).name = "monster"
-        @_createAction()
+        this.scheduleOnce(@_shoot.bind(@))
+        this.node.getComponent(cc.PhysicsBoxCollider).name = "bullet"
 
-    _createAction: ->
-        ac1 = cc.moveBy(1, 200, 0)
-        ac2 = cc.moveBy(1, -200, 0)
-        this.node.runAction(cc.repeatForever(cc.sequence(ac1, ac2)))
-
-    update: (dt) ->
-        # do your update here
+    _shoot: ->
+        
 
     onBeginContact: (contact, selfCollider, otherCollider) ->
-        if otherCollider.name is "player"
-            cc.director.emit("game_over")
+        if otherCollider.name is "monster"
+            selfCollider.node.removeFromParent()
+            otherCollider.node.removeFromParent()
         return
+    update: (dt) ->
+        # do your update here
 }
