@@ -34,6 +34,7 @@ cc.Class {
     _initData: ->
         this._accRatio = 1500
         @_accX = 0
+        this.node.getComponent(cc.PhysicsBoxCollider).name = "player"
         this.body = this.getComponent(cc.RigidBody)
         sysInfo = wx?.getSystemInfoSync()
 

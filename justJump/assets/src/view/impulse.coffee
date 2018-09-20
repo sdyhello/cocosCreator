@@ -5,9 +5,17 @@ cc.Class {
         impulse: cc.v2(0, 3000)
     }
 
+    onLoad: ->
+        this.node.getComponent(cc.PhysicsBoxCollider).name = "impulse_platform"
+        # @_createAction()
+
+    _createAction: ->
+        ac1 = cc.moveBy(200, 0)
+        ac2 = cc.moveBy(-200, 0)
+        this.node.runAction(cc.repeatForever(cc.sequence(ac1, ac2)))
+
     onBeginContact: (contact, selfCollider, otherCollider) ->
         manifold = contact.getWorldManifold()
-        selfCollider.sensor = false
         return if manifold.normal.y isnt 1
         body = otherCollider.body
         body.linearVelocity = cc.v2()

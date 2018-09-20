@@ -3,10 +3,11 @@ cc.Class {
 
     properties: {
         platformRootNode: cc.Node
-        platform_prafab: [cc.Prefab],
+        platform_prefab: [cc.Prefab],
         player: cc.Node
         lastPlatform: cc.Node
         scoreLabel: cc.Label
+        monsterPrefab: cc.Prefab
     }
 
     _getRandomNum: ->
@@ -25,8 +26,16 @@ cc.Class {
     _usePhysics: ->
         cc.director.getPhysicsManager().enabled = true
 
+    _createMonster: ->
+        randNum = @_getRandomInt(1, 20)
+        return if randNum < 19
+        posY = @_platformList[@_platformList.length - 1].y + 100
+        monster = cc.instantiate(this.monsterPrefab)
+        this.platformRootNode.addChild(monster)
+        monster.setPosition(0, posY)
+
     _createPlatform: (posY) ->
-        platform = cc.instantiate(this.platform_prafab[@_getRandomNum()])
+        platform = cc.instantiate(this.platform_prefab[@_getRandomNum()])
         this.platformRootNode.addChild(platform)
         @_setNewPlatformPosition(posY, platform)
 
@@ -55,6 +64,7 @@ cc.Class {
             newPlatform = @_createPlatform(platformPos.y)
             @_platformList.push newPlatform
             @lastPlatform = newPlatform
+            @_createMonster()
         return
 
     update: (dt) ->
