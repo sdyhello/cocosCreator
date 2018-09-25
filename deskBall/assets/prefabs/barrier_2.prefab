@@ -12,7 +12,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "barrier_1",
+    "_name": "barrier_2",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -35,15 +35,15 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 201,
-      "g": 90,
-      "b": 90,
+      "r": 177,
+      "g": 184,
+      "b": 95,
       "a": 255
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 100,
-      "height": 10
+      "width": 50,
+      "height": 50
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -52,8 +52,8 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": -193,
-      "y": 341,
+      "x": 224,
+      "y": 419,
       "z": 0
     },
     "_scale": {
@@ -103,7 +103,7 @@
     "_isTrimmedMode": true,
     "_state": 0,
     "_atlas": null,
-    "_id": "adUu27kiRL5IXi51zPf5bA"
+    "_id": "bdkK507XpFAKwnfrL0ViJg"
   },
   {
     "__type__": "cc.RigidBody",
@@ -127,7 +127,7 @@
     "_fixedRotation": false,
     "enabledContactListener": false,
     "bullet": false,
-    "_id": "67khcrERhMdZo4IBoTcm9D"
+    "_id": "4ezV4Y66VM5b2vYIlFXChA"
   },
   {
     "__type__": "cc.PhysicsBoxCollider",
@@ -150,10 +150,10 @@
     },
     "_size": {
       "__type__": "cc.Size",
-      "width": 100,
-      "height": 10
+      "width": 50,
+      "height": 50
     },
-    "_id": "68mNqydq9NL4rY1uPMires"
+    "_id": "4aIw1nl6lCUYL43QLNBNXN"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -161,9 +161,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "ed1b64a5-eb95-498e-85b1-aa46876e44d6"
+      "__uuid__": "ef0dab7c-7818-4916-8148-40f90dfeec3d"
     },
-    "fileId": "b5fj1jyllDCrSyRqXaWH34",
+    "fileId": "bdUBQdD2hKVrj7nq6P20ui",
     "sync": false
   }
 ]

@@ -15,7 +15,7 @@ cc.Class {
         enemyNode: cc.Node
         tipsNode: cc.Label
         barrierNode: cc.Node
-        barrierPrefab: cc.Prefab
+        barrierPrefabTable: [cc.Prefab]
     }
 
     onLoad: ->
@@ -42,8 +42,12 @@ cc.Class {
                 @_createBarrier(pos)
         return
 
+    _selectBarrier: ->
+        randomNum = @_getRandomInt(0, this.barrierPrefabTable.length - 1)
+        return this.barrierPrefabTable[randomNum]
+
     _createBarrier: (pos) ->
-        barrier = cc.instantiate(this.barrierPrefab)
+        barrier = cc.instantiate(@_selectBarrier())
         this.barrierNode.addChild(barrier)
         barrier.setRotation(@_getRandomInt(0, 180))
         barrier.setPosition(pos)
@@ -131,7 +135,7 @@ cc.Class {
         normal = subPos.normalize()
         if @_getRandomInt(1, 10) > 1
             normal.negSelf()
-        speedScale = 5000
+        speedScale = 8000
 
 
         power = cc.v2(normal.x * speedScale, normal.y * speedScale)
