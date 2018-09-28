@@ -145,18 +145,21 @@ cc.Class {
 
     _dragPlayerSpeed: ->
         return if this.playerBody.linearVelocity.x is 0 and this.playerBody.linearVelocity.y is 0
-        isXStop = Math.floor(Math.abs(this.playerBody.linearVelocity.x)) < 10
-        isYStop = Math.floor(Math.abs(this.playerBody.linearVelocity.y)) < 10
-        if isXStop and isYStop
+        if @_isStop(this.playerBody)
             this.playerBody.linearVelocity = cc.v2()
             console.log("player move end")
         return
 
+    _isStop: (body) ->
+        isXStop = Math.floor(Math.abs(body.linearVelocity.x)) < 10
+        isYStop = Math.floor(Math.abs(body.linearVelocity.y)) < 10
+        if isXStop and isYStop
+            return true
+        return false
+
     _dragEnemySpeed: ->
         return if this.enemyBody.linearVelocity.x is 0 and this.enemyBody.linearVelocity.y is 0
-        isXStop = Math.floor(Math.abs(this.enemyBody.linearVelocity.x)) < 10
-        isYStop = Math.floor(Math.abs(this.enemyBody.linearVelocity.y)) < 10
-        if isXStop and isYStop
+        if @_isStop(this.enemyBody)
             this.enemyBody.linearVelocity = cc.v2()
             @_isEnemyRuning = false
             @_playerCanShoot = true
