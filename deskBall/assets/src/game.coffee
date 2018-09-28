@@ -16,6 +16,7 @@ cc.Class {
         tipsNode: cc.Label
         barrierNode: cc.Node
         barrierPrefabTable: [cc.Prefab]
+        graphicsNode: cc.Node
     }
 
     onLoad: ->
@@ -24,13 +25,15 @@ cc.Class {
         @_playerCanShoot = true
         @_isEnemyRuning = false
         @_game_result = null
+        @_barriersTable = []
+        @_graphics = this.graphicsNode.getComponent(cc.Graphics)
         @_createListener()
         @_usePhysics()
         @_initBarrier()
 
     _initBarrier: ->
-        xNum = 4
-        yNum = 5
+        xNum = 6
+        yNum = 8
         widthDis = cc.winSize.width / xNum
         heightDis = cc.winSize.height / yNum
 
@@ -51,21 +54,27 @@ cc.Class {
         this.barrierNode.addChild(barrier)
         barrier.setRotation(@_getRandomInt(0, 180))
         barrier.setPosition(pos)
+        @_barriersTable.push barrier
+
+    _drawLine: (pos) ->
+        @_clearDrawLine()
+        @_graphics.moveTo(@_drawLineBeginPos.x, @_drawLineBeginPos.y)
+        @_graphics.lineTo(pos.x, pos.y)
+        @_graphics.stroke()
+
+    _clearDrawLine: ->
+        @_graphics.clear()
 
     _createListener: ->
-        this.touchNode.on(cc.Node.EventType.MOUSE_DOWN,
-            (event) =>
-                @_beginTouchPos = event.getLocation()
-        )
-        
-        this.touchNode.on(cc.Node.EventType.MOUSE_UP,
-            (event) =>
-                @_prepareShoot(event)
-        )
-
         this.touchNode.on(cc.Node.EventType.TOUCH_START,
             (event) =>
                 @_beginTouchPos = event.getLocation()
+                @_drawLineBeginPos = this.node.convertToNodeSpaceAR(event.getLocation())
+        )
+
+        this.touchNode.on(cc.Node.EventType.TOUCH_MOVE,
+            (event) =>
+                @_drawLine(this.node.convertToNodeSpaceAR(event.getLocation()))
         )
 
         this.touchNode.on(cc.Node.EventType.TOUCH_END,
@@ -104,6 +113,7 @@ cc.Class {
         cc.director.getPhysicsManager().enabled = true
 
     _prepareShoot: (event) ->
+        @_clearDrawLine()
         return if @_isEnemyRuning
         endPos = event.getLocation()
         subPos = endPos.sub(@_beginTouchPos)
@@ -147,7 +157,18 @@ cc.Class {
         return if this.playerBody.linearVelocity.x is 0 and this.playerBody.linearVelocity.y is 0
         if @_isStop(this.playerBody)
             this.playerBody.linearVelocity = cc.v2()
+            @_updateBarrierRigidBody()
             console.log("player move end")
+        return
+
+    _updateBarrierRigidBody: ->
+        for barrier in @_barriersTable
+            if @_getRandomInt(1, 10) > 5
+                barrier.getComponent(cc.RigidBody).active = false
+                barrier.color = cc.color(83, 207, 73, 255)
+            else
+                barrier.getComponent(cc.RigidBody).active = true
+                barrier.color = cc.color(228, 80, 80, 255)
         return
 
     _isStop: (body) ->
@@ -164,6 +185,7 @@ cc.Class {
             @_isEnemyRuning = false
             @_playerCanShoot = true
             console.log("enemy move end")
+            @_updateBarrierRigidBody()
         return
 
     _updateTips: ->
