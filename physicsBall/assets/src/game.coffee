@@ -160,6 +160,7 @@ cc.Class {
     ballReturn: ->
         @_returnBallCount++
         if @_isAllBallReturn()
+            @_saveHighScore()
             for barrier in @_barriersTable
                 barrier.runAction(cc.moveBy(0.3, cc.v2(0, 100)))
             @_checkGameFail()
