@@ -13,7 +13,9 @@ cc.Class {
         ball: cc.Node
         ballPrefab: cc.Prefab
         barriersPrefabTable: [cc.Prefab]
-        score: cc.Label
+        score: cc.RichText
+        ballNum: cc.RichText
+        graphicsNode: cc.Node
     }
 
     onLoad: ->
@@ -27,15 +29,45 @@ cc.Class {
         cc.director.getPhysicsManager().enabled = true
         @_createListener()
         @_updateScore()
+        @_updateBallNumber()
+
+        @_ctx = this.graphicsNode.getComponent(cc.Graphics)
+        
+    _drawLine: (pos) ->
+        @_clearLine()
+        @_ctx.moveTo(0, 285)
+        @_ctx.lineTo(pos.x, pos.y)
+        @_ctx.stroke()
+
+    _clearLine: ->
+        @_ctx.clear()
 
     start: ->
         @_addOneRowBarriers()
 
     _createListener: ->
-        this.node.on(cc.Node.EventType.TOUCH_END, @_onTouchStart.bind(@))
+        this.node.on(cc.Node.EventType.TOUCH_START, @_onTouchStart.bind(@))
+        this.node.on(cc.Node.EventType.TOUCH_MOVE, @_onTouchMove.bind(@))
+        this.node.on(cc.Node.EventType.TOUCH_END, @_onTouchEnd.bind(@))
+        this.node.on(cc.Node.EventType.TOUCH_CANCEL, @_onTouchCancel.bind(@))
         cc.director.on("get_score", (options) => options.cb(@_gameScore))
 
     _onTouchStart: (event) ->
+        return unless @_isAllBallReturn()
+        @_drawLine(this.node.convertToNodeSpaceAR(event.getLocation()))
+
+    _onTouchMove: (event) ->
+        return unless @_isAllBallReturn()
+        @_drawLine(this.node.convertToNodeSpaceAR(event.getLocation()))
+
+    _onTouchEnd: (event) ->
+        @_afterTouchEvent(event)
+
+    _onTouchCancel: (event) ->
+        @_afterTouchEvent(event)
+
+    _afterTouchEvent: (event) ->
+        @_clearLine()
         return unless @_isAllBallReturn()
         pos = this.node.convertToNodeSpaceAR(event.getLocation())
         subPos = pos.sub(cc.v2(0, 285))
@@ -60,12 +92,12 @@ cc.Class {
         points = []
         points.push ball.getPosition()
         points.push cc.v2(0, 285)
-
         ball.runAction(cc.sequence(
             cc.cardinalSplineTo(1, points, 1)
             cc.callFunc(
                 ->
                     ball.getComponent(cc.RigidBody).active = true
+                    ball.getComponent(cc.RigidBody).gravityScale = 0
                     dir = cc.v2(dir.x * 1000, dir.y * 1000)
                     ball.getComponent(cc.RigidBody).linearVelocity = dir
                     ball.group = "ballInGame"
@@ -119,6 +151,7 @@ cc.Class {
     addBall: (node) ->
         @removeBarrier(node)
         @_createBall(node.getPosition())
+        @_updateBallNumber()
 
     getBarrierScore: ->
         @_barrierScore += @_getRandomInt(2, 10)
@@ -143,7 +176,10 @@ cc.Class {
         @_updateScore()
 
     _updateScore: ->
-        this.score.string = "得分: #{@_gameScore}"
+        this.score.string = "得分: <color=#00ff00>#{@_gameScore}</c>"
+
+    _updateBallNumber: ->
+        this.ballNum.string = "拥有球数: <color=#0fffff>#{@_ballTable.length}</color> 个"
 
     _checkGameFail: ->
         for barrier in @_barriersTable

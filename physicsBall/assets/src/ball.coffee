@@ -17,8 +17,11 @@ cc.Class {
         @_isDown = false
 
     onBeginContact: (contact, selfCollider, otherCollider) ->
+        if selfCollider.body.gravityScale is 0
+            selfCollider.body.gravityScale = 5
         if otherCollider.node.name is "ground"
             @_isDown = true
+        return
 
     update: (dt) ->
         if @_isDown
@@ -26,9 +29,15 @@ cc.Class {
             this.getComponent(cc.RigidBody).linearVelocity = cc.Vec2.ZERO
             points = []
             points.push this.node.position
-            points.push cc.v2(329, -455)
-            points.push cc.v2(329, 520)
-            points.push cc.v2(0, 425)
+            if this.node.position.x > 0
+                points.push cc.v2(329, -455)
+                points.push cc.v2(329, 520)
+                points.push cc.v2(0, 425)
+            else
+                points.push cc.v2(-329, -455)
+                points.push cc.v2(-329, 520)
+                points.push cc.v2(0, 425)
+
             this.node.runAction(cc.sequence(
                 cc.cardinalSplineTo(3, points, 1)
                 cc.callFunc(
@@ -40,5 +49,5 @@ cc.Class {
                 )
             ))
             @_isDown = false
-        # do your update here
+        return
 }

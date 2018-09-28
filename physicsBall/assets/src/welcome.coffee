@@ -16,9 +16,28 @@ cc.Class {
     onLoad: ->
         score = cc.sys.localStorage.getItem("highScore") or 0
         this.highScore.string = "最高分: #{score}"
+        @_setRankInfo(score) if wx?
+
+    _setRankInfo: (highScore) ->
+        kvData = { key: "physicsBallScore", value: highScore + "" }
+        wx.setUserCloudStorage(
+            {
+                KVDataList: [kvData]
+                success: ->
+                    console.log("set user cloud ok")
+                fail: (res) ->
+                    console.log("fail:#{JSON.stringify res}")
+            }
+        )
 
     onStartGame: ->
         cc.director.loadScene("game")
+
+    onOpenRank: ->
+        cc.director.loadScene("friends")
+
+    exitGame: ->
+        cc.director.popScene()
 
     update: (dt) ->
         # do your update here

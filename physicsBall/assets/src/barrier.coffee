@@ -13,9 +13,8 @@ cc.Class {
         scoreLabel: cc.Label
         game: null
     }
-    onLoad: ->
-        
     start: ->
+        this.scoreLabel.node.rotation -= this.node.rotation
         @_score = @game.getBarrierScore()
         @_updateScoreLabel()
         

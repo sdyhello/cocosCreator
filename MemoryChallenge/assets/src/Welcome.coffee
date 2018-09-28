@@ -25,13 +25,16 @@ cc.Class {
         highScoreTable = cc.sys.localStorage.getItem("high_score_table") or []
         highScore = if highScoreTable.length > 0 then highScoreTable[0] else 0
         @m_high_score.string = "最高分: #{highScore}"
-
+        kvData = { key: "score", value: highScore + "" }
+        console.log("kvData:#{JSON.stringify kvData}")
         wx.setUserCloudStorage(
-            KVDataList: [{key: "score", value: highScore + ""}]
-            success: ->
-                console.log("set user cloud ok")
-            fail: (res)->
-                console.log("fail:#{JSON.stringify res}")
+            {
+                KVDataList: [kvData]
+                success: ->
+                    console.log("set user cloud ok")
+                fail: (res) ->
+                    console.log("fail:#{JSON.stringify res}")
+            }
         )
 
     onLoad: ->

@@ -120,7 +120,7 @@ cc.Class {
         @_setBtnStatus(false)
         @schedule(@_ligheItemFunc, 1)
 
-    _runLightAction: (sprite)->
+    _runLightAction: (sprite) ->
         seq = []
         seq.push cc.delayTime(0.2)
         seq.push cc.show()

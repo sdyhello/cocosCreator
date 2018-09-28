@@ -25,7 +25,7 @@
     "REMOTE_SERVER_ROOT": "",
     "orientation": "portrait"
   },
-  "startScene": "01773cbf-5c92-4112-ba78-54b47c9a8cc7",
+  "startScene": "8d1ec627-14d1-4ed2-9bb0-928ae02d4ff3",
   "title": "physicsBall",
   "webOrientation": "auto",
   "wechatgame": {
@@ -33,7 +33,7 @@
     "appid": "wxbdf29f1213fcf483",
     "isSubdomain": false,
     "orientation": "portrait",
-    "subContext": ""
+    "subContext": "openDataProject"
   },
   "xxteaKey": "3e4b5cb1-5b08-44",
   "zipCompressJs": true
