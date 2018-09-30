@@ -21,6 +21,7 @@ cc.Class {
         tiledMap: cc.TiledMap
         cupPrefab: cc.Prefab
         mainCamera: cc.Node
+        winTips: cc.Node
     }
 
     onLoad: ->
@@ -54,6 +55,7 @@ cc.Class {
 
     _initData: ->
         cc.director.getPhysicsManager().enabled = true
+        @winTips.active = false
         @_graphicsObj = this.graphicsNode.getComponent(cc.Graphics)
         @_isEraserRun = false
         @_cameraFollowPencil = false
@@ -164,9 +166,15 @@ cc.Class {
     #<<<<<<<<<<<<<<<<<<<<<<<<graphics<<<<<<<<<<<<<<<<<<<<<<<
     _drawLine: (pos) ->
         @_clearLine()
-        @_graphicsObj.moveTo(@_touchStartPos.x, @_touchStartPos.y)
-        @_graphicsObj.lineTo(pos.x, pos.y)
+        subPos = pos.sub(@_touchStartPos).negSelf()
+        normal = subPos.normalize()
+        lineLength = 389
+        eraserPos = this.eraser.position
+        targetPosX = eraserPos.x + normal.x * lineLength
+        targetPosY = eraserPos.y + normal.y * lineLength
 
+        @_graphicsObj.moveTo(eraserPos.x, eraserPos.y)
+        @_graphicsObj.lineTo(targetPosX, targetPosY)
         @_graphicsObj.stroke()
 
     _clearLine: ->
@@ -178,12 +186,6 @@ cc.Class {
         pos = this.eraser.getPosition()
         this.eraserPosTips.string = "pos: x: #{Math.floor(pos.x)}, y: #{Math.floor(pos.y)}"
 
-    onResetGame: ->
-        @_resetBodyStatus()
-        @_resetGameStatus()
-        @_resetBodyPos()
-        @_setDefaultCupNodeStatus(false)
-
     _setDefaultCupNodeStatus: (status) ->
         this._defaultCupNode.active = status
         this._targetCup.active = not status
@@ -193,9 +195,12 @@ cc.Class {
 
     onGuide: ->
         @_setDefaultCupNodeStatus(true)
+        @_resetGameStatus()
         @_isGuide = true
-
+        @_resetBodyStatus()
         @_setGuidePencilPos(@_defaultCupDataObj.pencilPos)
+        this.eraser.position = cc.v2(-229, -197)
+
         length = @_defaultCupDataObj.length
         eraserPos = @_defaultCupDataObj.eraserPos
         power = cc.v2(@_defaultCupDataObj.power.x, @_defaultCupDataObj.power.y)
@@ -231,12 +236,19 @@ cc.Class {
     onViewTarget: (target, callback) ->
         @_viewTarget()
 
+    onResetGame: ->
+        @_resetBodyStatus()
+        @_resetGameStatus()
+        @_resetBodyPos()
+        @_setDefaultCupNodeStatus(false)
+
     _resetGameStatus: ->
         @_cameraFollowPencil = false
         @_isEraserRun = false
         @_isGuide = false
         @_contactCupLeftOrRight = false
         @_contactCupBottom = false
+        this.camera.position = cc.v2(0,  0)
 
     _resetBodyStatus: ->
         eraserBody = this.eraser.getComponent(cc.RigidBody)
@@ -246,10 +258,10 @@ cc.Class {
         pencilBody = this.pencil.getComponent(cc.RigidBody)
         pencilBody.linearVelocity = cc.Vec2.ZERO
         pencilBody.angularVelocity = 0
+        this.pencil.rotation = 0
 
     _resetBodyPos: ->
         this.eraser.position = @_eraserPos
-        this.camera.position = cc.v2(0,  0)
         this.pencil.position = @_pencilPos
         @_updateErasePosTips()
 
@@ -299,6 +311,7 @@ cc.Class {
             @_saveSuccessShootInfo()
             return if @_gameWin
             @_gameWin = true
+            @winTips.active = true
             this.scheduleOnce(
                 ->
                     console.log("good job")
