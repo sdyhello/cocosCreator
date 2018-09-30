@@ -43,7 +43,6 @@ cc.Class {
         @_defaultCupNode.setPosition(defaultCupDataObj.targetPos)
         this._defaultCupNode.active = false
 
-
     _saveNodePos: ->
         @_eraserPos = this.eraser.position
         @_pencilPos = this.pencil.position
@@ -167,6 +166,7 @@ cc.Class {
         @_clearLine()
         @_graphicsObj.moveTo(@_touchStartPos.x, @_touchStartPos.y)
         @_graphicsObj.lineTo(pos.x, pos.y)
+
         @_graphicsObj.stroke()
 
     _clearLine: ->
@@ -181,19 +181,18 @@ cc.Class {
     onResetGame: ->
         @_resetBodyStatus()
         @_resetGameStatus()
-        this.scheduleOnce(
-            =>
-                @_resetBodyPos()
-        )
-        this._defaultCupNode.active = false
-        @_targetCup.active = true
+        @_resetBodyPos()
+        @_setDefaultCupNodeStatus(false)
+
+    _setDefaultCupNodeStatus: (status) ->
+        this._defaultCupNode.active = status
+        this._targetCup.active = not status
 
     _setGuidePencilPos: (pencilPos) ->
         this.pencil.position = pencilPos
 
     onGuide: ->
-        this._defaultCupNode.active = true
-        @_targetCup.active = false
+        @_setDefaultCupNodeStatus(true)
         @_isGuide = true
 
         @_setGuidePencilPos(@_defaultCupDataObj.pencilPos)
