@@ -151,14 +151,11 @@ cc.Class {
         infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
         infoTable.push "\n有息负债: #{@_balanceObj[stockCode].getInterestDebt()}%"
         infoTable.push "\n预收账款占总资产比例: #{@_getAdvanceReceiptsPercent(stockCode)}%， #{@_getIndustryAverage(stockCode, "预收账款")}"
-        receivableTurnoverDays = @_getReceivableTurnOverDays(stockCode)
-        infoTable.push "\n应收账款周转天数: #{receivableTurnoverDays}, #{@_getIndustryAverage(stockCode, "应收账款")}"
-        inventoryTurnoverDays = @_getInventoryTurnoverDays(stockCode)
-        infoTable.push "\n存货周转天数:#{inventoryTurnoverDays}天, #{@_getIndustryAverage(stockCode, "存货")}天"
-        payableTurnoverDays = @_getPayableTurnoverDays(stockCode)
-        infoTable.push "\n应付账款周转天数:#{payableTurnoverDays} 天, #{@_getIndustryAverage(stockCode, "应付账款")}天"
-        cashTurnoverDays = parseFloat(receivableTurnoverDays) + parseFloat(inventoryTurnoverDays) - parseFloat(payableTurnoverDays)
-        infoTable.push "\n现金周转天数：#{cashTurnoverDays} 天, #{@_getIndustryAverage(stockCode, "现金周转")} 天"
+        infoTable.push "\n应收账款周转天数: #{@_getReceivableTurnOverDays(stockCode)}, #{@_getIndustryAverage(stockCode, "应收账款")}"
+        infoTable.push "\n存货周转天数:#{@_getInventoryTurnoverDays(stockCode)}天, #{@_getIndustryAverage(stockCode, "存货")}天"
+        infoTable.push "\n应付账款周转天数:#{@_getPayableTurnoverDays(stockCode)} 天, #{@_getIndustryAverage(stockCode, "应付账款")}天"
+        infoTable.push "\n现金周转天数：#{@_getCashTurnoverDays(stockCode)} 天, #{@_getIndustryAverage(stockCode, "现金周转")} 天"
+        infoTable.push "\n商誉:#{utils.getValueDillion(@_balanceObj[stockCode].getGoodWill())}, 占总资产比例:#{@_getGoodWillPercent(stockCode)}%"
         infoTable.push "\n净利润（多）： " + utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())
         infoTable.push "\n毛利率（单）: #{@_profitObj[stockCode].getSingleYearGrossProfitRatio()}, #{@_getIndustryAverage(stockCode, "毛利率")}%"
         infoTable.push "\n净利率（单）: #{@_profitObj[stockCode].getSingleYearNetProfitRatio()}, #{@_getIndustryAverage(stockCode, "净利率")}%"
@@ -213,6 +210,13 @@ cc.Class {
         operatingCosts = @_profitObj[stockCode].getOperatingCosts()[0]
         day = (360 / (operatingCosts / averagePayable)).toFixed(2)
         day
+
+    _getCashTurnoverDays: (stockCode)->
+        receivableTurnoverDays = @_getReceivableTurnOverDays(stockCode)
+        inventoryTurnoverDays = @_getInventoryTurnoverDays(stockCode)
+        payableTurnoverDays = @_getPayableTurnoverDays(stockCode)
+        cashTurnoverDays = parseFloat(receivableTurnoverDays) + parseFloat(inventoryTurnoverDays) - parseFloat(payableTurnoverDays)
+        cashTurnoverDays.toFixed(2)
 
     _getIndustryAverage: (stockCode, type)->
         industry = @_balanceObj[stockCode].getIndustry()
@@ -298,6 +302,12 @@ cc.Class {
             infoTable.push info
             break if index >= 49
         return infoTable
+
+    _getGoodWillPercent: (stockCode) ->
+        totalAssets = @_balanceObj[stockCode].getTotalAssets()[0]
+        goodWill = @_balanceObj[stockCode].getGoodWill()
+        percent = (goodWill / totalAssets * 100).toFixed(2)
+        percent
 
     _loadTable: (dir)->
         totalIndex = 0

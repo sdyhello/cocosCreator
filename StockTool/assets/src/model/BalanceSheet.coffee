@@ -97,5 +97,8 @@ class BalanceSheet extends TableBase
 		longInvest = @getValue(@_data["长期股权投资(万元)"])[0]
 		return ((financial + endInvest + longInvest) / @getTotalAssets()[0] * 100).toFixed(2)
 
+	getGoodWill: ->
+		goodWill = @getValue(@_data["商誉(万元)"])[0]
+		goodWill
 
 module.exports = BalanceSheet
