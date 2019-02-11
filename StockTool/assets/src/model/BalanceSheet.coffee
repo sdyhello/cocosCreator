@@ -21,7 +21,6 @@ class BalanceSheet extends TableBase
 
 	getStaffPayment: -> 
 		valueTable = @getValue(@_data["应付职工薪酬(万元)"])
-		console.log("pay :#{valueTable}, #{typeof(valueTable[0])}, #{valueTable[0]}")
 		return valueTable[0] - valueTable[1]
 
 	getInterestDebt: ->
@@ -77,14 +76,20 @@ class BalanceSheet extends TableBase
 		advanceReceiptsTable = @getValue(@_data["预收账款(万元)"])
 		totalAssetsTable = @getTotalAssets()
 		percent = []
-		for advanceReceipt, index in advanceReceiptsTable
-			percent.push (advanceReceipt / totalAssetsTable[index]) * 100
-		utils.getAverage(percent)
+		# for advanceReceipt, index in advanceReceiptsTable
+		# 	percent.push (advanceReceipt / totalAssetsTable[index]) * 100
+		percent = (advanceReceiptsTable[0] / totalAssetsTable[0]) * 100
+		return percent.toFixed(2)
 
 	getSingleYearAverageInventory: ->
 		inventoryTable = @getValue(@_data["存货(万元)"])
 		averageInventory = (inventoryTable[0] + inventoryTable[1]) / 2
 		averageInventory
+
+	getSingleYearAveragePayable: ->
+		payableTable = @getValue(@_data["应付账款(万元)"])
+		averagePayable = (payableTable[0] + payableTable[1]) / 2
+		averagePayable
 
 	getInvestAssets: ->
 		financial = @getValue(@_data["可供出售金融资产(万元)"])[0]

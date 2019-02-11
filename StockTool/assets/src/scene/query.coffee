@@ -113,13 +113,8 @@ cc.Class {
     _getReceivableTurnOverDays: (stockCode)->
         receivableValueTable = @_balanceObj[stockCode].getReceivableValue()
         inComeValueTable = @_profitObj[stockCode].getIncomeValue()
-        daysTable = []
-        for receivableValue, index in receivableValueTable
-            break if index >= receivableValueTable.length - 1
-            days = 360 / inComeValueTable[index] * (receivableValue + receivableValueTable[index + 1]) / 2
-            daysTable.push days
-
-        day = utils.getAverage(daysTable)
+        day = 360 / inComeValueTable[0] * (receivableValueTable[0] + receivableValueTable[1]) / 2
+        day = day.toFixed(2)
         return day
 
     _isAllTableLoadFinish: (stockCode)->
@@ -152,12 +147,22 @@ cc.Class {
         infoTable.push "\nPE:   " + @_profitObj[stockCode].getPE() + "\t对应股价:#{@_profitObj[stockCode].getSharePrice()}"
         infoTable.push "\n总资产：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalAssets()[0])}"
         infoTable.push "\n总市值：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalMarketValue() / 10000)}"
-        infoTable.push "\n资产负债表Top10（最新期）: #{@_balanceObj[stockCode].getTop10()}"
+        infoTable.push "\n资产负债表Top10: #{@_balanceObj[stockCode].getTop10()}"
         infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
-        infoTable.push "\n有息负债（单）: #{@_balanceObj[stockCode].getInterestDebt()}%"
-        infoTable.push "\n应收账款周转天数(历年平均): #{@_getReceivableTurnOverDays(stockCode)}, #{@_getIndustryAverage(stockCode, "应收账款")}"
-        infoTable.push "\n预收账款占总资产比例（历年平均）: #{@_getAdvanceReceiptsPercent(stockCode)}%， #{@_getIndustryAverage(stockCode, "预收账款")}"
-        infoTable.push "\n存货周转率（单）:#{@_getInventoryTurnoverRatio(stockCode)}%, #{@_getIndustryAverage(stockCode, "存货")}%"
+        infoTable.push "\n有息负债: #{@_balanceObj[stockCode].getInterestDebt()}%"
+        infoTable.push "\n预收账款占总资产比例: #{@_getAdvanceReceiptsPercent(stockCode)}%， #{@_getIndustryAverage(stockCode, "预收账款")}"
+        receivableTurnoverDays = @_getReceivableTurnOverDays(stockCode)
+        averageReceiveableTurnoverDays = @_getIndustryAverage(stockCode, "应收账款")
+        infoTable.push "\n应收账款周转天数: #{receivableTurnoverDays}, #{averageReceiveableTurnoverDays}"
+        inventoryTurnoverDays = @_getInventoryTurnoverDays(stockCode)
+        averageInventoryTurnoverDays = @_getIndustryAverage(stockCode, "存货")
+        infoTable.push "\n存货周转天数:#{inventoryTurnoverDays}天, #{averageInventoryTurnoverDays}天"
+        payableTurnoverDays = @_getPayableTurnoverDays(stockCode)
+        averagePayableTurnoverDays = @_getIndustryAverage(stockCode, "应付账款")
+        infoTable.push "\n应付账款周转天数:#{payableTurnoverDays} 天, #{averagePayableTurnoverDays}天"
+        cashTurnoverDays = parseFloat(receivableTurnoverDays) + parseFloat(inventoryTurnoverDays) - parseFloat(payableTurnoverDays)
+        averageCashTurnoverDays = parseFloat(averageReceiveableTurnoverDays) + parseFloat(averageInventoryTurnoverDays) - parseFloat(averagePayableTurnoverDays)
+        infoTable.push "\n现金周转天数：#{cashTurnoverDays} 天"
         infoTable.push "\n净利润（多）： " + utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())
         infoTable.push "\n毛利率（单）: #{@_profitObj[stockCode].getSingleYearGrossProfitRatio()}, #{@_getIndustryAverage(stockCode, "毛利率")}%"
         infoTable.push "\n净利率（单）: #{@_profitObj[stockCode].getSingleYearNetProfitRatio()}, #{@_getIndustryAverage(stockCode, "净利率")}%"
@@ -201,11 +206,17 @@ cc.Class {
             ratioTable.push (workCashFlowTable[index] / netProfit).toFixed(2)
         ratioTable
 
-    _getInventoryTurnoverRatio: (stockCode)->
+    _getInventoryTurnoverDays: (stockCode)->
         averageInventory = @_balanceObj[stockCode].getSingleYearAverageInventory()
         operatingCosts = @_profitObj[stockCode].getOperatingCosts()[0]
-        ratio = (operatingCosts / averageInventory).toFixed(2)
+        ratio = (360 / (operatingCosts / averageInventory)).toFixed(2)
         ratio
+
+    _getPayableTurnoverDays: (stockCode) ->
+        averagePayable = @_balanceObj[stockCode].getSingleYearAveragePayable()
+        operatingCosts = @_profitObj[stockCode].getOperatingCosts()[0]
+        day = (360 / (operatingCosts / averagePayable)).toFixed(2)
+        day
 
     _getIndustryAverage: (stockCode, type)->
         industry = @_balanceObj[stockCode].getIndustry()
@@ -219,7 +230,7 @@ cc.Class {
                 sameIndustryStockCode.push stockCode
                 switch type
                     when "存货"
-                        value = @_getInventoryTurnoverRatio(stockCode)
+                        value = @_getInventoryTurnoverDays(stockCode)
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
                     when "应收账款"
@@ -240,6 +251,10 @@ cc.Class {
                         sameIndustryInfo.push value
                     when "平均月薪"
                         value = (@_getStaffInfo(stockCode, true) * 10000).toFixed(2)
+                        sameIndustryInfoObj[stockCode] = value
+                        sameIndustryInfo.push value
+                    when "应付账款"
+                        value = @_getPayableTurnoverDays(stockCode)
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
 
