@@ -152,17 +152,13 @@ cc.Class {
         infoTable.push "\n有息负债: #{@_balanceObj[stockCode].getInterestDebt()}%"
         infoTable.push "\n预收账款占总资产比例: #{@_getAdvanceReceiptsPercent(stockCode)}%， #{@_getIndustryAverage(stockCode, "预收账款")}"
         receivableTurnoverDays = @_getReceivableTurnOverDays(stockCode)
-        averageReceiveableTurnoverDays = @_getIndustryAverage(stockCode, "应收账款")
-        infoTable.push "\n应收账款周转天数: #{receivableTurnoverDays}, #{averageReceiveableTurnoverDays}"
+        infoTable.push "\n应收账款周转天数: #{receivableTurnoverDays}, #{@_getIndustryAverage(stockCode, "应收账款")}"
         inventoryTurnoverDays = @_getInventoryTurnoverDays(stockCode)
-        averageInventoryTurnoverDays = @_getIndustryAverage(stockCode, "存货")
-        infoTable.push "\n存货周转天数:#{inventoryTurnoverDays}天, #{averageInventoryTurnoverDays}天"
+        infoTable.push "\n存货周转天数:#{inventoryTurnoverDays}天, #{@_getIndustryAverage(stockCode, "存货")}天"
         payableTurnoverDays = @_getPayableTurnoverDays(stockCode)
-        averagePayableTurnoverDays = @_getIndustryAverage(stockCode, "应付账款")
-        infoTable.push "\n应付账款周转天数:#{payableTurnoverDays} 天, #{averagePayableTurnoverDays}天"
+        infoTable.push "\n应付账款周转天数:#{payableTurnoverDays} 天, #{@_getIndustryAverage(stockCode, "应付账款")}天"
         cashTurnoverDays = parseFloat(receivableTurnoverDays) + parseFloat(inventoryTurnoverDays) - parseFloat(payableTurnoverDays)
-        averageCashTurnoverDays = parseFloat(averageReceiveableTurnoverDays) + parseFloat(averageInventoryTurnoverDays) - parseFloat(averagePayableTurnoverDays)
-        infoTable.push "\n现金周转天数：#{cashTurnoverDays} 天"
+        infoTable.push "\n现金周转天数：#{cashTurnoverDays} 天, #{@_getIndustryAverage(stockCode, "现金周转")} 天"
         infoTable.push "\n净利润（多）： " + utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())
         infoTable.push "\n毛利率（单）: #{@_profitObj[stockCode].getSingleYearGrossProfitRatio()}, #{@_getIndustryAverage(stockCode, "毛利率")}%"
         infoTable.push "\n净利率（单）: #{@_profitObj[stockCode].getSingleYearNetProfitRatio()}, #{@_getIndustryAverage(stockCode, "净利率")}%"
@@ -255,6 +251,11 @@ cc.Class {
                         sameIndustryInfo.push value
                     when "应付账款"
                         value = @_getPayableTurnoverDays(stockCode)
+                        sameIndustryInfoObj[stockCode] = value
+                        sameIndustryInfo.push value
+                    when "现金周转"
+                        value = parseFloat(@_getReceivableTurnOverDays(stockCode)) + parseFloat(@_getInventoryTurnoverDays(stockCode)) - parseFloat(@_getPayableTurnoverDays(stockCode))
+                        value = value.toFixed(2)
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
 

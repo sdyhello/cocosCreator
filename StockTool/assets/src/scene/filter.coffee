@@ -40,7 +40,7 @@ cc.Class {
             {name: "经营现金与净利润比(例:0.8)", key: "netProfitQuality"},
             {name: "有息负债占总资产比例(例:5)", key: "debt"},
             {name: "统计时间(例:6)", key: "time"},
-            {name: "待开发...", key: ""},
+            {name: "现金周转时间", key: "cashTurnoverDays"},
             {name: "待开发...", key: ""},
         ]
         @_editboxDataObj = cc.sys.localStorage.getItem("filterObj_new")
@@ -53,6 +53,7 @@ cc.Class {
                 receivableTurnoverDays: "30"
                 netProfitQuality: "0.8"
                 debt: "-1"
+                cashTurnoverDays: "30"
                 time: global.year
                 "": "-1"
             }
@@ -121,7 +122,8 @@ cc.Class {
         receivableTurnoverDays  = @_editboxDataObj.receivableTurnoverDays
         netProfitQuality        = @_editboxDataObj.netProfitQuality
         debt                    = @_editboxDataObj.debt
-        TDGA?.onEvent("onFilter", {profitAddRatio, roe, pe, advanceReceipt, receivableTurnoverDays, netProfitQuality, debt})
+        cashTurnoverDays        = @_editboxDataObj.cashTurnoverDays
+        TDGA?.onEvent("onFilter", {profitAddRatio, roe, pe, advanceReceipt, receivableTurnoverDays, netProfitQuality, debt, cashTurnoverDays})
         cc.sys.localStorage.setItem("filterObj_new", JSON.stringify @_editboxDataObj)
 
     _filterStock: ->
@@ -134,11 +136,12 @@ cc.Class {
         netProfitQuality = parseFloat(options.netProfitQuality) or -1
         debt = parseFloat(options.debt) or -1
         global.year = parseFloat(options.time) if options.time
+        cashTurnoverDays = parseFloat(options.cashTurnoverDays)
         info = @findMatchConditionStock(profitAddRatio, roe, pe, advanceReceipt,
-            receivableTurnoverDays, netProfitQuality, debt)
+            receivableTurnoverDays, netProfitQuality, debt, cashTurnoverDays)
         @m_display_label.string = info
 
-    findMatchConditionStock:(profitAddRatio, roe, pe, advanceReceipt,receivableTurnoverDays, netProfitQuality, debt)->
+    findMatchConditionStock:(profitAddRatio, roe, pe, advanceReceipt,receivableTurnoverDays, netProfitQuality, debt, cashTurnoverDays)->
         matchStockTable = []
         for stockCode in utils.getStockTable("allA")
             stockCode = stockCode.slice(2, 8)
@@ -150,6 +153,7 @@ cc.Class {
             continue unless @_filterReceivableTurnoverDays(stockCode, receivableTurnoverDays)
             continue unless @_filterNetProfitQuality(stockCode, netProfitQuality)
             continue unless @_filterInterestDebt(stockCode, debt)
+            continue unless @_filterCashTurnoverDays(stockCode, cashTurnoverDays)
             matchStockTable.push stockCode
         return @_getStockTableInfo(matchStockTable)
 
@@ -249,17 +253,12 @@ cc.Class {
             return true
         return false
 
-    _getReceivableTurnOverDays: (stockCode)->
-        receivableValueTable = @_balanceObj[stockCode].getReceivableValue()
-        inComeValueTable = @_profitObj[stockCode].getIncomeValue()
-        daysTable = []
-        for receivableValue, index in receivableValueTable
-            break if index >= receivableValueTable.length - 1
-            days = 360 / inComeValueTable[index] * (receivableValue + receivableValueTable[index + 1]) / 2
-            daysTable.push days
-
-        day = utils.getAverage(daysTable)
-        return day
+    _filterCashTurnoverDays: (stockCode, cashTurnoverDays) ->
+        return true if cashTurnoverDays is -1
+        curCashTurnoverDays = @_getCashTurnoverDays(stockCode)
+        if curCashTurnoverDays <= cashTurnoverDays
+            return true
+        return false
 
     _getAdvanceReceiptsPercent: (stockCode)->
         return @_balanceObj[stockCode].getAdvanceReceiptsPercent()
@@ -298,6 +297,7 @@ cc.Class {
         stockInfoTable.push "应收账款周转天数: #{@_editboxDataObj.receivableTurnoverDays}"
         stockInfoTable.push "经营现金流量与净利润比值: #{@_editboxDataObj.netProfitQuality}"
         stockInfoTable.push "有息负债占总资产比例: #{@_editboxDataObj.debt}"
+        stockInfoTable.push "现金周转天数：#{@_editboxDataObj.cashTurnoverDays}"
 
         stockInfoTable.push "\n股票代码 \t 基本信息 \t 所属行业 \t 利润增长率 \t 平均ROE \t PE \t 应收 \t 预收 \t 现金流 \t  总数:#{matchStockTable.length}"
         for stockCode in matchStockTable
@@ -324,7 +324,35 @@ cc.Class {
             utils.addTab("应:#{@_getReceivableTurnOverDays(stockCode)}") +
             utils.addTab("预:#{@_getAdvanceReceiptsPercent(stockCode)}") +
             utils.addTab("现:#{utils.getAverage(@_getNetProfitQuality(stockCode))}") +
+            utils.addTab("现金周转:#{@_getCashTurnoverDays(stockCode)}")
             "时:#{@_balanceObj[stockCode].getExistYears()}"
+
+    _getReceivableTurnOverDays: (stockCode) ->
+        console.log("stockCode:#{stockCode}")
+        receivableValueTable = @_balanceObj[stockCode].getReceivableValue()
+        inComeValueTable = @_profitObj[stockCode].getIncomeValue()
+        day = 360 / inComeValueTable[0] * (receivableValueTable[0] + receivableValueTable[1]) / 2
+        day = day.toFixed(2)
+        day
+
+    _getInventoryTurnoverDays: (stockCode) ->
+        averageInventory = @_balanceObj[stockCode].getSingleYearAverageInventory()
+        operatingCosts = @_profitObj[stockCode].getOperatingCosts()[0]
+        day = (360 / (operatingCosts / averageInventory)).toFixed(2)
+        day
+
+    _getPayableTurnoverDays: (stockCode) ->
+        averagePayable = @_balanceObj[stockCode].getSingleYearAveragePayable()
+        operatingCosts = @_profitObj[stockCode].getOperatingCosts()[0]
+        day = (360 / (operatingCosts / averagePayable)).toFixed(2)
+        day
+
+    _getCashTurnoverDays: (stockCode)->
+        receivableTurnoverDays = @_getReceivableTurnOverDays(stockCode)
+        inventoryTurnoverDays = @_getInventoryTurnoverDays(stockCode)
+        payableTurnoverDays = @_getPayableTurnoverDays(stockCode)
+        cashTurnoverDays = parseFloat(receivableTurnoverDays) + parseFloat(inventoryTurnoverDays) - parseFloat(payableTurnoverDays)
+        cashTurnoverDays.toFixed(2)
 
     _loadTableByType: (dir)->
         return if @_loadingFileStatus
