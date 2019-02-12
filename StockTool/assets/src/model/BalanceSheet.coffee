@@ -91,6 +91,11 @@ class BalanceSheet extends TableBase
 		averagePayable = (payableTable[0] + payableTable[1]) / 2
 		averagePayable
 
+	getSingleYearAverageTotalAssets: ->
+		totalAssetsTable = @getTotalAssets()
+		averageTotalAssets = (totalAssetsTable[0] + totalAssetsTable[1]) / 2
+		averageTotalAssets
+
 	getInvestAssets: ->
 		financial = @getValue(@_data["可供出售金融资产(万元)"])[0]
 		endInvest = @getValue(@_data["持有至到期投资(万元)"])[0]
@@ -100,5 +105,13 @@ class BalanceSheet extends TableBase
 	getGoodWill: ->
 		goodWill = @getValue(@_data["商誉(万元)"])[0]
 		goodWill
+
+	getFinancialLeverage: ->
+		averageTotalAssets = @getSingleYearAverageTotalAssets()
+		netAssets = @getNetAssets()[0]
+		ratio = (averageTotalAssets / netAssets).toFixed(2)
+		ratio
+
+
 
 module.exports = BalanceSheet

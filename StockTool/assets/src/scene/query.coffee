@@ -163,6 +163,7 @@ cc.Class {
         infoTable.push "\n净利润复合增长率:   " + @_profitObj[stockCode].getNetProfitAddRatio() + "%"
         infoTable.push "\n现金流量比净利润:   " + @_getNetProfitQuality(stockCode) + "平均:#{utils.getAverage(@_getNetProfitQuality(stockCode))}"
         infoTable.push "\n历年ROE:   " + @_getROE(stockCode) + "平均: #{utils.getAverage(@_getROE(stockCode))}%"
+        infoTable.push "\nROE分解----->净利率: #{@_profitObj[stockCode].getSingleYearNetProfitRatio()}, 总资产周转率:#{@_getTotalAssetsTurnoverRatio(stockCode)}, 财务杠杆:#{@_balanceObj[stockCode].getFinancialLeverage()}"
         infoTable.push "\n" + @_getStaffInfo(stockCode)
         infoTable.push "\n统计时间： #{@_balanceObj[stockCode].getExistYears()}"
         @_getIndustryAverage(stockCode, "平均月薪")
@@ -218,7 +219,13 @@ cc.Class {
         cashTurnoverDays = parseFloat(receivableTurnoverDays) + parseFloat(inventoryTurnoverDays) - parseFloat(payableTurnoverDays)
         cashTurnoverDays.toFixed(2)
 
-    _getIndustryAverage: (stockCode, type)->
+    _getTotalAssetsTurnoverRatio: (stockCode) ->
+        averageTotalAssets = @_balanceObj[stockCode].getSingleYearAverageTotalAssets()
+        inComeValueTable = @_profitObj[stockCode].getIncomeValue()
+        ratio = (inComeValueTable[0] / averageTotalAssets).toFixed(2)
+        ratio
+
+    _getIndustryAverage: (stockCode, type) ->
         industry = @_balanceObj[stockCode].getIndustry()
         sameIndustryInfo = []
         sameIndustryStockCode = []

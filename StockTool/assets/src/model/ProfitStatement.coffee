@@ -24,6 +24,9 @@ class ProfitStatement extends TableBase
 	getNetProfitTable : ->
 		@getValue(@_data["归属于母公司所有者的净利润(万元)"])
 
+	getNetProfitAllTable : ->
+		@getValue(@_data["净利润(万元)"])
+
 	getNetProfitYoy: ->
 		profitTable = @getNetProfitTable()
 		addRatio = []
@@ -33,7 +36,7 @@ class ProfitStatement extends TableBase
 		addRatio
 
 	getSingleYearNetProfitRatio: ->
-		netProfit = @getNetProfitTable()[0]
+		netProfit = @getNetProfitAllTable()[0]
 		incomeValue = @getIncomeValue()[0]
 		netProfitRatio = (netProfit / incomeValue * 100).toFixed(2)
 		netProfitRatio
