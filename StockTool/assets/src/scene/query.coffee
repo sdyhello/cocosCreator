@@ -150,6 +150,7 @@ cc.Class {
         infoTable.push "\n资产负债表Top10: #{@_balanceObj[stockCode].getTop10()}"
         infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
         infoTable.push "\n有息负债: #{@_balanceObj[stockCode].getInterestDebt()}%"
+        infoTable.push "\n赚的钱是从股东那借的钱的几倍：#{@_balanceObj[stockCode].getNetAssetsStruct()}"
         infoTable.push "\n预收账款占总资产比例: #{@_getAdvanceReceiptsPercent(stockCode)}%， #{@_getIndustryAverage(stockCode, "预收账款")}"
         infoTable.push "\n应收账款周转天数: #{@_getReceivableTurnOverDays(stockCode)}, #{@_getIndustryAverage(stockCode, "应收账款")}"
         infoTable.push "\n存货周转天数:#{@_getInventoryTurnoverDays(stockCode)}天, #{@_getIndustryAverage(stockCode, "存货")}天"

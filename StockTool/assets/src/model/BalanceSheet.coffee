@@ -112,6 +112,13 @@ class BalanceSheet extends TableBase
 		ratio = (averageTotalAssets / netAssets).toFixed(2)
 		ratio
 
+	getNetAssetsStruct: ->
+		number1 = @getValue(@_data["实收资本(或股本)(万元)"])[0]
+		number2 = @getValue(@_data["资本公积(万元)"])[0]
+		number3 = @getValue(@_data["盈余公积(万元)"])[0]
+		number4 = @getValue(@_data["未分配利润(万元)"])[0]
 
+		result = (number3 + number4) / (number1 + number2)
+		return result.toFixed(2)
 
 module.exports = BalanceSheet
