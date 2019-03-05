@@ -30,11 +30,13 @@ cc.Class {
                         @_hide()
                     when "Refresh"
                         @_initFriendsInfo()
+                    when "gameType"
+                        @_gameType = data.gameType
+                        @_initFriendsInfo()
         )
 
         for index in [1..7]
             @_updateInfo(@["m_rank_#{index}"], null, "--", "--", "--")
-        @_initFriendsInfo()
 
     _createImage: (sprite, url) ->
         image = wx.createImage()
@@ -60,12 +62,18 @@ cc.Class {
 
     _initFriendsInfo: ->
         @_dataIndex = 1
+        if @_gameType is "numberMaze"
+            dataTable = ["fastTime", "useStep", "passCount"]
+        else if @_gameType is "memory"
+            dataTable = ["score"]
+        else if @_gameType is "physicsBall"
+            dataTable = ["physicsBallScore"]
+
         wx.getFriendCloudStorage(
             {
-                keyList: ["fastTime", "useStep", "passCount"]
+                keyList: dataTable
                 success: (res) =>
-                    console.log("friends data :#{JSON.stringify res}")
-                    console.log("filter")
+                    console.log("friends data :#{JSON.stringify res.data}")
                     res.data = res.data.filter(
                         (a) ->
                             console.log(a.nickname, a.KVDataList.length)
@@ -74,7 +82,9 @@ cc.Class {
                                 return true
                             return false
                     )
-                    res.data.sort((a, b) -> a.KVDataList[0].value - b.KVDataList[0].value )
+                    res.data.sort((a, b) -> b.KVDataList[0].value - a.KVDataList[0].value )
+                    if @_gameType is "numberMaze"
+                        res.data.sort((a, b) -> a.KVDataList[0].value - b.KVDataList[0].value )
                     for infoObj in res.data
                         if @_dataIndex > 7
                             break
@@ -84,8 +94,8 @@ cc.Class {
                         iconUrl = infoObj.avatarUrl
                         
                         fastTime = infoObj.KVDataList[0].value
-                        useStep = infoObj.KVDataList[1]?.value or 999
-                        passCount = infoObj.KVDataList[2]?.value or 0
+                        useStep = infoObj.KVDataList[1]?.value or "--"
+                        passCount = infoObj.KVDataList[2]?.value or "--"
                         
                         @_updateInfo(rankNode, iconUrl, fastTime, useStep, passCount)
                         

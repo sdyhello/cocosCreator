@@ -1,0 +1,31 @@
+{
+  "ver": "2.2.0",
+  "uuid": "05ae9491-956c-41e3-8c27-47db8ab04a0a",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "subMetas": {
+    "ui_button_ok03_meitu_3_1": {
+      "ver": "1.0.3",
+      "uuid": "a6ada20c-eb64-4698-aa5d-849e096339f5",
+      "rawTextureUuid": "05ae9491-956c-41e3-8c27-47db8ab04a0a",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0.5,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 238,
+      "height": 77,
+      "rawWidth": 238,
+      "rawHeight": 78,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

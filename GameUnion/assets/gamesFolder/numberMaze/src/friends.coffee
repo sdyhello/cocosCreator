@@ -18,16 +18,16 @@ cc.Class {
         @tex = new cc.Texture2D()
         @_setGameType()
 
-    onClick: ->
-        cc.director.loadScene('welcome')
-
     _setGameType: ->
         wx.postMessage(
             {
                 message: "gameType"
-                gameType: "memory"
+                gameType: "numberMaze"
             }
         )
+
+    onClick: ->
+        cc.director.loadScene('numberWelcome')
 
     onRefresh: ->
         wx.postMessage(
