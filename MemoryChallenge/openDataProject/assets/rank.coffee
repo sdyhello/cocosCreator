@@ -11,18 +11,13 @@ cc.Class {
         #   displayName: 'Foo' # [optional], default is property name
         #   readonly: false    # [optional], default is false
         display: cc.Node,
-        m_rank_1: cc.Label,
-        m_rank_2: cc.Label,
-        m_rank_3: cc.Label,
-        m_rank_4: cc.Label,
-        m_rank_5: cc.Label,
-
-        m_icon_1: cc.Sprite,
-        m_icon_2: cc.Sprite,
-        m_icon_3: cc.Sprite,
-        m_icon_4: cc.Sprite,
-        m_icon_5: cc.Sprite,
-
+        m_rank_1: cc.Node,
+        m_rank_2: cc.Node,
+        m_rank_3: cc.Node,
+        m_rank_4: cc.Node,
+        m_rank_5: cc.Node,
+        m_rank_6: cc.Node,
+        m_rank_7: cc.Node,
     }
 
     start: ->
@@ -37,8 +32,8 @@ cc.Class {
                         @_initFriendsInfo()
         )
 
-        for index in [1..5]
-            @["m_rank_#{index}"].string = "-----"
+        for index in [1..7]
+            @_updateInfo(@["m_rank_#{index}"], null, "--", "--", "--")
         @_initFriendsInfo()
 
     _createImage: (sprite, url) ->
@@ -52,13 +47,22 @@ cc.Class {
             sprite.node.height = 50
         image.src = url
 
-    
+    _updateInfo: (rankNode, iconUrl, fastTime, useStep, passCount) ->
+        iconObj = rankNode.getChildByName("icon")
+        iconSprite = iconObj.getChildByName("icon").getComponent(cc.Sprite)
+        @_createImage(iconSprite, iconUrl)
+        fastTimeLabel = iconObj.getChildByName("rank_1").getComponent(cc.Label)
+        fastTimeLabel.string = fastTime
+        useStepLabel = iconObj.getChildByName("rank_2").getComponent(cc.Label)
+        useStepLabel.string = useStep
+        passCountLabel = iconObj.getChildByName("rank_3").getComponent(cc.Label)
+        passCountLabel.string = passCount
 
     _initFriendsInfo: ->
         @_dataIndex = 1
         wx.getFriendCloudStorage(
             {
-                keyList: ["physicsBallScore"]
+                keyList: ["fastTime", "useStep", "passCount"]
                 success: (res) =>
                     console.log("friends data :#{JSON.stringify res}")
                     console.log("filter")
@@ -70,17 +74,24 @@ cc.Class {
                                 return true
                             return false
                     )
-                    res.data.sort((a, b) -> b.KVDataList[0].value - a.KVDataList[0].value )
+                    res.data.sort((a, b) -> a.KVDataList[0].value - b.KVDataList[0].value )
                     for infoObj in res.data
+                        if @_dataIndex > 7
+                            break
                         friendName = infoObj.nickname
-                        @_createImage(@["m_icon_#{@_dataIndex}"], infoObj.avatarUrl)
-                        for info in infoObj.KVDataList
-                            if @_dataIndex > 5
-                                break
-                            string = "No.#{@_dataIndex}: " + friendName + ": " + info.value + "分"
-                            @["m_rank_#{@_dataIndex}"].visible = true
-                            @["m_rank_#{@_dataIndex}"].string = string
-                            @_dataIndex++
+                        
+                        rankNode = @["m_rank_#{@_dataIndex}"]
+                        iconUrl = infoObj.avatarUrl
+                        
+                        fastTime = infoObj.KVDataList[0].value
+                        useStep = infoObj.KVDataList[1]?.value or 999
+                        passCount = infoObj.KVDataList[2]?.value or 0
+                        
+                        @_updateInfo(rankNode, iconUrl, fastTime, useStep, passCount)
+                        
+                        @_dataIndex++
+                    for index in [@_dataIndex..7]
+                        @["m_rank_#{index}"].active =  false
                     return
             }
         )

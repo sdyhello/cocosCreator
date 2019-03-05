@@ -152,6 +152,7 @@ cc.Class {
             @successLabel.node.active = true
             @_isSuccess = true
             @_saveFastTime(@_costTime.toFixed(2))
+            @_addPassCount()
         return
 
     _getResult: ->
@@ -216,6 +217,11 @@ cc.Class {
         @_isSuccess = true
         @_initMaze()
         @_createEventListener()
+
+    _addPassCount: ->
+        count = cc.sys.localStorage.getItem("pass_count") or 0
+        count = parseInt(count)
+        cc.sys.localStorage.setItem("pass_count", count + 1)
 
     onBegin: ->
         return if @_costTime isnt 0
