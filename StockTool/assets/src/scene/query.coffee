@@ -150,6 +150,7 @@ cc.Class {
         infoTable.push "\n资产负债表Top10: #{@_balanceObj[stockCode].getTop10()}"
         infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
         infoTable.push "\n有息负债: #{@_balanceObj[stockCode].getInterestDebt()}%"
+        infoTable.push "\n资本开支占净利润比：#{@_getCapitalExpenditureRatio(stockCode)}%"
         infoTable.push "\n赚的钱是从股东那拿的钱的几倍：#{@_balanceObj[stockCode].getNetAssetsStruct()}"
         infoTable.push "\n预收账款占总资产比例: #{@_getAdvanceReceiptsPercent(stockCode)}%， #{@_getIndustryAverage(stockCode, "预收账款")}"
         infoTable.push "\n应收账款周转天数: #{@_getReceivableTurnOverDays(stockCode)}, #{@_getIndustryAverage(stockCode, "应收账款")}"
@@ -225,6 +226,14 @@ cc.Class {
         inComeValueTable = @_profitObj[stockCode].getIncomeValue()
         ratio = (inComeValueTable[0] / averageTotalAssets).toFixed(2)
         ratio
+
+    _getCapitalExpenditureRatio: (stockCode) ->
+        capitalExpenditure = @_cashFlowObj[stockCode].getCapitalExpenditure()
+        console.log("cap :#{JSON.stringify capitalExpenditure}")
+        netProfit = @_profitObj[stockCode].getNetProfitAllTable()
+        captialSummation = utils.getSummation(capitalExpenditure)
+        netProfitSummation = utils.getSummation(netProfit)
+        return (captialSummation / netProfitSummation * 100).toFixed(2)
 
     _getIndustryAverage: (stockCode, type) ->
         industry = @_balanceObj[stockCode].getIndustry()

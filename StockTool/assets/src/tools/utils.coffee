@@ -12,6 +12,12 @@ utils =
     addTab: (value)->
         value + "\t\t"
 
+    getSummation: (table) ->
+        summation = 0
+        for num in table 
+            summation += num
+        return summation
+
     csvToArray : (strData, strDelimiter )->
 	    strDelimiter = (strDelimiter || ",");
 	    objPattern = new RegExp(
