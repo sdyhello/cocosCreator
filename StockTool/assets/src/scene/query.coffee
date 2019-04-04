@@ -159,6 +159,7 @@ cc.Class {
         infoTable.push "\n现金周转天数：#{@_getCashTurnoverDays(stockCode)} 天, #{@_getIndustryAverage(stockCode, "现金周转")} 天"
         infoTable.push "\n商誉:#{utils.getValueDillion(@_balanceObj[stockCode].getGoodWill())}, 占总资产比例:#{@_getGoodWillPercent(stockCode)}%"
         infoTable.push "\n净利润（多）： " + utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())
+        infoTable.push "\n营业利润率 : #{@_profitObj[stockCode].getOperatingProfitRatio()} % ， #{@_getIndustryAverage(stockCode, "营业利润率")}" 
         infoTable.push "\n毛利率（单）: #{@_profitObj[stockCode].getSingleYearGrossProfitRatio()}, #{@_getIndustryAverage(stockCode, "毛利率")}%"
         infoTable.push "\n净利率（单）: #{@_profitObj[stockCode].getSingleYearNetProfitRatio()}, #{@_getIndustryAverage(stockCode, "净利率")}%"
         infoTable.push "\n年净利润增长率:   " + @_profitObj[stockCode].getNetProfitYoy()
@@ -277,6 +278,10 @@ cc.Class {
                     when "现金周转"
                         value = parseFloat(@_getReceivableTurnOverDays(stockCode)) + parseFloat(@_getInventoryTurnoverDays(stockCode)) - parseFloat(@_getPayableTurnoverDays(stockCode))
                         value = value.toFixed(2)
+                        sameIndustryInfoObj[stockCode] = value
+                        sameIndustryInfo.push value
+                    when "营业利润率"
+                        value = @_profitObj[stockCode].getOperatingProfitRatio()
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
 

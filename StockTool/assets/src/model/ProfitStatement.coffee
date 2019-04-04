@@ -53,5 +53,16 @@ class ProfitStatement extends TableBase
 		PE = (price / earnPerShare).toFixed(2)
 		PE
 
+	getOperatingProfitRatio: ->
+		a = @getValue(@_data["营业收入(万元)"])[0]
+		b = @getValue(@_data["营业成本(万元)"])[0]
+		c = @getValue(@_data["营业税金及附加(万元)"])[0]
+		d = @getValue(@_data["销售费用(万元)"])[0]
+		e = @getValue(@_data["管理费用(万元)"])[0]
+		f = @getValue(@_data["财务费用(万元)"])[0]
+		operatingProfit = a - b - c - d - e - f
+		operatingProfitRatio = ((operatingProfit / a ) * 100).toFixed(2)
+		operatingProfitRatio
+
 
 module.exports = ProfitStatement
