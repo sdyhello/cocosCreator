@@ -14,6 +14,8 @@ class ProfitStatement extends TableBase
 
 	getOperatingCosts: -> @getValue(@_data["营业成本(万元)"])
 
+	getProfitTotal: -> @getValue(@_data["利润总额(万元)"])
+
 	getNetProfitAddRatio: ->
 		netProfitTable = @getNetProfitTable()
 		addTimes = netProfitTable[0] / netProfitTable[netProfitTable.length - 1]
@@ -53,7 +55,7 @@ class ProfitStatement extends TableBase
 		PE = (price / earnPerShare).toFixed(2)
 		PE
 
-	getOperatingProfitRatio: ->
+	getCoreProfit: ->
 		a = @getValue(@_data["营业收入(万元)"])[0]
 		b = @getValue(@_data["营业成本(万元)"])[0]
 		c = @getValue(@_data["营业税金及附加(万元)"])[0]
@@ -61,8 +63,28 @@ class ProfitStatement extends TableBase
 		e = @getValue(@_data["管理费用(万元)"])[0]
 		f = @getValue(@_data["财务费用(万元)"])[0]
 		operatingProfit = a - b - c - d - e - f
-		operatingProfitRatio = ((operatingProfit / a ) * 100).toFixed(2)
+		return operatingProfit
+
+	getOperatingProfitRatio: ->
+		coreProfit = @getCoreProfit()
+		a = @getValue(@_data["营业收入(万元)"])[0]
+		operatingProfitRatio = ((coreProfit / a ) * 100).toFixed(2)
 		operatingProfitRatio
+
+	getCoreProfitRatio: ->
+		totalProfit = @getProfitTotal()[0]
+		coreProfit = @getCoreProfit()
+		coreProfitRatio = (coreProfit / totalProfit * 100 ).toFixed(2)
+		coreProfitRatio
+
+	getExpenseRatio: ->
+		d = @getValue(@_data["销售费用(万元)"])[0]
+		e = @getValue(@_data["管理费用(万元)"])[0]
+		f = @getValue(@_data["财务费用(万元)"])[0]
+		totalExpense = d + e + f
+		a = @getValue(@_data["营业收入(万元)"])[0]
+		expenseRatio = (totalExpense / a * 100).toFixed(2)
+		expenseRatio
 
 
 module.exports = ProfitStatement

@@ -159,9 +159,11 @@ cc.Class {
         infoTable.push "\n现金周转天数：#{@_getCashTurnoverDays(stockCode)} 天, #{@_getIndustryAverage(stockCode, "现金周转")} 天"
         infoTable.push "\n商誉:#{utils.getValueDillion(@_balanceObj[stockCode].getGoodWill())}, 占总资产比例:#{@_getGoodWillPercent(stockCode)}%"
         infoTable.push "\n净利润（多）： " + utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())
-        infoTable.push "\n营业利润率 : #{@_profitObj[stockCode].getOperatingProfitRatio()} % ， #{@_getIndustryAverage(stockCode, "营业利润率")}" 
         infoTable.push "\n毛利率（单）: #{@_profitObj[stockCode].getSingleYearGrossProfitRatio()}, #{@_getIndustryAverage(stockCode, "毛利率")}%"
         infoTable.push "\n净利率（单）: #{@_profitObj[stockCode].getSingleYearNetProfitRatio()}, #{@_getIndustryAverage(stockCode, "净利率")}%"
+        infoTable.push "\n营业利润率 : #{@_profitObj[stockCode].getOperatingProfitRatio()} % ， #{@_getIndustryAverage(stockCode, "营业利润率")}" 
+        infoTable.push "\n核心利润占利润总额比例:#{@_profitObj[stockCode].getCoreProfitRatio()} %"
+        infoTable.push "\n 三项费用率：#{@_profitObj[stockCode].getExpenseRatio()} %, #{@_getIndustryAverage(stockCode, "费用率")}"
         infoTable.push "\n年净利润增长率:   " + @_profitObj[stockCode].getNetProfitYoy()
         infoTable.push "\n净利润复合增长率:   " + @_profitObj[stockCode].getNetProfitAddRatio() + "%"
         infoTable.push "\n现金流量比净利润:   " + @_getNetProfitQuality(stockCode) + "平均:#{utils.getAverage(@_getNetProfitQuality(stockCode))}"
@@ -282,6 +284,10 @@ cc.Class {
                         sameIndustryInfo.push value
                     when "营业利润率"
                         value = @_profitObj[stockCode].getOperatingProfitRatio()
+                        sameIndustryInfoObj[stockCode] = value
+                        sameIndustryInfo.push value
+                    when "费用率"
+                        value = @_profitObj[stockCode].getExpenseRatio()
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
 
