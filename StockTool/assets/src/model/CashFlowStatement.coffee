@@ -17,4 +17,7 @@ class CashFlowStatement extends TableBase
 	getCapitalExpenditure: ->
 		@getValue(@_data["购建固定资产、无形资产和其他长期资产所支付的现金(万元)"])
 
+	getSellGoodsMoney: ->
+		@getValue(@_data["销售商品、提供劳务收到的现金(万元)"])
+		
 module.exports = CashFlowStatement

@@ -166,6 +166,7 @@ cc.Class {
         infoTable.push "\n 三项费用率：#{@_profitObj[stockCode].getExpenseRatio()} %, #{@_getIndustryAverage(stockCode, "费用率")}"
         infoTable.push "\n年净利润增长率:   " + @_profitObj[stockCode].getNetProfitYoy()
         infoTable.push "\n净利润复合增长率:   " + @_profitObj[stockCode].getNetProfitAddRatio() + "%"
+        infoTable.push "\n营收含金量: #{@_getIncomeQuality(stockCode)}, 平均：#{utils.getAverage(@_getIncomeQuality(stockCode))}"
         infoTable.push "\n现金流量比净利润:   " + @_getNetProfitQuality(stockCode) + "平均:#{utils.getAverage(@_getNetProfitQuality(stockCode))}"
         infoTable.push "\n历年ROE:   " + @_getROE(stockCode) + "平均: #{utils.getAverage(@_getROE(stockCode))}%"
         infoTable.push "\nROE分解----->净利率: #{@_profitObj[stockCode].getSingleYearNetProfitRatio()}, 总资产周转率:#{@_getTotalAssetsTurnoverRatio(stockCode)}, 财务杠杆:#{@_balanceObj[stockCode].getFinancialLeverage()}"
@@ -205,7 +206,15 @@ cc.Class {
             ratioTable.push (workCashFlowTable[index] / netProfit).toFixed(2)
         ratioTable
 
-    _getInventoryTurnoverDays: (stockCode)->
+    _getIncomeQuality: (stockCode) ->
+        incomeValueTable = @_profitObj[stockCode].getIncomeValue()
+        sellGoodsGetMoneyTable = @_cashFlowObj[stockCode].getSellGoodsMoney()
+        ratioTable = []
+        for incomeValue, index in incomeValueTable
+            ratioTable.push (sellGoodsGetMoneyTable[index] / incomeValue).toFixed(2)
+        ratioTable
+
+    _getInventoryTurnoverDays: (stockCode) ->
         averageInventory = @_balanceObj[stockCode].getSingleYearAverageInventory()
         operatingCosts = @_profitObj[stockCode].getOperatingCosts()[0]
         ratio = (360 / (operatingCosts / averageInventory)).toFixed(2)
