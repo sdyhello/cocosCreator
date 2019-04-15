@@ -336,7 +336,7 @@ cc.Class {
         day
 
     _getInventoryTurnoverDays: (stockCode) ->
-        averageInventory = @_balanceObj[stockCode].getSingleYearAverageInventory()
+        averageInventory = @_balanceObj[stockCode].getAverageInventoryTable()[0]
         operatingCosts = @_profitObj[stockCode].getOperatingCosts()[0]
         day = (360 / (operatingCosts / averageInventory)).toFixed(2)
         day

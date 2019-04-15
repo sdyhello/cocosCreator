@@ -19,6 +19,10 @@ class BalanceSheet extends TableBase
 
 	getReceivableValue: -> @getValue(@_data["应收账款(万元)"])
 
+	getFixedAssets: -> @getValue(@_data["固定资产(万元)"])
+
+	getInventory: -> @getValue(@_data["存货(万元)"])
+
 	getStaffPayment: -> 
 		valueTable = @getValue(@_data["应付职工薪酬(万元)"])
 		return valueTable[0] - valueTable[1]
@@ -81,10 +85,14 @@ class BalanceSheet extends TableBase
 		percent = (advanceReceiptsTable[0] / totalAssetsTable[0]) * 100
 		return percent.toFixed(2)
 
-	getSingleYearAverageInventory: ->
+	getAverageInventoryTable: ->
 		inventoryTable = @getValue(@_data["存货(万元)"])
-		averageInventory = (inventoryTable[0] + inventoryTable[1]) / 2
-		averageInventory
+		averageInventoryTable = []
+		for value , index in inventoryTable
+			break if index >= inventoryTable.length - 1
+			averageInventory = (inventoryTable[0] + inventoryTable[1]) / 2
+			averageInventoryTable.push averageInventory
+		averageInventoryTable
 
 	getSingleYearAveragePayable: ->
 		payableTable = @getValue(@_data["应付账款(万元)"])
@@ -120,5 +128,10 @@ class BalanceSheet extends TableBase
 
 		result = (number3 + number4) / (number1 + number2)
 		return result.toFixed(2)
+
+	getFixedAssetsWithTotalAssetsRatio: ->
+		fixedAssetsTable = @getFixedAssets()
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(fixedAssetsTable, totalAssetsTable)
 
 module.exports = BalanceSheet

@@ -1,4 +1,11 @@
 utils =
+    getRatioTable: (leftInfo, rightInfo) ->
+        ratioTable = []
+        for left , index in leftInfo
+            ratio = (left / rightInfo[index] * 100).toFixed(2)
+            ratioTable.push ratio
+        ratioTable
+
     getCompoundRate: (addRate, time)->
         return Math.exp(1 / time * Math.log(addRate))
 
