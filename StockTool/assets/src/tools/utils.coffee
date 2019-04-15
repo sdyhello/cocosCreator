@@ -1,8 +1,9 @@
 utils =
-    getRatioTable: (leftInfo, rightInfo) ->
+    getRatioTable: (leftInfo, rightInfo, param) ->
+        param ?= 100
         ratioTable = []
         for left , index in leftInfo
-            ratio = (left / rightInfo[index] * 100).toFixed(2)
+            ratio = (left / rightInfo[index] * param).toFixed(2)
             ratioTable.push ratio
         ratioTable
 
@@ -15,6 +16,12 @@ utils =
             total += parseFloat(value)
         ave = (total / table.length).toFixed(2)
         ave
+
+    addTabInTable: (table)->
+        newTable = []
+        for value in table
+            newTable.push value + "    "
+        return newTable
 
     addTab: (value)->
         value + "\t\t"

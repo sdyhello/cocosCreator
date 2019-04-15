@@ -127,11 +127,17 @@ cc.Class {
         return @_balanceObj[stockCode].getAdvanceReceiptsPercent()
 
     _getReceivableTurnOverDays: (stockCode)->
+        ratio = @_getRecievableTurnRatio(stockCode)[0]
+        return (360 / ratio).toFixed(2)
+
+    _getRecievableTurnRatio: (stockCode) ->
         receivableValueTable = @_balanceObj[stockCode].getReceivableValue()
         inComeValueTable = @_profitObj[stockCode].getIncomeValue()
-        day = 360 / inComeValueTable[0] * (receivableValueTable[0] + receivableValueTable[1]) / 2
-        day = day.toFixed(2)
-        return day
+        daysTable = []
+        for receivable, index in receivableValueTable
+            day = (inComeValueTable[index] / (receivableValueTable[index] + receivableValueTable[index + 1]) / 2).toFixed(2)
+            daysTable.push day
+        return daysTable
 
     _isAllTableLoadFinish: (stockCode)->
         balance = @_balanceObj[stockCode]?.isLoadFinish()
@@ -244,7 +250,8 @@ cc.Class {
     _getInventoryTurnoverRatio: (stockCode) ->
         averageInventory = @_balanceObj[stockCode].getAverageInventoryTable()
         operatingCosts = @_profitObj[stockCode].getOperatingCosts()
-        utils.getRatioTable(operatingCosts, averageInventory)
+        console.log("Arkad :#{JSON.stringify [averageInventory, operatingCosts]}")
+        utils.getRatioTable(operatingCosts, averageInventory, 1)
 
     _getPayableTurnoverDays: (stockCode) ->
         averagePayable = @_balanceObj[stockCode].getSingleYearAveragePayable()
@@ -414,26 +421,25 @@ cc.Class {
     _getBaseInfo: ->
         infoTable = []
         stockCode = @_stockCode
-        infoTable.push "\n营业收入增长速度:#{@_profitObj[stockCode].getIncomeValueAddRatio()}"
-        infoTable.push "\n毛利率:#{@_profitObj[stockCode].getGrossProfitRatio()}"
-        infoTable.push "\n三项费用率:#{@_profitObj[stockCode].getExpenseRatio()}"
-        infoTable.push "\n销售费用率:#{@_profitObj[stockCode].getSellingFeeRatio()}"
-        infoTable.push "\n管理费用率:#{@_profitObj[stockCode].getManageFeeRatio()}"
-        infoTable.push "\n财务费用率:#{@_profitObj[stockCode].getMoneyFeeRatio()}"
-        infoTable.push "\n营业利润增长率:#{@_profitObj[stockCode].getOperatingProfitAddRatio()}"
-        infoTable.push "\n扣非净利润增长率:"
-        infoTable.push "\n应收账款占收入比:#{@_getReceivableInIncomeRatio(stockCode)}"
-        infoTable.push "\n固定资产占总资产比重:#{@_balanceObj[stockCode].getFixedAssetsWithTotalAssetsRatio()}"
-        infoTable.push "\n净资产收益率:#{@_getROE(stockCode)}"
-        console.log("get base info:#{stockCode}, #{@_profitObj[stockCode]}")
-        infoTable.push "\n净利润率:#{@_profitObj[stockCode].getNetProfitRatio()}"
+        infoTable.push "\n营业收入增长速度:   #{utils.addTabInTable(@_profitObj[stockCode].getIncomeValueAddRatio())}"
+        infoTable.push "\n毛利率:           #{utils.addTabInTable(@_profitObj[stockCode].getGrossProfitRatio())}"
+        infoTable.push "\n三项费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getExpenseRatio())}"
+        infoTable.push "\n销售费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getSellingFeeRatio())}"
+        infoTable.push "\n管理费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getManageFeeRatio())}"
+        infoTable.push "\n财务费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getMoneyFeeRatio())}"
+        infoTable.push "\n营业利润增长率:   #{utils.addTabInTable(@_profitObj[stockCode].getOperatingProfitAddRatio())}"
+        infoTable.push "\n扣非净利润增长率: "
+        infoTable.push "\n应收账款占收入比: #{utils.addTabInTable(@_getReceivableInIncomeRatio(stockCode))}"
+        infoTable.push "\n固定资产占总资产比重:#{utils.addTabInTable(@_balanceObj[stockCode].getFixedAssetsWithTotalAssetsRatio())}"
+        infoTable.push "\n净资产收益率:    #{utils.addTabInTable(@_getROE(stockCode))}"
+        infoTable.push "\n净利润率:       #{utils.addTabInTable(@_profitObj[stockCode].getNetProfitRatio())}"
         infoTable.push "\n总资产周转率:"
         infoTable.push "\n权益乘数:"
         infoTable.push "\n总资产增长率:"
-        infoTable.push "\n应收账款周转率:"
-        infoTable.push "\n存货周转率:#{@_getInventoryTurnoverRatio(stockCode)}"
-        infoTable.push "\n销售商品、提供劳务收到的现金/营业收入:#{@_getIncomeQuality(stockCode)}"
-        infoTable.push "\n经营性现金流净额/ 净利润:#{@_getNetProfitQuality(stockCode)}"
+        infoTable.push "\n应收账款周转率:  #{@_getRecievableTurnRatio(stockCode)}"
+        infoTable.push "\n存货周转率:     #{utils.addTabInTable(@_getInventoryTurnoverRatio(stockCode))}"
+        infoTable.push "\n销售商品、提供劳务收到的现金/营业收入:#{utils.addTabInTable(@_getIncomeQuality(stockCode))}"
+        infoTable.push "\n经营性现金流净额/ 净利润:#{utils.addTabInTable(@_getNetProfitQuality(stockCode))}"
 
         @m_baseInfo_info.string = infoTable
     onLoad300: ->

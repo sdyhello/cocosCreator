@@ -90,7 +90,7 @@ class BalanceSheet extends TableBase
 		averageInventoryTable = []
 		for value , index in inventoryTable
 			break if index >= inventoryTable.length - 1
-			averageInventory = (inventoryTable[0] + inventoryTable[1]) / 2
+			averageInventory = (inventoryTable[index] + inventoryTable[index + 1]) / 2
 			averageInventoryTable.push averageInventory
 		averageInventoryTable
 
