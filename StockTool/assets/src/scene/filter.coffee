@@ -261,7 +261,7 @@ cc.Class {
         return false
 
     _getAdvanceReceiptsPercent: (stockCode)->
-        return @_balanceObj[stockCode].getAdvanceReceiptsPercent()
+        return @_balanceObj[stockCode].getAdvanceReceiptsPercent()[0]
 
     _getROE: (stockCode)->
         netAssetsTable = @_balanceObj[stockCode].getNetAssets()
@@ -317,14 +317,14 @@ cc.Class {
         aveRoe = utils.getAverage(roeTable)
         
         PE  = @_profitObj[stockCode].getPE()
-        return "\n" + utils.addTab(stockCode) + utils.addTab(baseInfo) +
+        return "\n" + utils.addTab(baseInfo) +
             utils.addTab("净:#{profitAddRatio}") + 
             utils.addTab("roe:#{aveRoe}") +
             utils.addTab("PE:#{PE}") + 
             utils.addTab("应:#{@_getReceivableTurnOverDays(stockCode)}") +
             utils.addTab("预:#{@_getAdvanceReceiptsPercent(stockCode)}") +
             utils.addTab("现:#{utils.getAverage(@_getNetProfitQuality(stockCode))}") +
-            utils.addTab("现金周转:#{@_getCashTurnoverDays(stockCode)}")
+            utils.addTab("现转:#{@_getCashTurnoverDays(stockCode)}")
             "时:#{@_balanceObj[stockCode].getExistYears()}"
 
     _getReceivableTurnOverDays: (stockCode) ->
@@ -342,7 +342,7 @@ cc.Class {
         day
 
     _getPayableTurnoverDays: (stockCode) ->
-        averagePayable = @_balanceObj[stockCode].getSingleYearAveragePayable()
+        averagePayable = @_balanceObj[stockCode].getAveragePayable()[0]
         operatingCosts = @_profitObj[stockCode].getOperatingCosts()[0]
         day = (360 / (operatingCosts / averagePayable)).toFixed(2)
         day

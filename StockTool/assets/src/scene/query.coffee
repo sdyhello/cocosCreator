@@ -82,6 +82,7 @@ cc.Class {
         @m_baseInfo_node.active = false
 
     onLookBaseInfo: ->
+        TDGA?.onEvent("lookCoreInfo", {"info": @_profitObj[@_stockCode]?.getBaseInfo()})
         @m_query_node.active = false
         @m_industry_node.active = false
         @m_baseInfo_node.active = true
