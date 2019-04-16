@@ -20,7 +20,10 @@ utils =
     addTabInTable: (table)->
         newTable = []
         for value in table
-            newTable.push value + "    "
+            unless isNaN(value)
+                newTable.push value + "    "
+            else
+                newTable.push "--"
         return newTable
 
     addTab: (value)->

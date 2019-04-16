@@ -127,15 +127,19 @@ cc.Class {
         return @_balanceObj[stockCode].getAdvanceReceiptsPercent()
 
     _getReceivableTurnOverDays: (stockCode)->
-        ratio = @_getRecievableTurnRatio(stockCode)[0]
-        return (360 / ratio).toFixed(2)
+        ratioTable = @_getRecievableTurnRatio(stockCode)
+        daysTable = []
+        for ratio in ratioTable
+            daysTable.push (360 / ratio).toFixed(2)
+        return daysTable
 
     _getRecievableTurnRatio: (stockCode) ->
         receivableValueTable = @_balanceObj[stockCode].getReceivableValue()
         inComeValueTable = @_profitObj[stockCode].getIncomeValue()
         daysTable = []
         for receivable, index in receivableValueTable
-            day = (inComeValueTable[index] / (receivableValueTable[index] + receivableValueTable[index + 1]) / 2).toFixed(2)
+            averageRecievable = (receivableValueTable[index] + receivableValueTable[index + 1]) / 2
+            day = (inComeValueTable[index] / averageRecievable).toFixed(2)
             daysTable.push day
         return daysTable
 
@@ -171,14 +175,14 @@ cc.Class {
         infoTable.push "\n总市值：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalMarketValue() / 10000)}"
         infoTable.push "\n资产负债表Top10: #{@_balanceObj[stockCode].getTop10()}"
         infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
-        infoTable.push "\n有息负债: #{@_balanceObj[stockCode].getInterestDebt()}%"
+        infoTable.push "\n有息负债: #{@_balanceObj[stockCode].getInterestDebt()[0]}%"
         infoTable.push "\n资本开支占净利润比：#{@_getCapitalExpenditureRatio(stockCode)}%"
         infoTable.push "\n赚的钱是从股东那拿的钱的几倍：#{@_balanceObj[stockCode].getNetAssetsStruct()}"
         infoTable.push "\n商誉:#{utils.getValueDillion(@_balanceObj[stockCode].getGoodWill())}, 占总资产比例:#{@_getGoodWillPercent(stockCode)}%"
         infoTable.push "\n预收账款占总资产比例: #{@_getAdvanceReceiptsPercent(stockCode)}%， #{@_getIndustryAverage(stockCode, "预收账款")}"
-        infoTable.push "\n应收账款周转天数: #{@_getReceivableTurnOverDays(stockCode)}, #{@_getIndustryAverage(stockCode, "应收账款")}"
-        infoTable.push "\n存货周转天数:#{@_getInventoryTurnoverDays(stockCode)}天, #{@_getIndustryAverage(stockCode, "存货")}天"
-        infoTable.push "\n应付账款周转天数:#{@_getPayableTurnoverDays(stockCode)} 天, #{@_getIndustryAverage(stockCode, "应付账款")}天"
+        infoTable.push "\n应收账款周转天数: #{@_getReceivableTurnOverDays(stockCode)[0]}, #{@_getIndustryAverage(stockCode, "应收账款")}"
+        infoTable.push "\n存货周转天数:#{@_getInventoryTurnoverDays(stockCode)[0]}天, #{@_getIndustryAverage(stockCode, "存货")}天"
+        infoTable.push "\n应付账款周转天数:#{@_getPayableTurnoverDays(stockCode)[0]} 天, #{@_getIndustryAverage(stockCode, "应付账款")}天"
         infoTable.push "\n现金周转天数：#{@_getCashTurnoverDays(stockCode)} 天, #{@_getIndustryAverage(stockCode, "现金周转")} 天"
         infoTable.push "\n净利润（多）： " + utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())
         infoTable.push "\n毛利率（单）: #{@_profitObj[stockCode].getGrossProfitRatio()[0]}, #{@_getIndustryAverage(stockCode, "毛利率")}%"
@@ -191,7 +195,7 @@ cc.Class {
         infoTable.push "\n营收含金量: #{@_getIncomeQuality(stockCode)}, 平均：#{utils.getAverage(@_getIncomeQuality(stockCode))}"
         infoTable.push "\n现金流量比净利润:   " + @_getNetProfitQuality(stockCode) + "平均:#{utils.getAverage(@_getNetProfitQuality(stockCode))}"
         infoTable.push "\n历年ROE:   " + @_getROE(stockCode) + "平均: #{utils.getAverage(@_getROE(stockCode))}%"
-        infoTable.push "\nROE分解----->净利率: #{@_profitObj[stockCode].getNetProfitRatio()[0]}, 总资产周转率:#{@_getTotalAssetsTurnoverRatio(stockCode)}, 财务杠杆:#{@_balanceObj[stockCode].getFinancialLeverage()}"
+        infoTable.push "\nROE分解----->净利率: #{@_profitObj[stockCode].getNetProfitRatio()[0]}, 总资产周转率:#{@_getTotalAssetsTurnoverRatio(stockCode)[0]}, 财务杠杆:#{@_balanceObj[stockCode].getFinancialLeverage()[0]}"
         infoTable.push "\n" + @_getStaffInfo(stockCode)
         infoTable.push "\n统计时间： #{@_balanceObj[stockCode].getExistYears()}"
         @_getIndustryAverage(stockCode, "平均月薪")
@@ -242,39 +246,42 @@ cc.Class {
         ratioTable
 
     _getInventoryTurnoverDays: (stockCode) ->
-        averageInventory = @_balanceObj[stockCode].getAverageInventoryTable()[0]
-        operatingCosts = @_profitObj[stockCode].getOperatingCosts()[0]
-        ratio = (360 / (operatingCosts / averageInventory)).toFixed(2)
-        ratio
+        inventoryRatioTable = @_getInventoryTurnoverRatio(stockCode)
+        daysTable = []
+        for ratio in inventoryRatioTable
+            daysTable.push (360 / ratio).toFixed(2)
+        return daysTable
 
     _getInventoryTurnoverRatio: (stockCode) ->
         averageInventory = @_balanceObj[stockCode].getAverageInventoryTable()
         operatingCosts = @_profitObj[stockCode].getOperatingCosts()
-        console.log("Arkad :#{JSON.stringify [averageInventory, operatingCosts]}")
         utils.getRatioTable(operatingCosts, averageInventory, 1)
 
     _getPayableTurnoverDays: (stockCode) ->
-        averagePayable = @_balanceObj[stockCode].getSingleYearAveragePayable()
-        operatingCosts = @_profitObj[stockCode].getOperatingCosts()[0]
-        day = (360 / (operatingCosts / averagePayable)).toFixed(2)
-        day
+        console.log("Arkad stockCode:#{stockCode}")
+        averagePayable = @_balanceObj[stockCode].getAveragePayable()
+        operatingCosts = @_profitObj[stockCode].getOperatingCosts()
+
+        payableRatioTable = utils.getRatioTable(operatingCosts, averagePayable, 1)
+        daysTable = []
+        for ratio in payableRatioTable
+            daysTable.push (360 / ratio).toFixed(2)
+        return daysTable
 
     _getCashTurnoverDays: (stockCode)->
-        receivableTurnoverDays = @_getReceivableTurnOverDays(stockCode)
-        inventoryTurnoverDays = @_getInventoryTurnoverDays(stockCode)
-        payableTurnoverDays = @_getPayableTurnoverDays(stockCode)
+        receivableTurnoverDays = @_getReceivableTurnOverDays(stockCode)[0]
+        inventoryTurnoverDays = @_getInventoryTurnoverDays(stockCode)[0]
+        payableTurnoverDays = @_getPayableTurnoverDays(stockCode)[0]
         cashTurnoverDays = parseFloat(receivableTurnoverDays) + parseFloat(inventoryTurnoverDays) - parseFloat(payableTurnoverDays)
         cashTurnoverDays.toFixed(2)
 
     _getTotalAssetsTurnoverRatio: (stockCode) ->
-        averageTotalAssets = @_balanceObj[stockCode].getSingleYearAverageTotalAssets()
+        averageTotalAssets = @_balanceObj[stockCode].getAverageTotalAssets()
         inComeValueTable = @_profitObj[stockCode].getIncomeValue()
-        ratio = (inComeValueTable[0] / averageTotalAssets).toFixed(2)
-        ratio
+        utils.getRatioTable(inComeValueTable, averageTotalAssets, 1)
 
     _getCapitalExpenditureRatio: (stockCode) ->
         capitalExpenditure = @_cashFlowObj[stockCode].getCapitalExpenditure()
-        console.log("cap :#{JSON.stringify capitalExpenditure}")
         netProfit = @_profitObj[stockCode].getNetProfitAllTable()
         captialSummation = utils.getSummation(capitalExpenditure)
         netProfitSummation = utils.getSummation(netProfit)
@@ -292,11 +299,11 @@ cc.Class {
                 sameIndustryStockCode.push stockCode
                 switch type
                     when "存货"
-                        value = @_getInventoryTurnoverDays(stockCode)
+                        value = @_getInventoryTurnoverDays(stockCode)[0]
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
                     when "应收账款"
-                        value = @_getReceivableTurnOverDays(stockCode)
+                        value = @_getReceivableTurnOverDays(stockCode)[0]
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
                     when "预收账款"
@@ -316,11 +323,11 @@ cc.Class {
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
                     when "应付账款"
-                        value = @_getPayableTurnoverDays(stockCode)
+                        value = @_getPayableTurnoverDays(stockCode)[0]
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
                     when "现金周转"
-                        value = parseFloat(@_getReceivableTurnOverDays(stockCode)) + parseFloat(@_getInventoryTurnoverDays(stockCode)) - parseFloat(@_getPayableTurnoverDays(stockCode))
+                        value = parseFloat(@_getReceivableTurnOverDays(stockCode)[0]) + parseFloat(@_getInventoryTurnoverDays(stockCode)[0]) - parseFloat(@_getPayableTurnoverDays(stockCode)[0])
                         value = value.toFixed(2)
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
@@ -421,25 +428,29 @@ cc.Class {
     _getBaseInfo: ->
         infoTable = []
         stockCode = @_stockCode
-        infoTable.push "\n营业收入增长速度:   #{utils.addTabInTable(@_profitObj[stockCode].getIncomeValueAddRatio())}"
-        infoTable.push "\n毛利率:           #{utils.addTabInTable(@_profitObj[stockCode].getGrossProfitRatio())}"
+        infoTable.push "\n营业收入增长:   #{utils.addTabInTable(@_profitObj[stockCode].getIncomeValueAddRatio())}"
+        infoTable.push "\n毛利率:          #{utils.addTabInTable(@_profitObj[stockCode].getGrossProfitRatio())}"
         infoTable.push "\n三项费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getExpenseRatio())}"
         infoTable.push "\n销售费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getSellingFeeRatio())}"
         infoTable.push "\n管理费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getManageFeeRatio())}"
         infoTable.push "\n财务费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getMoneyFeeRatio())}"
-        infoTable.push "\n营业利润增长率:   #{utils.addTabInTable(@_profitObj[stockCode].getOperatingProfitAddRatio())}"
-        infoTable.push "\n扣非净利润增长率: "
+        infoTable.push "\n营业利润增长率:   #{utils.addTabInTable(@_profitObj[stockCode].getOperatingProfitAddRatio())}"#---#
+        # infoTable.push "\n扣非净利润增长率: "
         infoTable.push "\n应收账款占收入比: #{utils.addTabInTable(@_getReceivableInIncomeRatio(stockCode))}"
-        infoTable.push "\n固定资产占总资产比重:#{utils.addTabInTable(@_balanceObj[stockCode].getFixedAssetsWithTotalAssetsRatio())}"
+        infoTable.push "\n有息负债率:       #{utils.addTabInTable(@_balanceObj[stockCode].getInterestDebt())}"
+        infoTable.push "\n固定资产/总资产:  #{utils.addTabInTable(@_balanceObj[stockCode].getFixedAssetsWithTotalAssetsRatio())}"    
         infoTable.push "\n净资产收益率:    #{utils.addTabInTable(@_getROE(stockCode))}"
         infoTable.push "\n净利润率:       #{utils.addTabInTable(@_profitObj[stockCode].getNetProfitRatio())}"
-        infoTable.push "\n总资产周转率:"
-        infoTable.push "\n权益乘数:"
-        infoTable.push "\n总资产增长率:"
-        infoTable.push "\n应收账款周转率:  #{@_getRecievableTurnRatio(stockCode)}"
-        infoTable.push "\n存货周转率:     #{utils.addTabInTable(@_getInventoryTurnoverRatio(stockCode))}"
-        infoTable.push "\n销售商品、提供劳务收到的现金/营业收入:#{utils.addTabInTable(@_getIncomeQuality(stockCode))}"
-        infoTable.push "\n经营性现金流净额/ 净利润:#{utils.addTabInTable(@_getNetProfitQuality(stockCode))}"
+        infoTable.push "\n总资产周转率:    #{utils.addTabInTable(@_getTotalAssetsTurnoverRatio(stockCode))}"
+        infoTable.push "\n权益乘数:       #{utils.addTabInTable(@_balanceObj[stockCode].getFinancialLeverage())}"#---#
+        # infoTable.push "\n总资产增长率:"
+        # infoTable.push "\n应收账款周转率:  #{utils.addTabInTable(@_getRecievableTurnRatio(stockCode))}"
+        infoTable.push "\n应收账款周转天数: #{utils.addTabInTable(@_getReceivableTurnOverDays(stockCode))}"
+        # infoTable.push "\n存货周转率:     #{utils.addTabInTable(@_getInventoryTurnoverRatio(stockCode))}"
+        infoTable.push "\n存货周转天数:     #{utils.addTabInTable(@_getInventoryTurnoverDays(stockCode))}"
+        infoTable.push "\n应付账款周转天数:     #{utils.addTabInTable(@_getPayableTurnoverDays(stockCode))}"
+        infoTable.push "\n销、劳现金/营业收入:#{utils.addTabInTable(@_getIncomeQuality(stockCode))}"
+        infoTable.push "\n经营现金/净利润:  #{utils.addTabInTable(@_getNetProfitQuality(stockCode))}"
 
         @m_baseInfo_info.string = infoTable
     onLoad300: ->

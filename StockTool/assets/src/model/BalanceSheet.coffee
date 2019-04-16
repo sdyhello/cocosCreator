@@ -28,11 +28,14 @@ class BalanceSheet extends TableBase
 		return valueTable[0] - valueTable[1]
 
 	getInterestDebt: ->
-		value1 = @getValue(@_data["短期借款(万元)"])[0]
-		value2 = @getValue(@_data["长期借款(万元)"])[0]
-		value3 = @getValue(@_data["应付债券(万元)"])[0]
-		totalAssets = @getTotalAssets()[0]
-		return ((value1 + value2 + value3) / totalAssets * 100).toFixed(2)
+		value1 = @getValue(@_data["短期借款(万元)"])
+		value2 = @getValue(@_data["长期借款(万元)"])
+		value3 = @getValue(@_data["应付债券(万元)"])
+		totalAssets = @getTotalAssets()
+		debtTable = []
+		for data, index in value1
+			debtTable.push value1[index] + value2[index] + value3[index]
+		utils.getRatioTable(debtTable, totalAssets)
 
 	getTop10: ->
 		totalAssets = @getTotalAssets()
@@ -85,24 +88,25 @@ class BalanceSheet extends TableBase
 		percent = (advanceReceiptsTable[0] / totalAssetsTable[0]) * 100
 		return percent.toFixed(2)
 
+	_getAverageData: (dataTable) ->
+		averageTable = []
+		for value, index in dataTable
+			break if index >= dataTable.length - 1
+			averageData = (dataTable[index] + dataTable[index + 1]) / 2
+			averageTable.push averageData
+		averageTable
+		
 	getAverageInventoryTable: ->
 		inventoryTable = @getValue(@_data["存货(万元)"])
-		averageInventoryTable = []
-		for value , index in inventoryTable
-			break if index >= inventoryTable.length - 1
-			averageInventory = (inventoryTable[index] + inventoryTable[index + 1]) / 2
-			averageInventoryTable.push averageInventory
-		averageInventoryTable
+		@_getAverageData(inventoryTable)
 
-	getSingleYearAveragePayable: ->
+	getAveragePayable: ->
 		payableTable = @getValue(@_data["应付账款(万元)"])
-		averagePayable = (payableTable[0] + payableTable[1]) / 2
-		averagePayable
+		@_getAverageData(payableTable)
 
-	getSingleYearAverageTotalAssets: ->
+	getAverageTotalAssets: ->
 		totalAssetsTable = @getTotalAssets()
-		averageTotalAssets = (totalAssetsTable[0] + totalAssetsTable[1]) / 2
-		averageTotalAssets
+		@_getAverageData(totalAssetsTable)
 
 	getInvestAssets: ->
 		financial = @getValue(@_data["可供出售金融资产(万元)"])[0]
@@ -115,10 +119,9 @@ class BalanceSheet extends TableBase
 		goodWill
 
 	getFinancialLeverage: ->
-		averageTotalAssets = @getSingleYearAverageTotalAssets()
-		netAssets = @getNetAssets()[0]
-		ratio = (averageTotalAssets / netAssets).toFixed(2)
-		ratio
+		averageTotalAssets = @getAverageTotalAssets()
+		netAssets = @getNetAssets()
+		utils.getRatioTable(averageTotalAssets, netAssets, 1)
 
 	getNetAssetsStruct: ->
 		number1 = @getValue(@_data["实收资本(或股本)(万元)"])[0]
