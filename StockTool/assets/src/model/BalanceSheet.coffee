@@ -84,11 +84,7 @@ class BalanceSheet extends TableBase
 	getAdvanceReceiptsPercent: ->
 		advanceReceiptsTable = @getValue(@_data["预收账款(万元)"])
 		totalAssetsTable = @getTotalAssets()
-		percent = []
-		# for advanceReceipt, index in advanceReceiptsTable
-		# 	percent.push (advanceReceipt / totalAssetsTable[index]) * 100
-		percent = (advanceReceiptsTable[0] / totalAssetsTable[0]) * 100
-		return percent.toFixed(2)
+		utils.getRatioTable(advanceReceiptsTable, totalAssetsTable)
 
 	_getAverageData: (dataTable) ->
 		averageTable = []

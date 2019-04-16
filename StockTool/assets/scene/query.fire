@@ -5318,7 +5318,7 @@
         "__id__": 140
       }
     ],
-    "_active": false,
+    "_active": true,
     "_level": 1,
     "_components": [],
     "_prefab": null,
