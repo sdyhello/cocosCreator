@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.35612921724398083,
-      "y": 0.35612921724398083,
+      "x": 0.6927816901408451,
+      "y": 0.6927816901408451,
       "z": 1
     },
     "_quat": {
@@ -3727,8 +3727,8 @@
     "_srcBlendFactor": 1,
     "_dstBlendFactor": 771,
     "_useOriginalSize": false,
-    "_string": "对比结果",
-    "_N$string": "对比结果",
+    "_string": " 同行对比",
+    "_N$string": " 同行对比",
     "_fontSize": 40,
     "_lineHeight": 40,
     "_enableWrapText": false,
@@ -3987,8 +3987,8 @@
     "_srcBlendFactor": 1,
     "_dstBlendFactor": 771,
     "_useOriginalSize": false,
-    "_string": "基础数据",
-    "_N$string": "基础数据",
+    "_string": "核心数据",
+    "_N$string": "核心数据",
     "_fontSize": 40,
     "_lineHeight": 40,
     "_enableWrapText": false,
@@ -5318,7 +5318,7 @@
         "__id__": 140
       }
     ],
-    "_active": true,
+    "_active": false,
     "_level": 1,
     "_components": [],
     "_prefab": null,
@@ -5528,8 +5528,8 @@
     "_srcBlendFactor": 1,
     "_dstBlendFactor": 771,
     "_useOriginalSize": false,
-    "_string": "基础信息",
-    "_N$string": "基础信息",
+    "_string": "\b核心数据",
+    "_N$string": "\b核心数据",
     "_fontSize": 40,
     "_lineHeight": 40,
     "_enableWrapText": true,
