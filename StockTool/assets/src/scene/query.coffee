@@ -435,7 +435,7 @@ cc.Class {
         infoTable.push "\n销售费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getSellingFeeRatio())}"
         infoTable.push "\n管理费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getManageFeeRatio())}"
         infoTable.push "\n财务费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getMoneyFeeRatio())}"
-        infoTable.push "\n营业利润增长率:   #{utils.addTabInTable(@_profitObj[stockCode].getOperatingProfitAddRatio())}"#---#
+        infoTable.push "\n营业利润增长率#:   #{utils.addTabInTable(@_profitObj[stockCode].getOperatingProfitAddRatio())}"
         # infoTable.push "\n扣非净利润增长率: "
         infoTable.push "\n应收账款占收入比: #{utils.addTabInTable(@_getReceivableInIncomeRatio(stockCode))}"
         infoTable.push "\n有息负债率:       #{utils.addTabInTable(@_balanceObj[stockCode].getInterestDebt())}"
@@ -443,7 +443,7 @@ cc.Class {
         infoTable.push "\n净资产收益率:    #{utils.addTabInTable(@_getROE(stockCode))}"
         infoTable.push "\n净利润率:       #{utils.addTabInTable(@_profitObj[stockCode].getNetProfitRatio())}"
         infoTable.push "\n总资产周转率:    #{utils.addTabInTable(@_getTotalAssetsTurnoverRatio(stockCode))}"
-        infoTable.push "\n权益乘数:       #{utils.addTabInTable(@_balanceObj[stockCode].getFinancialLeverage())}"#---#
+        infoTable.push "\n权益乘数#:       #{utils.addTabInTable(@_balanceObj[stockCode].getFinancialLeverage())}"#---#
         # infoTable.push "\n总资产增长率:"
         # infoTable.push "\n应收账款周转率:  #{utils.addTabInTable(@_getRecievableTurnRatio(stockCode))}"
         infoTable.push "\n应收账款周转天数: #{utils.addTabInTable(@_getReceivableTurnOverDays(stockCode))}"

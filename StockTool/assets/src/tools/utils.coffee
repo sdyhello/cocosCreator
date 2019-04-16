@@ -21,7 +21,7 @@ utils =
         newTable = []
         for value in table
             unless isNaN(value)
-                newTable.push value + "    "
+                newTable.push  "   " + "[" + value + "]"
             else
                 newTable.push "--"
         return newTable
