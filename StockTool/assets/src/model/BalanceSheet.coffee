@@ -135,4 +135,8 @@ class BalanceSheet extends TableBase
 		totalAssetsTable = @getTotalAssets()
 		utils.getRatioTable(fixedAssetsTable, totalAssetsTable)
 
+	getCashValuePercent: ->
+		cash = @getCashValue()
+		totalAssets = @getTotalAssets()
+		utils.getRatioTable(cash, totalAssets)
 module.exports = BalanceSheet

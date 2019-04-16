@@ -433,6 +433,8 @@ cc.Class {
         
         # infoTable.push "\n扣非净利润增长率: "
         infoTable.push "\n----------------------资产负债表----------------------------"
+        
+        infoTable.push "\n  货币资金/总资产: #{utils.addTabInTable(@_balanceObj[stockCode].getCashValuePercent())}"
         infoTable.push "\n应收账款占收入比: #{utils.addTabInTable(@_getReceivableInIncomeRatio(stockCode))}"
         infoTable.push "\n          有息负债率: #{utils.addTabInTable(@_balanceObj[stockCode].getInterestDebt())}"
         infoTable.push "\n固定资产/总资产:  #{utils.addTabInTable(@_balanceObj[stockCode].getFixedAssetsWithTotalAssetsRatio())}"    

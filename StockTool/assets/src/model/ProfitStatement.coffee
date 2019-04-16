@@ -69,9 +69,10 @@ class ProfitStatement extends TableBase
 		e = @getValue(@_data["管理费用(万元)"])
 		f = @getValue(@_data["财务费用(万元)"])
 		g = @getRDFee()
+		h = @getValue(@_data["资产减值损失(万元)"])
 		coreProfitTable = []
 		for value, index in a
-			operatingProfit = a[index] - b[index] - c[index] - d[index] - e[index] - f[index] - g[index]
+			operatingProfit = a[index] - b[index] - c[index] - d[index] - e[index] - f[index] - g[index] - h[index]
 			coreProfitTable.push operatingProfit
 		
 		return coreProfitTable
