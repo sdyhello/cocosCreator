@@ -124,5 +124,16 @@ class TableBase
 					@_stockInfo.push value
 				break
 		return
-		
+
+	getTimeTitle: ->
+		indexTable = @_getYearValueIndex()
+		timeTable = []
+		for index in indexTable
+			timeTable.push @_data["报告日期"][index]
+		timeTable = timeTable.slice(0, @_getValueLength(timeTable.length))
+		yearTable = []
+		for time in timeTable
+			yearTable.push time.slice(0, 4)
+		return yearTable
+
 module.exports = TableBase
