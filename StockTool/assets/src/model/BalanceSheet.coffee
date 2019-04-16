@@ -23,7 +23,9 @@ class BalanceSheet extends TableBase
 
 	getInventory: -> @getValue(@_data["存货(万元)"])
 
-	getStaffPayment: -> 
+	getStockHolderEquity: -> @getValue(@_data["所有者权益(或股东权益)合计(万元)"])
+
+	getStaffPayment: ->
 		valueTable = @getValue(@_data["应付职工薪酬(万元)"])
 		return valueTable[0] - valueTable[1]
 
@@ -119,9 +121,9 @@ class BalanceSheet extends TableBase
 		goodWill
 
 	getFinancialLeverage: ->
-		averageTotalAssets = @getAverageTotalAssets()
-		netAssets = @getNetAssets()
-		utils.getRatioTable(averageTotalAssets, netAssets, 1)
+		totalAssetsTable = @getTotalAssets()
+		netAssets = @getStockHolderEquity()
+		utils.getRatioTable(totalAssetsTable, netAssets, 1)
 
 	getNetAssetsStruct: ->
 		number1 = @getValue(@_data["实收资本(或股本)(万元)"])[0]
