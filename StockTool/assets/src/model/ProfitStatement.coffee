@@ -18,6 +18,8 @@ class ProfitStatement extends TableBase
 
 	getIncomeProfit: -> @getValue(@_data["营业利润(万元)"])
 
+	getRDFee: -> @getValue(@_data["研发费用(万元)"])
+
 	getNetProfitAddRatio: ->
 		netProfitTable = @getNetProfitTable()
 		addTimes = netProfitTable[0] / netProfitTable[netProfitTable.length - 1]
@@ -66,24 +68,23 @@ class ProfitStatement extends TableBase
 		d = @getValue(@_data["销售费用(万元)"])
 		e = @getValue(@_data["管理费用(万元)"])
 		f = @getValue(@_data["财务费用(万元)"])
+		g = @getRDFee()
 		coreProfitTable = []
 		for value, index in a
-			operatingProfit = a[index] - b[index] - c[index] - d[index] - e[index] - f[index]
+			operatingProfit = a[index] - b[index] - c[index] - d[index] - e[index] - f[index] - g[index]
 			coreProfitTable.push operatingProfit
 		
 		return coreProfitTable
 
 	getOperatingProfitRatio: ->
-		coreProfit = @getCoreProfit()[0]
-		a = @getValue(@_data["营业收入(万元)"])[0]
-		operatingProfitRatio = ((coreProfit / a ) * 100).toFixed(2)
-		operatingProfitRatio
+		coreProfit = @getCoreProfit()
+		a = @getValue(@_data["营业收入(万元)"])
+		utils.getRatioTable(coreProfit, a)
 
 	getCoreProfitRatio: ->
-		totalProfit = @getProfitTotal()[0]
-		coreProfit = @getCoreProfit()[0]
-		coreProfitRatio = (coreProfit / totalProfit * 100 ).toFixed(2)
-		coreProfitRatio
+		totalProfit = @getProfitTotal()
+		coreProfit = @getCoreProfit()
+		utils.getRatioTable(coreProfit, totalProfit)
 
 	getExpenseRatio: ->
 		sellingFeeTable = @getValue(@_data["销售费用(万元)"])

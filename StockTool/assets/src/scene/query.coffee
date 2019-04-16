@@ -188,7 +188,7 @@ cc.Class {
         infoTable.push "\n净利润（多）： " + utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())
         infoTable.push "\n毛利率（单）: #{@_profitObj[stockCode].getGrossProfitRatio()[0]}, #{@_getIndustryAverage(stockCode, "毛利率")}%"
         infoTable.push "\n净利率（单）: #{@_profitObj[stockCode].getNetProfitRatio()[0]}, #{@_getIndustryAverage(stockCode, "净利率")}%"
-        infoTable.push "\n营业利润率 : #{@_profitObj[stockCode].getOperatingProfitRatio()} % ， #{@_getIndustryAverage(stockCode, "营业利润率")}" 
+        infoTable.push "\n核心利润率 : #{@_profitObj[stockCode].getOperatingProfitRatio()[0]} % ， #{@_getIndustryAverage(stockCode, "核心利润率")}" 
         infoTable.push "\n核心利润占利润总额比例:#{@_profitObj[stockCode].getCoreProfitRatio()} %"
         infoTable.push "\n 三项费用率：#{@_profitObj[stockCode].getExpenseRatio()[0]} %, #{@_getIndustryAverage(stockCode, "费用率")}"
         infoTable.push "\n年净利润增长率:   " + @_profitObj[stockCode].getNetProfitYoy()
@@ -259,7 +259,6 @@ cc.Class {
         utils.getRatioTable(operatingCosts, averageInventory, 1)
 
     _getPayableTurnoverDays: (stockCode) ->
-        console.log("Arkad stockCode:#{stockCode}")
         averagePayable = @_balanceObj[stockCode].getAveragePayable()
         operatingCosts = @_profitObj[stockCode].getOperatingCosts()
 
@@ -332,8 +331,8 @@ cc.Class {
                         value = value.toFixed(2)
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
-                    when "营业利润率"
-                        value = @_profitObj[stockCode].getOperatingProfitRatio()
+                    when "核心利润率"
+                        value = @_profitObj[stockCode].getOperatingProfitRatio()[0]
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
                     when "费用率"
@@ -449,6 +448,9 @@ cc.Class {
         infoTable.push "\n营业收入增长:   #{utils.addTabInTable(@_profitObj[stockCode].getIncomeValueAddRatio())}"
         infoTable.push "\n       净利润：     #{utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())}"
         infoTable.push "\n净利润增长率:    #{utils.addTabInTable(@_profitObj[stockCode].getNetProfitYoy())}"
+        # infoTable.push "\n  核心利润:    #{utils.getValueDillion(@_profitObj[stockCode].getCoreProfit())}"
+        infoTable.push "\n  核心利润率:    #{utils.addTabInTable(@_profitObj[stockCode].getCoreProfitRatio())}"
+        
         infoTable.push "\n      毛利率 :      #{utils.addTabInTable(@_profitObj[stockCode].getGrossProfitRatio())}"
         infoTable.push "\n      净利率 :      #{utils.addTabInTable(@_profitObj[stockCode].getNetProfitRatio())}"
         infoTable.push "\n三项费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getExpenseRatio())}"
