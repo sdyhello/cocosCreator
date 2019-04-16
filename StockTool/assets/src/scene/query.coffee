@@ -428,9 +428,10 @@ cc.Class {
     _getBaseInfo: ->
         infoTable = []
         stockCode = @_stockCode
-        infoTable.push "时间:           #{utils.addTabInTable(@_profitObj[stockCode].getTimeTitle())}"
+        infoTable.push "基本信息：          #{@_profitObj[stockCode].getBaseInfo()}"
+        infoTable.push "\n时间:           #{utils.addTabInTable(@_profitObj[stockCode].getTimeTitle())}"
         infoTable.push "\n营业收入增长:   #{utils.addTabInTable(@_profitObj[stockCode].getIncomeValueAddRatio())}"
-        infoTable.push "\n毛利率:          #{utils.addTabInTable(@_profitObj[stockCode].getGrossProfitRatio())}"
+        infoTable.push "\n毛利率   :       #{utils.addTabInTable(@_profitObj[stockCode].getGrossProfitRatio())}"
         infoTable.push "\n三项费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getExpenseRatio())}"
         infoTable.push "\n销售费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getSellingFeeRatio())}"
         infoTable.push "\n管理费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getManageFeeRatio())}"
