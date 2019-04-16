@@ -36,7 +36,7 @@ class ProfitStatement extends TableBase
 		addRatio = []
 		for profit, index in profitTable
 			break if index >= profitTable.length - 1
-			addRatio.push ((profit - profitTable[index + 1]) / profitTable[index + 1] * 100).toFixed(2) + "%"
+			addRatio.push ((profit - profitTable[index + 1]) / profitTable[index + 1] * 100).toFixed(2)
 		addRatio
 
 	getNetProfitRatio: ->
