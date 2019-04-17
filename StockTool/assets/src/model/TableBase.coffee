@@ -66,7 +66,7 @@ class TableBase
 
 	getStockName: -> @_data["资料"][0]
 
-	getBaseInfo: -> @_stockCode + "------" + @_data["资料"][0] + "------" + @_data["资料"][2]
+	getBaseInfo: -> @_stockCode + "------" + @_data["资料"][0] + "------" + @_data["资料"][2] + "------财报时间" + @getTimeTitle()[0]
 
 	getIndustry: -> @_data["资料"][2]
 
@@ -88,6 +88,9 @@ class TableBase
 		for timeStr, index in @_data["报告日期"]
 			if timeStr.indexOf("12-31") isnt -1
 				indexTable.push(index)
+
+		if @_data["报告日期"][0].indexOf("12-31") is -1
+			indexTable.unshift 0
 		return indexTable
 
 	_getValueLength: (valueLength)->
@@ -108,6 +111,7 @@ class TableBase
 		return unless data?
 		yearIndexTable = @_getYearValueIndex()
 		valueTable = []
+
 		for index in yearIndexTable
 			valueTable.push data[index]
 
@@ -133,7 +137,7 @@ class TableBase
 		timeTable = timeTable.slice(0, @_getValueLength(timeTable.length))
 		yearTable = []
 		for time in timeTable
-			yearTable.push time.slice(0, 4)
+			yearTable.push "[#{time.slice(0, 7)}]"
 		return yearTable
 
 module.exports = TableBase

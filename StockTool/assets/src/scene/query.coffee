@@ -429,7 +429,7 @@ cc.Class {
         infoTable = []
         stockCode = @_stockCode
         infoTable.push "基本信息：          #{@_profitObj[stockCode].getBaseInfo()}"
-        infoTable.push "\n时间:           #{utils.addTabInTable(@_profitObj[stockCode].getTimeTitle())}"
+        infoTable.push "\n时间:           #{@_profitObj[stockCode].getTimeTitle()}"
         
         # infoTable.push "\n扣非净利润增长率: "
         infoTable.push "\n----------------------资产负债表----------------------------"
