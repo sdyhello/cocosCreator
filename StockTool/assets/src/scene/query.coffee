@@ -241,10 +241,7 @@ cc.Class {
     _getIncomeQuality: (stockCode) ->
         incomeValueTable = @_profitObj[stockCode].getIncomeValue()
         sellGoodsGetMoneyTable = @_cashFlowObj[stockCode].getSellGoodsMoney()
-        ratioTable = []
-        for incomeValue, index in incomeValueTable
-            ratioTable.push (sellGoodsGetMoneyTable[index] / incomeValue * 100).toFixed(2)
-        ratioTable
+        utils.getRatioTable(sellGoodsGetMoneyTable, incomeValueTable)
 
     _getInventoryTurnoverDays: (stockCode) ->
         inventoryRatioTable = @_getInventoryTurnoverRatio(stockCode)
@@ -258,17 +255,19 @@ cc.Class {
         operatingCosts = @_profitObj[stockCode].getOperatingCosts()
         utils.getRatioTable(operatingCosts, averageInventory, 1)
 
-    _getPayableTurnoverDays: (stockCode) ->
+    _getPayableTurnoverRatio: (stockCode) ->
         averagePayable = @_balanceObj[stockCode].getAveragePayable()
         operatingCosts = @_profitObj[stockCode].getOperatingCosts()
+        utils.getRatioTable(operatingCosts, averagePayable, 1)
 
-        payableRatioTable = utils.getRatioTable(operatingCosts, averagePayable, 1)
+    _getPayableTurnoverDays: (stockCode) ->
+        payableRatioTable = @_getPayableTurnoverRatio(stockCode)
         daysTable = []
         for ratio in payableRatioTable
             daysTable.push (360 / ratio).toFixed(2)
         return daysTable
 
-    _getCashTurnoverDays: (stockCode)->
+    _getCashTurnoverDays: (stockCode) ->
         receivableTurnoverDays = @_getReceivableTurnOverDays(stockCode)[0]
         inventoryTurnoverDays = @_getInventoryTurnoverDays(stockCode)[0]
         payableTurnoverDays = @_getPayableTurnoverDays(stockCode)[0]
@@ -439,10 +438,12 @@ cc.Class {
         infoTable.push "\n          有息负债率: #{utils.addTabInTable(@_balanceObj[stockCode].getInterestDebt())}"
         infoTable.push "\n固定资产/总资产:  #{utils.addTabInTable(@_balanceObj[stockCode].getFixedAssetsWithTotalAssetsRatio())}"    
         infoTable.push "\n预收账款/总资产:  #{utils.addTabInTable(@_balanceObj[stockCode].getAdvanceReceiptsPercent())}"
-        infoTable.push "\n应收账款周转天数: #{utils.addTabInTable(@_getReceivableTurnOverDays(stockCode))}"
-        # infoTable.push "\n存货周转率:     #{utils.addTabInTable(@_getInventoryTurnoverRatio(stockCode))}"
+        infoTable.push "\n  应收款周转率:  #{utils.addTabInTable(@_getRecievableTurnRatio(stockCode))}"
+        infoTable.push "\n应收款周转天数: #{utils.addTabInTable(@_getReceivableTurnOverDays(stockCode))}"
+        infoTable.push "\n    存货周转率:     #{utils.addTabInTable(@_getInventoryTurnoverRatio(stockCode))}"
         infoTable.push "\n  存货周转天数:     #{utils.addTabInTable(@_getInventoryTurnoverDays(stockCode))}"
-        infoTable.push "\n应付账款周转天数:  #{utils.addTabInTable(@_getPayableTurnoverDays(stockCode))}"
+        infoTable.push "\n   应付款周转率:   #{utils.addTabInTable(@_getPayableTurnoverRatio(stockCode))}"
+        infoTable.push "\n应付款周转天数:    #{utils.addTabInTable(@_getPayableTurnoverDays(stockCode))}"
 
         infoTable.push "\n----------------------利润表表----------------------------"
         
@@ -462,8 +463,10 @@ cc.Class {
         # infoTable.push "\n营业利润增长率:   #{utils.addTabInTable(@_profitObj[stockCode].getOperatingProfitAddRatio())}"
 
         infoTable.push "\n----------------------现金流量表----------------------------"
+        infoTable.push "\n  经营活动现金净额: #{utils.getValueDillion(@_cashFlowObj[stockCode].getWorkCashFlow())}"
+        infoTable.push "\n购建资产支付的现金: #{utils.getValueDillion(@_cashFlowObj[stockCode].getCapitalExpenditure())}"
         infoTable.push "\n销、劳现金/营业收入:#{utils.addTabInTable(@_getIncomeQuality(stockCode))}"
-        infoTable.push "\n经营现金/净利润:  #{utils.addTabInTable(@_getNetProfitQuality(stockCode))}"
+        infoTable.push "\n    经营现金/净利润:  #{utils.addTabInTable(@_getNetProfitQuality(stockCode))}"
 
         infoTable.push "\n----------------------净资产收益率----------------------------"
         infoTable.push "\n 净资产收益率: #{utils.addTabInTable(@_getROE(stockCode))}"
@@ -471,9 +474,6 @@ cc.Class {
         infoTable.push "\n 总资产周转率: #{utils.addTabInTable(@_getTotalAssetsTurnoverRatio(stockCode))}"
         infoTable.push "\n      权益乘数: #{utils.addTabInTable(@_balanceObj[stockCode].getFinancialLeverage())}"#---#
         # infoTable.push "\n总资产增长率:"
-        # infoTable.push "\n应收账款周转率:  #{utils.addTabInTable(@_getRecievableTurnRatio(stockCode))}"
-        
-        
 
         @m_baseInfo_info.string = infoTable
     onLoad300: ->
