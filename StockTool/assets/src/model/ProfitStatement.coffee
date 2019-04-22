@@ -35,11 +35,7 @@ class ProfitStatement extends TableBase
 
 	getNetProfitYoy: ->
 		profitTable = @getNetProfitTable()
-		addRatio = []
-		for profit, index in profitTable
-			break if index >= profitTable.length - 1
-			addRatio.push ((profit - profitTable[index + 1]) / profitTable[index + 1] * 100).toFixed(2)
-		addRatio
+		utils.getAddRatioTable(profitTable)
 
 	getNetProfitRatio: ->
 		netProfit = @getNetProfitAllTable()
@@ -87,6 +83,10 @@ class ProfitStatement extends TableBase
 		coreProfit = @getCoreProfit()
 		utils.getRatioTable(coreProfit, totalProfit)
 
+	getCoreProfitAddRatio: ->
+		coreProfit = @getCoreProfit()
+		utils.getAddRatioTable(coreProfit)
+
 	getExpenseRatio: ->
 		sellingFeeTable = @getValue(@_data["销售费用(万元)"])
 		manageFeeTable = @getValue(@_data["管理费用(万元)"])
@@ -99,15 +99,6 @@ class ProfitStatement extends TableBase
 			expenseRatio = (totalFee / incomeValue * 100).toFixed(2)
 			expenseRatioTable.push expenseRatio
 		expenseRatioTable
-
-	getOperatingProfitAddRatio: ->
-		coreProfitTable = @getIncomeProfit()
-		ratioTable = []
-		for value, index in coreProfitTable
-			break if index >= coreProfitTable.length - 1
-			ratio = ((value - coreProfitTable[index + 1]) / coreProfitTable[index + 1] * 100).toFixed(2)
-			ratioTable.push ratio
-		return ratioTable
 
 	getSellingFeeRatio: ->
 		sellingFeeTable = @getValue(@_data["销售费用(万元)"])
@@ -126,11 +117,6 @@ class ProfitStatement extends TableBase
 
 	getIncomeValueAddRatio: ->
 		incomeValueTable = @getIncomeValue()
-		ratioTable = []
-		for value, index in incomeValueTable
-			break if index >= incomeValueTable.length - 1
-			ratio = ((value - incomeValueTable[index + 1]) / incomeValueTable[index + 1] * 100).toFixed(2)
-			ratioTable.push ratio
-		return ratioTable
+		utils.getAddRatioTable(incomeValueTable)
 
 module.exports = ProfitStatement

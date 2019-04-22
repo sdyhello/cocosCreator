@@ -445,13 +445,14 @@ cc.Class {
         infoTable.push "\n   应付款周转率:   #{utils.addTabInTable(@_getPayableTurnoverRatio(stockCode))}"
         infoTable.push "\n应付款周转天数:    #{utils.addTabInTable(@_getPayableTurnoverDays(stockCode))}"
 
-        infoTable.push "\n----------------------利润表表----------------------------"
+        infoTable.push "\n----------------------利润表----------------------------"
         
         infoTable.push "\n     营业收入:     #{utils.getValueDillion(@_profitObj[stockCode].getIncomeValue())}"
         infoTable.push "\n营业收入增长:   #{utils.addTabInTable(@_profitObj[stockCode].getIncomeValueAddRatio())}"
         infoTable.push "\n       净利润：     #{utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())}"
         infoTable.push "\n净利润增长率:    #{utils.addTabInTable(@_profitObj[stockCode].getNetProfitYoy())}"
-        # infoTable.push "\n  核心利润:    #{utils.getValueDillion(@_profitObj[stockCode].getCoreProfit())}"
+        infoTable.push "\n        核心利润:    #{utils.getValueDillion(@_profitObj[stockCode].getCoreProfit())}"
+        infoTable.push "\n核心润增长率:   #{utils.addTabInTable(@_profitObj[stockCode].getCoreProfitAddRatio())}"
         infoTable.push "\n  核心利润率:    #{utils.addTabInTable(@_profitObj[stockCode].getCoreProfitRatio())}"
         
         infoTable.push "\n      毛利率 :      #{utils.addTabInTable(@_profitObj[stockCode].getGrossProfitRatio())}"
@@ -460,7 +461,6 @@ cc.Class {
         infoTable.push "\n销售费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getSellingFeeRatio())}"
         infoTable.push "\n管理费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getManageFeeRatio())}"
         infoTable.push "\n财务费用率:       #{utils.addTabInTable(@_profitObj[stockCode].getMoneyFeeRatio())}"
-        # infoTable.push "\n营业利润增长率:   #{utils.addTabInTable(@_profitObj[stockCode].getOperatingProfitAddRatio())}"
 
         infoTable.push "\n----------------------现金流量表----------------------------"
         infoTable.push "\n  经营活动现金净额: #{utils.getValueDillion(@_cashFlowObj[stockCode].getWorkCashFlow())}"

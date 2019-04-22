@@ -7,6 +7,13 @@ utils =
             ratioTable.push ratio
         ratioTable
 
+    getAddRatioTable: (dataTable)->
+        addRatio = []
+        for data, index in dataTable
+            break if index >= dataTable.length - 1
+            addRatio.push ((data - dataTable[index + 1]) / dataTable[index + 1] * 100).toFixed(2)
+        addRatio
+
     getCompoundRate: (addRate, time)->
         return Math.exp(1 / time * Math.log(addRate))
 
