@@ -165,6 +165,8 @@ class BalanceSheet extends TableBase
 				needLength--
 
 			top10ChangeInfo.push key + ":" + utils.addTabInTable(utils.getRatioTable(dataValue, totalAssets))
+
+		top10ChangeInfo.push "总资产增长率一:#{utils.addTabInTable(utils.getAddRatioTable(totalAssets))}"
 		return top10ChangeInfo
 
 module.exports = BalanceSheet
