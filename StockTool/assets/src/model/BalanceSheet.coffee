@@ -15,7 +15,7 @@ class BalanceSheet extends TableBase
 
 	getNetAssets: -> @getValue(@_data["归属于母公司股东权益合计(万元)"])
 
-	_getNoNeedCalcItems: -> ["资料", "报告日期"]
+	_getNoNeedCalcItems: -> ["资料", "报告日期", "应收出口退税(万元)"]
 
 	getReceivableValue: -> @getValue(@_data["应收账款(万元)"])
 
