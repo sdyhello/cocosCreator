@@ -431,7 +431,10 @@ cc.Class {
         infoTable.push "\n时间:           #{@_profitObj[stockCode].getTimeTitle()}"
         
         # infoTable.push "\n扣非净利润增长率: "
-        infoTable.push "\n----------------------资产负债表----------------------------"
+        infoTable.push "\n----------------------  资产负债表Top 10 ----------------------------"
+        infoTable.push "\n#{JSON.stringify(@_balanceObj[stockCode].getTop10AllYearPercent(), null, 4) }"
+
+        infoTable.push "\n----------------------营运能力----------------------------"
         
         infoTable.push "\n  货币资金/总资产: #{utils.addTabInTable(@_balanceObj[stockCode].getCashValuePercent())}"
         infoTable.push "\n应收账款占收入比: #{utils.addTabInTable(@_getReceivableInIncomeRatio(stockCode))}"
@@ -473,8 +476,7 @@ cc.Class {
         infoTable.push "\n      净利润率: #{utils.addTabInTable(@_profitObj[stockCode].getNetProfitRatio())}"
         infoTable.push "\n 总资产周转率: #{utils.addTabInTable(@_getTotalAssetsTurnoverRatio(stockCode))}"
         infoTable.push "\n      权益乘数: #{utils.addTabInTable(@_balanceObj[stockCode].getFinancialLeverage())}"#---#
-        infoTable.push "\n----------------------  资产负债表Top 10 ----------------------------"
-        infoTable.push "\n#{JSON.stringify(@_balanceObj[stockCode].getTop10AllYearPercent(), null, 4) }"
+        
         # infoTable.push "\n总资产增长率:"
 
         @m_baseInfo_info.string = infoTable
