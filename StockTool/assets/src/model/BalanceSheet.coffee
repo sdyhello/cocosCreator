@@ -45,6 +45,7 @@ class BalanceSheet extends TableBase
 		for key , value of @_data
 			continue if value[0] is 0
 			continue if key in @_getNoNeedCalcItems()
+			break if key is "资产总计(万元)"
 			percent = @getValue(value)[0] / totalAssets[0] * 100
 			assetsPercentTable[key] = percent.toFixed(2)
 		sortedObjKeys = Object.keys(assetsPercentTable).sort(
@@ -156,6 +157,9 @@ class BalanceSheet extends TableBase
 		top10ChangeInfo = []
 		maxLength = 7
 		totalPercentTable = []
+
+		isAddLine = false
+
 		for key in top10Key
 			dataValue = @getValue(@_data[key])
 			endPos = key.indexOf("(")
@@ -169,6 +173,12 @@ class BalanceSheet extends TableBase
 				totalPercentTable[ratioIndex] ?= 0
 				totalPercentTable[ratioIndex] += parseFloat(ratio)
 				totalPercentTable[ratioIndex] = Math.floor(totalPercentTable[ratioIndex] * 100) / 100
+
+			if ratioTable[0] < 5 and isAddLine is false
+				top10ChangeInfo.push "-------------------------------------------------------------------------"
+				top10ChangeInfo.push "一一总计一一一:#{utils.addTabInTable(totalPercentTable)}"
+				top10ChangeInfo.push "-------------------------------------------------------------------------"
+				isAddLine = true
 			top10ChangeInfo.push key + ":" + utils.addTabInTable(ratioTable)
 		top10ChangeInfo.push "总计一一一一一:#{utils.addTabInTable(totalPercentTable)}"
 		top10ChangeInfo.push "总资产增长率一:#{utils.addTabInTable(utils.getAddRatioTable(totalAssets))}"
