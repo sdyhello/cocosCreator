@@ -39,7 +39,7 @@ class BalanceSheet extends TableBase
 			debtTable.push value1[index] + value2[index] + value3[index]
 		utils.getRatioTable(debtTable, totalAssets)
 
-	getTop10: ->
+	_getTop10Key: ->
 		totalAssets = @getTotalAssets()
 		assetsPercentTable = {}
 		for key , value of @_data
@@ -48,7 +48,7 @@ class BalanceSheet extends TableBase
 			percent = @getValue(value)[0] / totalAssets[0] * 100
 			assetsPercentTable[key] = percent.toFixed(2)
 		sortedObjKeys = Object.keys(assetsPercentTable).sort(
-			(a, b)->
+			(a, b) ->
 				return assetsPercentTable[b] - assetsPercentTable[a]
 		)
 		useAbleTable = []
@@ -58,11 +58,21 @@ class BalanceSheet extends TableBase
 			continue if key in disAbleTable
 			useAbleTable.push key
 		top10Key = useAbleTable.slice(0, 10)
+		return top10Key
+
+	getTop10: ->
+		totalAssets = @getTotalAssets()
+		assetsPercentTable = {}
+		for key , value of @_data
+			continue if value[0] is 0
+			continue if key in @_getNoNeedCalcItems()
+			percent = @getValue(value)[0] / totalAssets[0] * 100
+			assetsPercentTable[key] = percent.toFixed(2)
+		top10Key = @_getTop10Key()
 		top10Info = []
 		for key in top10Key
 			top10Info.push key.slice(0, key.indexOf("(")) + ":" + assetsPercentTable[key] + '%'
 		top10Info
-
 
 	getCurrentRatio: ->
 		currentAssetsTable = @getValue(@_data["流动资产合计(万元)"])
@@ -139,4 +149,22 @@ class BalanceSheet extends TableBase
 		cash = @getCashValue()
 		totalAssets = @getTotalAssets()
 		utils.getRatioTable(cash, totalAssets)
+
+	getTop10AllYearPercent: ->
+		top10Key = @_getTop10Key()
+		totalAssets = @getTotalAssets()
+		top10ChangeInfo = []
+		maxLength = 7
+		for key in top10Key
+			dataValue = @getValue(@_data[key])
+			endPos = key.indexOf("(")
+			key = key.slice(0, endPos)
+			needLength = maxLength - key.length
+			while needLength > 0
+				key += "一"
+				needLength--
+
+			top10ChangeInfo.push key + ":" + utils.addTabInTable(utils.getRatioTable(dataValue, totalAssets))
+		return top10ChangeInfo
+
 module.exports = BalanceSheet

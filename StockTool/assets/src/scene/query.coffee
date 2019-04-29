@@ -473,6 +473,8 @@ cc.Class {
         infoTable.push "\n      净利润率: #{utils.addTabInTable(@_profitObj[stockCode].getNetProfitRatio())}"
         infoTable.push "\n 总资产周转率: #{utils.addTabInTable(@_getTotalAssetsTurnoverRatio(stockCode))}"
         infoTable.push "\n      权益乘数: #{utils.addTabInTable(@_balanceObj[stockCode].getFinancialLeverage())}"#---#
+        infoTable.push "\n----------------------  资产负债表Top 10 ----------------------------"
+        infoTable.push "\n#{JSON.stringify(@_balanceObj[stockCode].getTop10AllYearPercent(), null, 4) }"
         # infoTable.push "\n总资产增长率:"
 
         @m_baseInfo_info.string = infoTable
