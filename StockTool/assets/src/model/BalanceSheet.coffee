@@ -155,6 +155,7 @@ class BalanceSheet extends TableBase
 		totalAssets = @getTotalAssets()
 		top10ChangeInfo = []
 		maxLength = 7
+		totalPercentTable = []
 		for key in top10Key
 			dataValue = @getValue(@_data[key])
 			endPos = key.indexOf("(")
@@ -163,9 +164,13 @@ class BalanceSheet extends TableBase
 			while needLength > 0
 				key += "一"
 				needLength--
-
-			top10ChangeInfo.push key + ":" + utils.addTabInTable(utils.getRatioTable(dataValue, totalAssets))
-
+			ratioTable = utils.getRatioTable(dataValue, totalAssets)
+			for ratio, ratioIndex in ratioTable
+				totalPercentTable[ratioIndex] ?= 0
+				totalPercentTable[ratioIndex] += parseFloat(ratio)
+				totalPercentTable[ratioIndex] = Math.floor(totalPercentTable[ratioIndex] * 100) / 100
+			top10ChangeInfo.push key + ":" + utils.addTabInTable(ratioTable)
+		top10ChangeInfo.push "总计一一一一一:#{utils.addTabInTable(totalPercentTable)}"
 		top10ChangeInfo.push "总资产增长率一:#{utils.addTabInTable(utils.getAddRatioTable(totalAssets))}"
 		return top10ChangeInfo
 
