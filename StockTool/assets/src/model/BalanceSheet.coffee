@@ -158,6 +158,8 @@ class BalanceSheet extends TableBase
 		maxLength = 7
 		totalPercentTable = []
 
+		valueDisplayTable = []
+
 		isAddLine = false
 
 		for key in top10Key
@@ -180,8 +182,10 @@ class BalanceSheet extends TableBase
 				top10ChangeInfo.push "-------------------------------------------------------------------------"
 				isAddLine = true
 			top10ChangeInfo.push key + ":" + utils.addTabInTable(ratioTable)
+			valueDisplayTable.push key + ":" + utils.getValueDillion(dataValue)
 		top10ChangeInfo.push "总计一一一一一:#{utils.addTabInTable(totalPercentTable)}"
 		top10ChangeInfo.push "总资产增长率一:#{utils.addTabInTable(utils.getAddRatioTable(totalAssets))}"
+		top10ChangeInfo.push valueDisplayTable
 		return top10ChangeInfo
 
 module.exports = BalanceSheet
