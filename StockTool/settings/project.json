@@ -1,11 +1,4 @@
 {
-  "cocos-analytics": {
-    "appID": "621582014",
-    "appSecret": "a67d88e3dd0e98a725fe4fe0f69baec6",
-    "channel": "first",
-    "enable": true,
-    "version": "0.0.1"
-  },
   "collision-matrix": [
     [
       true
@@ -13,7 +6,11 @@
   ],
   "design-resolution-height": 640,
   "design-resolution-width": 1136,
-  "excluded-modules": [],
+  "excluded-modules": [
+    "Geom Utils",
+    "3D",
+    "3D Primitive"
+  ],
   "fit-height": true,
   "fit-width": false,
   "group-list": [
@@ -26,5 +23,17 @@
   },
   "start-scene": "def153df-25e4-4816-a971-e702d0043cc8",
   "use-customize-simulator": false,
-  "use-project-simulator-setting": false
+  "use-project-simulator-setting": false,
+  "last-module-event-record-time": 0,
+  "assets-sort-type": "name",
+  "facebook": {
+    "enable": false,
+    "appID": "",
+    "live": {
+      "enable": false
+    },
+    "audience": {
+      "enable": false
+    }
+  }
 }

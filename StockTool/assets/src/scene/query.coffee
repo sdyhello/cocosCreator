@@ -171,6 +171,7 @@ cc.Class {
             @_loadFileToObj(stockCode)
             return "\n\n\n\n\n\n\t\t\t\t\t加载了------#{stockCode}------所需文件，请重新点击----“获取信息”-----来查看信息！"
         infoTable.push "基本信息:   " + @_profitObj[stockCode].getBaseInfo()
+        infoTable.push "折现估值：#{@_getArkadValuePercent(stockCode)}"
         infoTable.push "\nPE:   " + @_profitObj[stockCode].getPE() + "\t对应股价:#{@_profitObj[stockCode].getSharePrice()}"
         infoTable.push "\n总资产：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalAssets()[0])}"
         infoTable.push "\n总市值：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalMarketValue() / 10000)}"
@@ -424,6 +425,14 @@ cc.Class {
         global.canLoad = true
         @_loadTable(dir)
 
+    _getArkadValuePercent: (stockCode) ->
+        netProfitTable = @_profitObj[stockCode].getNetProfitTable(true, true)
+        netProfit = parseInt(netProfitTable[0]) / 10000
+        ArkadVaule = netProfit / 0.02
+        totalMarketValue = @_balanceObj[stockCode].getTotalMarketValue() / 100000000
+        console.log("arkad value :#{[totalMarketValue, ArkadVaule]}")
+        return (totalMarketValue / ArkadVaule).toFixed(2)
+
     _getBaseInfo: ->
         infoTable = []
         stockCode = @_stockCode
@@ -478,7 +487,7 @@ cc.Class {
         infoTable.push "\n      权益乘数: #{utils.addTabInTable(@_balanceObj[stockCode].getFinancialLeverage())}"#---#
         
         # infoTable.push "\n总资产增长率:"
-
+        console.log("baseInfo:#{infoTable}")
         @m_baseInfo_info.string = infoTable
     onLoad300: ->
         @_loadTableByType("hs300")

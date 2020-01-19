@@ -141,11 +141,22 @@ cc.Class {
             receivableTurnoverDays, netProfitQuality, debt, cashTurnoverDays)
         @m_display_label.string = info
 
+    _getArkadValuePercent: (stockCode) ->
+        netProfitTable = @_profitObj[stockCode].getNetProfitTable(true, true)
+        netProfit = parseInt(netProfitTable[0]) / 10000
+        ArkadVaule = netProfit / 0.02
+        totalMarketValue = @_balanceObj[stockCode].getTotalMarketValue() / 100000000
+        percent = (totalMarketValue / ArkadVaule).toFixed(2)
+        if percent > 0.5
+            console.log(@_profitObj[stockCode].getBaseInfo(), "percent :#{percent}")
+
     findMatchConditionStock:(profitAddRatio, roe, pe, advanceReceipt,receivableTurnoverDays, netProfitQuality, debt, cashTurnoverDays)->
         matchStockTable = []
         for stockCode in utils.getStockTable("allA")
             stockCode = stockCode.slice(2, 8)
+            
             continue unless @_isAllTableLoadFinish(stockCode)
+            @_getArkadValuePercent(stockCode)
             continue unless @_filterProfitAddRatio(stockCode, profitAddRatio)
             continue unless @_filterROE(stockCode, roe)
             continue unless @_filterPE(stockCode, pe)

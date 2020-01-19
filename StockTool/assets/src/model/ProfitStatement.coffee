@@ -27,8 +27,8 @@ class ProfitStatement extends TableBase
 		addRatio = ((addRatio - 1) * 100).toFixed(2)
 		addRatio
 
-	getNetProfitTable : ->
-		@getValue(@_data["归属于母公司所有者的净利润(万元)"])
+	getNetProfitTable: (doNotToInt, isOnlyYear) ->
+		@getValue(@_data["归属于母公司所有者的净利润(万元)"], doNotToInt, isOnlyYear)
 
 	getNetProfitAllTable : ->
 		@getValue(@_data["净利润(万元)"])
@@ -65,10 +65,9 @@ class ProfitStatement extends TableBase
 		e = @getValue(@_data["管理费用(万元)"])
 		f = @getValue(@_data["财务费用(万元)"])
 		g = @getRDFee()
-		h = @getValue(@_data["资产减值损失(万元)"])
 		coreProfitTable = []
 		for value, index in a
-			operatingProfit = a[index] - b[index] - c[index] - d[index] - e[index] - f[index] - g[index] - h[index]
+			operatingProfit = a[index] - b[index] - c[index] - d[index] - e[index] - f[index] - g[index]
 			coreProfitTable.push operatingProfit
 		
 		return coreProfitTable

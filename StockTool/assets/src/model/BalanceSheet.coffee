@@ -43,15 +43,17 @@ class BalanceSheet extends TableBase
 		totalAssets = @getTotalAssets()
 		assetsPercentTable = {}
 		for key , value of @_data
-			continue if value[0] is 0
+			continue if value[1] is 0
 			continue if key in @_getNoNeedCalcItems()
 			break if key is "资产总计(万元)"
-			percent = @getValue(value)[0] / totalAssets[0] * 100
+			keyValue =  @getValue(value, null, true)[0]
+			percent =  keyValue / totalAssets[0] * 100
 			assetsPercentTable[key] = percent.toFixed(2)
 		sortedObjKeys = Object.keys(assetsPercentTable).sort(
 			(a, b) ->
 				return assetsPercentTable[b] - assetsPercentTable[a]
 		)
+		console.log("key:#{JSON.stringify sortedObjKeys}")
 		useAbleTable = []
 		disAbleTable = ["固定资产净值(万元)", "固定资产原值(万元)", "未分配利润(万元)", "盈余公积(万元)", "资本公积(万元)", "少数股东权益(万元)", "实收资本(或股本)(万元)"]
 		for key in sortedObjKeys

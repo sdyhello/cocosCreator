@@ -83,12 +83,12 @@ class TableBase
 			formatTable.push @_getShowNumber(number)
 		return formatTable
 
-	_getYearValueIndex: ->
+	_getYearValueIndex: (isOnlyYear) ->
 		indexTable = []
 		for timeStr, index in @_data["报告日期"]
 			if timeStr.indexOf("12-31") isnt -1
 				indexTable.push(index)
-
+		return indexTable if isOnlyYear
 		if @_data["报告日期"][0].indexOf("12-31") is -1
 			indexTable.unshift 0
 		return indexTable
@@ -107,9 +107,9 @@ class TableBase
 			intTable.push parseInt(value)
 		return intTable
 
-	getValue: (data, doNotToInt)->
+	getValue: (data, doNotToInt, isOnlyYear)->
 		return unless data?
-		yearIndexTable = @_getYearValueIndex()
+		yearIndexTable = @_getYearValueIndex(isOnlyYear)
 		valueTable = []
 
 		for index in yearIndexTable
