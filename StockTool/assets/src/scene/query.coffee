@@ -171,7 +171,7 @@ cc.Class {
             @_loadFileToObj(stockCode)
             return "\n\n\n\n\n\n\t\t\t\t\t加载了------#{stockCode}------所需文件，请重新点击----“获取信息”-----来查看信息！"
         infoTable.push "基本信息:   " + @_profitObj[stockCode].getBaseInfo()
-        infoTable.push "\n折现估值：#{@_getArkadValuePercent(stockCode)}, #{@_getIndustryAverage(stockCode, "估值比")}"
+        # infoTable.push "\n折现估值：#{@_getArkadValuePercent(stockCode)}, #{@_getIndustryAverage(stockCode, "估值比")}"
         infoTable.push "\nPE:   " + @_profitObj[stockCode].getPE() + "\t对应股价:#{@_profitObj[stockCode].getSharePrice()}"
         infoTable.push "\n总资产：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalAssets()[0])}"
         infoTable.push "\n总市值：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalMarketValue() / 10000)}"

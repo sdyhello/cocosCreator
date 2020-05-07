@@ -68,6 +68,8 @@ class TableBase
 
 	getBaseInfo: -> @_stockCode + "------" + @_data["资料"][0] + "------" + @_data["资料"][2] + "------财报时间" + @getTimeTitle()[0]
 
+	getStockInfo: -> @_data["资料"][0]
+
 	getIndustry: -> @_data["资料"][2]
 
 	getSharePrice: -> @_data["资料"][1]
@@ -85,6 +87,7 @@ class TableBase
 
 	_getYearValueIndex: (isOnlyYear) ->
 		indexTable = []
+		isOnlyYear = true
 		for timeStr, index in @_data["报告日期"]
 			if timeStr.indexOf("12-31") isnt -1
 				indexTable.push(index)

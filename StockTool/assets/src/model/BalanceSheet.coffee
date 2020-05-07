@@ -3,7 +3,7 @@ utils 		= require '../tools/utils'
 TitleName 	= require "../title"
 
 class BalanceSheet extends TableBase
-	getFilePath:->
+	getFilePath: ->
 		"allA/zcfzb_#{@_stockCode}"
 
 	getFirstColTitle: ->
@@ -16,6 +16,10 @@ class BalanceSheet extends TableBase
 	getNetAssets: -> @getValue(@_data["归属于母公司股东权益合计(万元)"])
 
 	_getNoNeedCalcItems: -> ["资料", "报告日期", "应收出口退税(万元)"]
+
+	getStockAssetsInTotalAssets: ->
+		stockAssets = @getValue(@_data["交易性金融资产(万元)"])
+		return (stockAssets[0] / @getTotalAssets()[0] * 100).toFixed(2)
 
 	getReceivableValue: -> @getValue(@_data["应收账款(万元)"])
 
