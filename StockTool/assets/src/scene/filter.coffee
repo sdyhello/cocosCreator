@@ -28,44 +28,42 @@ cc.Class {
 
     onLoad: ->
         TDGA?.onEvent("filter")
-        cocosAnalytics?.CAEvent?.onEvent({eventName:"筛选个股"})
+        cocosAnalytics?.CAEvent?.onEvent({ eventName: "筛选个股" })
         @_editboxObjTable = []
         @_editboxDataObj = {}
         @_filterNameTable = [
             # {name: "净利润复合收益率(例:12)", key: "profitAddRatio"},
-            # {name: "平均ROE(例:15)", key: "roe"},
-            # {name: "市盈率(例:30)", key: "pe"},
+            { name: "平均ROE(例:15)", key: "roe" },
+            { name: "市盈率(例:30)", key: "pe" },
             { name: "销 / 收入 (1)", key: "incomeQuality" },
             { name: "平均核利增率(10)", key: "coreProfitAdd" },
-            { name: "平毛利率(10)", key: "grossProfitRatio" }
             { name: "有息负债率(10)", key: "debt" }
+            { name: "平毛利率(10)", key: "grossProfitRatio" }
             { name: "最新一期交易金融占比(10)", key: "stockAsstes" }
-
+            { name: "统计时间(例:6)", key: "time" },
             # {name: "应收账款周转天数(例:30)", key: "receivableTurnoverDays"},
             # {name: "预收账款占总资产比例(例:5)", key: "advanceReceipt"},
             # {name: "经营现金与净利润比(例:0.8)", key: "netProfitQuality"},
-            # {name: "有息负债占总资产比例(例:5)", key: "debt"},
-            {name: "统计时间(例:6)", key: "time"},
             # {name: "现金周转时间", key: "cashTurnoverDays"},
-            # {name: "待开发...", key: ""},
+            { name: "待开发...", key: "" },
+            { name: "待开发...", key: "" },
         ]
         @_editboxDataObj = cc.sys.localStorage.getItem("filterObj_new")
-
         unless @_editboxDataObj?
             @_editboxDataObj =  {
-                profitAddRatio: "12"
+                # profitAddRatio: "12"
                 roe: "15"
-                pe: "60"
-                advanceReceipt: "5"
-                receivableTurnoverDays: "30"
-                netProfitQuality: "0.8"
-                cashTurnoverDays: "30"
+                pe: "40"
+                # advanceReceipt: "5"
+                # receivableTurnoverDays: "30"
+                # netProfitQuality: "0.8"
+                # cashTurnoverDays: "30"
                 time: global.year
                 incomeQuality: "0.8"
                 coreProfitAdd: "20"
-                grossProfitRatio: "20"
+                grossProfitRatio: "-1"
                 debt: "1"
-                stockAsstes: "1"
+                stockAsstes: "-1"
                 "": "-1"
             }
         else
@@ -75,7 +73,7 @@ cc.Class {
         @m_display_node.active = false
         for index in [1..5]
             @_setEventHandler(@m_filter_1, index)
-            # @_setEventHandler(@m_filter_2, index)
+            @_setEventHandler(@m_filter_2, index)
         @_initAndLoadTable()
 
     _initAndLoadTable: ->
@@ -181,8 +179,8 @@ cc.Class {
             continue unless @_isAllTableLoadFinish(stockCode)
             # @_getArkadValuePercent(stockCode)
             # continue unless @_filterProfitAddRatio(stockCode, profitAddRatio)
-            # continue unless @_filterROE(stockCode, roe)
-            # continue unless @_filterPE(stockCode, pe)
+            continue unless @_filterROE(stockCode, roe)
+            continue unless @_filterPE(stockCode, pe)
 
             continue unless @_filterIncomeQuality(stockCode, incomeQuality)
             continue unless @_filterCoreProfitAddRatio(stockCode, coreProfitAdd)
@@ -274,7 +272,7 @@ cc.Class {
     _filterInterestDebt: (stockCode, limitInterestDebt) ->
         return true if limitInterestDebt is -1
         interestDebt = utils.getAverage(@_balanceObj[stockCode].getInterestDebt())
-        if Number(interestDebt) > limitInterestDebt
+        if Number(interestDebt) < limitInterestDebt
             return true
         return false
 
@@ -356,7 +354,7 @@ cc.Class {
             ratioTable.push (workCashFlowTable[index] / netProfit).toFixed(2)
         ratioTable
 
-    _getStockTableInfo: (matchStockTable)->
+    _getStockTableInfo: (matchStockTable) ->
         profitAddRatio          = @_editboxDataObj.profitAddRatio
         roe                     = @_editboxDataObj.roe
         pe                      = @_editboxDataObj.pe
@@ -373,7 +371,9 @@ cc.Class {
         stockInfoTable.push "有息负债率: #{@_editboxDataObj.debt}"
         stockInfoTable.push "交易金融占比: #{@_editboxDataObj.stockAsstes}"
         # stockInfoTable.push "现金周转天数：#{@_editboxDataObj.cashTurnoverDays}"
-
+        cc.log("info :#{JSON.stringify @_editboxDataObj}")
+        stockInfoTable.push "ROE:#{roe}"
+        stockInfoTable.push "PE:#{pe}"
         stockInfoTable.push "\n股票代码 \t 基本信息 \t 所属行业 \t 利润增长率 \t 平均ROE \t PE \t 现金流 \t  总数:#{matchStockTable.length}"
         for stockCode in matchStockTable
             stockInfoTable.push @_getStockInfo(stockCode)
@@ -401,8 +401,8 @@ cc.Class {
             utils.addTab("平毛利率:#{utils.getAverage(@_profitObj[stockCode].getGrossProfitRatio())}") +
             utils.addTab("平均有息负债率:#{utils.getAverage(@_balanceObj[stockCode].getInterestDebt())}") +
             utils.addTab("交易金融占比:#{@_balanceObj[stockCode].getStockAssetsInTotalAssets()}") +
-            # utils.addTab("roe:#{aveRoe}") +
-            # utils.addTab("PE:#{ PE }") +
+            utils.addTab("roe:#{aveRoe}") +
+            utils.addTab("PE:#{ PE }") +
             # utils.addTab("应:#{@_getReceivableTurnOverDays(stockCode)}") +
             # utils.addTab("预:#{@_getAdvanceReceiptsPercent(stockCode)}") +
             
