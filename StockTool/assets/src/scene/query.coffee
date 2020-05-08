@@ -287,14 +287,32 @@ cc.Class {
         netProfitSummation = utils.getSummation(netProfit)
         return (captialSummation / netProfitSummation * 100).toFixed(2)
 
+    _getAssetsPercent: (stockCode) ->
+        @_assetsTotal ?= []
+        assets = Number(@_balanceObj[stockCode].getCashValuePercent()[0])
+        unless assets?
+            assets = 0
+            cc.log("ERROR, assets is 0")
+            return
+        @_assetsTotal.push assets
+
+    _calcAverage: ->
+        total = 0
+
+        for asset in @_assetsTotal
+            total += asset
+        cc.log("ASSETS @_assetsTotal.length:#{@_assetsTotal.length}, #{total / @_assetsTotal.length}")
+
     _getIndustryAverage: (stockCode, type) ->
         industry = @_balanceObj[stockCode].getIndustry()
         sameIndustryInfo = []
         sameIndustryStockCode = []
         sameIndustryInfoObj = {}
+        @_assetsTotal = []
         for stockCode in utils.getStockTable("allA")
             stockCode = stockCode.slice(2, 8)
             continue unless @_isAllTableLoadFinish(stockCode)
+            @_getAssetsPercent(stockCode)
             if (@_balanceObj[stockCode].getIndustry() is industry)
                 sameIndustryStockCode.push stockCode
                 switch type
@@ -343,7 +361,7 @@ cc.Class {
                         value = @_getArkadValuePercent(stockCode)
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
-
+        @_calcAverage()
         info1 = "\t#{sameIndustryInfo.length}家同行"
         info2 = "平均值：" + utils.getAverage(sameIndustryInfo)
         sortedObjKeys = Object.keys(sameIndustryInfoObj).sort(

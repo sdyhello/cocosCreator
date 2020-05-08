@@ -171,6 +171,8 @@ cc.Class {
         if percent > 0.5
             console.log(@_profitObj[stockCode].getBaseInfo(), "percent :#{percent}")
 
+    
+
     findMatchConditionStock:(incomeQuality, coreProfitAdd, grossProfitRatio, stockAsstes, roe, pe, debt) ->
         matchStockTable = []
         cc.log("pararm :#{[incomeQuality, coreProfitAdd, grossProfitRatio, stockAsstes, roe, pe, debt]}")

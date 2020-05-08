@@ -17,9 +17,6 @@ class BalanceSheet extends TableBase
 
 	_getNoNeedCalcItems: -> ["资料", "报告日期", "应收出口退税(万元)"]
 
-	getStockAssetsInTotalAssets: ->
-		stockAssets = @getValue(@_data["交易性金融资产(万元)"])
-		return (stockAssets[0] / @getTotalAssets()[0] * 100).toFixed(2)
 
 	getReceivableValue: -> @getValue(@_data["应收账款(万元)"])
 
@@ -33,15 +30,7 @@ class BalanceSheet extends TableBase
 		valueTable = @getValue(@_data["应付职工薪酬(万元)"])
 		return valueTable[0] - valueTable[1]
 
-	getInterestDebt: ->
-		value1 = @getValue(@_data["短期借款(万元)"])
-		value2 = @getValue(@_data["长期借款(万元)"])
-		value3 = @getValue(@_data["应付债券(万元)"])
-		totalAssets = @getTotalAssets()
-		debtTable = []
-		for data, index in value1
-			debtTable.push value1[index] + value2[index] + value3[index]
-		utils.getRatioTable(debtTable, totalAssets)
+	
 
 	_getTop10Key: ->
 		totalAssets = @getTotalAssets()
@@ -97,12 +86,7 @@ class BalanceSheet extends TableBase
 		for currentAssets, index in currentAssetsTable
 			quickRatio.push ((currentAssets - inventoryTable[index]) / currentDebtsTable[index]).toFixed(2)
 		quickRatio
-
-	getAdvanceReceiptsPercent: ->
-		advanceReceiptsTable = @getValue(@_data["预收账款(万元)"])
-		totalAssetsTable = @getTotalAssets()
-		utils.getRatioTable(advanceReceiptsTable, totalAssetsTable)
-
+	
 	_getAverageData: (dataTable) ->
 		averageTable = []
 		for value, index in dataTable
@@ -133,10 +117,7 @@ class BalanceSheet extends TableBase
 		goodWill = @getValue(@_data["商誉(万元)"])[0]
 		goodWill
 
-	getFinancialLeverage: ->
-		totalAssetsTable = @getTotalAssets()
-		netAssets = @getStockHolderEquity()
-		utils.getRatioTable(totalAssetsTable, netAssets, 1)
+	
 
 	getNetAssetsStruct: ->
 		number1 = @getValue(@_data["实收资本(或股本)(万元)"])[0]
@@ -146,16 +127,6 @@ class BalanceSheet extends TableBase
 
 		result = (number3 + number4) / (number1 + number2)
 		return result.toFixed(2)
-
-	getFixedAssetsWithTotalAssetsRatio: ->
-		fixedAssetsTable = @getFixedAssets()
-		totalAssetsTable = @getTotalAssets()
-		utils.getRatioTable(fixedAssetsTable, totalAssetsTable)
-
-	getCashValuePercent: ->
-		cash = @getCashValue()
-		totalAssets = @getTotalAssets()
-		utils.getRatioTable(cash, totalAssets)
 
 	getTop10AllYearPercent: ->
 		top10Key = @_getTop10Key()
@@ -193,5 +164,122 @@ class BalanceSheet extends TableBase
 		top10ChangeInfo.push "总资产增长率一:#{utils.addTabInTable(utils.getAddRatioTable(totalAssets))}"
 		top10ChangeInfo.push valueDisplayTable
 		return top10ChangeInfo
+
+	
+	#货币资金占比（15.92%）
+	getCashValuePercent: ->
+		cash = @getCashValue()
+		totalAssets = @getTotalAssets()
+		utils.getRatioTable(cash, totalAssets)
+	
+	#交易性金融资产占比
+	getStockAssetsInTotalAssets: ->
+		stockAssets = @getValue(@_data["交易性金融资产(万元)"])
+		return (stockAssets[0] / @getTotalAssets()[0] * 100).toFixed(2)
+
+	#应收账款
+	getYingShouPercent: ->
+		singleData  = @getValue(@_data["应收账款(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#预付款项
+	getYuFuPercent: ->
+		singleData  = @getValue(@_data["预付款项(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#其他应收款
+	getQiTaYingShouPercent: ->
+		singleData  = @getValue(@_data["其他应收款(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#存货
+	getChunHuoPercent: ->
+		singleData  = @getValue(@_data["存货(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#长期股权投资
+	getChangeQiGuQuanPercent: ->
+		singleData  = @getValue(@_data["长期股权投资(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#固定资产占比
+	getFixedAssetsWithTotalAssetsRatio: ->
+		fixedAssetsTable = @getFixedAssets()
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(fixedAssetsTable, totalAssetsTable)
+	#在建工程
+	getZaiJiangPercent: ->
+		singleData  = @getValue(@_data["在建工程(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#无形资产
+	getWuXingPercent: ->
+		singleData  = @getValue(@_data["无形资产(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#商誉
+	getShangYuPercent: ->
+		singleData  = @getValue(@_data["商誉(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#长期待摊费用
+	getChangQiDaiTanPercent: ->
+		singleData  = @getValue(@_data["长期待摊费用(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#其他非流动资产
+	getQiTaFeiLiuDongPercent: ->
+		singleData  = @getValue(@_data["其他非流动资产(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#短期借款
+	getDuanQiJieKuanPercent: ->
+		singleData  = @getValue(@_data["短期借款(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#应付账款
+	getYingFuPercent: ->
+		singleData  = @getValue(@_data["应付账款(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#预收账款占比
+	
+	getAdvanceReceiptsPercent: ->
+		advanceReceiptsTable = @getValue(@_data["预收账款(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(advanceReceiptsTable, totalAssetsTable)
+	#其他应付款
+	getQiTaYingFuPercent: ->
+		singleData  = @getValue(@_data["其他应付款(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#长期借款
+	getChangeQiJieKuanPercent: ->
+		singleData  = @getValue(@_data["长期借款(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#未分配利润
+	getWeiFenPeiPercent: ->
+		singleData  = @getValue(@_data["未分配利润(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
+	#权益乘数
+	getFinancialLeverage: ->
+		totalAssetsTable = @getTotalAssets()
+		netAssets = @getStockHolderEquity()
+		utils.getRatioTable(totalAssetsTable, netAssets, 1)
+
+	#有息负债占比
+	getInterestDebt: ->
+		value1 = @getValue(@_data["短期借款(万元)"])
+		value2 = @getValue(@_data["长期借款(万元)"])
+		value3 = @getValue(@_data["应付债券(万元)"])
+		totalAssets = @getTotalAssets()
+		debtTable = []
+		for data, index in value1
+			debtTable.push value1[index] + value2[index] + value3[index]
+		utils.getRatioTable(debtTable, totalAssets)
+
+	
 
 module.exports = BalanceSheet
