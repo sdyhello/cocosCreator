@@ -39,11 +39,22 @@
   },
   "android-instant": {
     "REMOTE_SERVER_ROOT": "",
-    "pathPattern": "",
-    "scheme": "https",
     "host": "",
-    "skipRecord": false,
-    "recordPath": ""
+    "packageName": "org.cocos2d.readCsv",
+    "pathPattern": "",
+    "recordPath": "",
+    "scheme": "https",
+    "skipRecord": false
   },
-  "appBundle": false
+  "appBundle": false,
+  "android": {
+    "packageName": "org.cocos2d.readCsv"
+  },
+  "ios": {
+    "packageName": "org.cocos2d.readCsv"
+  },
+  "mac": {
+    "packageName": "org.cocos2d.readCsv"
+  },
+  "win32": {}
 }

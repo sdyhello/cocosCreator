@@ -74,6 +74,17 @@ cc.Class {
         @m_industry_node.active = true
         @m_baseInfo_node.active = false
         @onClickButton()
+        stockCode = @_stockCode
+        @_getIndustryAverage(stockCode, "预收账款")
+        @_getIndustryAverage(stockCode, "应收账款")
+        @_getIndustryAverage(stockCode, "存货")
+        @_getIndustryAverage(stockCode, "应付账款")
+        @_getIndustryAverage(stockCode, "现金周转")
+        @_getIndustryAverage(stockCode, "毛利率")
+        @_getIndustryAverage(stockCode, "净利率")
+        @_getIndustryAverage(stockCode, "核心利润率")
+        @_getIndustryAverage(stockCode, "费用率")
+        @_getIndustryAverage(stockCode, "平均月薪")
         @m_industry_info.string = JSON.stringify(@_industryInfo, null, 4)
 
     onIndustryReturn: ->
@@ -175,23 +186,24 @@ cc.Class {
         infoTable.push "\nPE:   " + @_profitObj[stockCode].getPE() + "\t对应股价:#{@_profitObj[stockCode].getSharePrice()}"
         infoTable.push "\n总资产：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalAssets()[0])}"
         infoTable.push "\n总市值：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalMarketValue() / 10000)}"
-        infoTable.push "\n资产负债表Top10: #{@_balanceObj[stockCode].getTop10()}"
+        # infoTable.push "\n资产负债表Top10: #{@_balanceObj[stockCode].getTop10()}"
+        @_getScore(stockCode, infoTable)
         infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
         infoTable.push "\n有息负债: #{@_balanceObj[stockCode].getInterestDebt()[0]}%"
         infoTable.push "\n资本开支占净利润比：#{@_getCapitalExpenditureRatio(stockCode)}%"
         infoTable.push "\n赚的钱是从股东那拿的钱的几倍：#{@_balanceObj[stockCode].getNetAssetsStruct()}"
         infoTable.push "\n商誉:#{utils.getValueDillion(@_balanceObj[stockCode].getGoodWill())}, 占总资产比例:#{@_getGoodWillPercent(stockCode)}%"
-        infoTable.push "\n预收账款占总资产比例: #{@_getAdvanceReceiptsPercent(stockCode)}%， #{@_getIndustryAverage(stockCode, "预收账款")}"
-        infoTable.push "\n应收账款周转天数: #{@_getReceivableTurnOverDays(stockCode)[0]}, #{@_getIndustryAverage(stockCode, "应收账款")}"
-        infoTable.push "\n存货周转天数:#{@_getInventoryTurnoverDays(stockCode)[0]}天, #{@_getIndustryAverage(stockCode, "存货")}天"
-        infoTable.push "\n应付账款周转天数:#{@_getPayableTurnoverDays(stockCode)[0]} 天, #{@_getIndustryAverage(stockCode, "应付账款")}天"
-        infoTable.push "\n现金周转天数：#{@_getCashTurnoverDays(stockCode)} 天, #{@_getIndustryAverage(stockCode, "现金周转")} 天"
+        infoTable.push "\n预收账款占总资产比例: #{@_getAdvanceReceiptsPercent(stockCode)}%"
+        infoTable.push "\n应收账款周转天数: #{@_getReceivableTurnOverDays(stockCode)[0]}"
+        infoTable.push "\n存货周转天数:#{@_getInventoryTurnoverDays(stockCode)[0]}天"
+        infoTable.push "\n应付账款周转天数:#{@_getPayableTurnoverDays(stockCode)[0]} 天"
+        infoTable.push "\n现金周转天数：#{@_getCashTurnoverDays(stockCode)} 天"
         infoTable.push "\n净利润（多）： " + utils.getValueDillion(@_profitObj[stockCode].getNetProfitTable())
-        infoTable.push "\n毛利率（单）: #{@_profitObj[stockCode].getGrossProfitRatio()[0]}, #{@_getIndustryAverage(stockCode, "毛利率")}%"
-        infoTable.push "\n净利率（单）: #{@_profitObj[stockCode].getNetProfitRatio()[0]}, #{@_getIndustryAverage(stockCode, "净利率")}%"
-        infoTable.push "\n核心利润率 : #{@_profitObj[stockCode].getOperatingProfitRatio()[0]} % ， #{@_getIndustryAverage(stockCode, "核心利润率")}" 
+        infoTable.push "\n毛利率（单）: #{@_profitObj[stockCode].getGrossProfitRatio()[0]}"
+        infoTable.push "\n净利率（单）: #{@_profitObj[stockCode].getNetProfitRatio()[0]}"
+        infoTable.push "\n核心利润率 : #{@_profitObj[stockCode].getOperatingProfitRatio()[0]} %" 
         infoTable.push "\n核心利润占利润总额比例:#{@_profitObj[stockCode].getCoreProfitRatio()} %"
-        infoTable.push "\n 三项费用率：#{@_profitObj[stockCode].getExpenseRatio()[0]} %, #{@_getIndustryAverage(stockCode, "费用率")}"
+        infoTable.push "\n 三项费用率：#{@_profitObj[stockCode].getExpenseRatio()[0]} %"
         infoTable.push "\n年净利润增长率:   " + @_profitObj[stockCode].getNetProfitYoy()
         infoTable.push "\n净利润复合增长率:   " + @_profitObj[stockCode].getNetProfitAddRatio() + "%"
         infoTable.push "\n营收含金量: #{@_getIncomeQuality(stockCode)}, 平均：#{utils.getAverage(@_getIncomeQuality(stockCode))}"
@@ -200,10 +212,12 @@ cc.Class {
         infoTable.push "\nROE分解----->净利率: #{@_profitObj[stockCode].getNetProfitRatio()[0]}, 总资产周转率:#{@_getTotalAssetsTurnoverRatio(stockCode)[0]}, 财务杠杆:#{@_balanceObj[stockCode].getFinancialLeverage()[0]}"
         infoTable.push "\n" + @_getStaffInfo(stockCode)
         infoTable.push "\n统计时间： #{@_balanceObj[stockCode].getExistYears()}"
-        @_getIndustryAverage(stockCode, "平均月薪")
+        
         TDGA?.onEvent("queryStockInfo", {"info": @_profitObj[stockCode].getBaseInfo()})
         cocosAnalytics?.CAEvent?.onEvent({eventName:"查询个股", info: @_profitObj[stockCode].getBaseInfo()})
+        
         console.log(infoTable)
+        @_lookAllStock()
         infoTable
 
     _getStaffInfo: (stockCode, isGetNumber)->
@@ -212,7 +226,6 @@ cc.Class {
         for staffInfo in staffInfoTable
             if(staffInfo[0].indexOf(stockCode) isnt -1)
                 staffNumber = staffInfo[2]
-                console.log(staffInfo[2])
                 break
         @_getAllPayStaffMoney(stockCode, staffNumber, isGetNumber)
 
@@ -288,7 +301,11 @@ cc.Class {
         return (captialSummation / netProfitSummation * 100).toFixed(2)
 
     _getAssetsPercent: (stockCode) ->
-        assetsNameTable = ["货币资金", "应收账款"]
+        assetsNameTable = ["货币资金", "应收账款", "交易性金融资产", "预付款项", "其他应收款", "存货",
+            "长期股权投资", "固定资产", "在建工程", "无形资产", "商誉", "长期待摊费用",
+            "其他非流动资产", "短期借款", "应付账款", "预收账款", "其他应付款", "长期借款",
+            "未分配利润", "权益乘数", "有息负债", "营收含金量", "核心利润占比", "ROE"
+            ]
         for assetName in assetsNameTable
             @_assetsTotalObject[assetName] ?= []
             switch assetName
@@ -296,7 +313,51 @@ cc.Class {
                     assets = Number(@_balanceObj[stockCode].getCashValuePercent()[0])
                 when "应收账款"
                     assets = Number(@_balanceObj[stockCode].getYingShouPercent()[0])
-            unless assets?
+                when "交易性金融资产"
+                    assets = Number(@_balanceObj[stockCode].getStockAssetsInTotalAssets()[0])
+                when "预付款项"
+                    assets = Number(@_balanceObj[stockCode].getYuFuPercent()[0])
+                when "其他应收款"
+                    assets = Number(@_balanceObj[stockCode].getQiTaYingShouPercent()[0])
+                when "存货"
+                    assets = Number(@_balanceObj[stockCode].getChunHuoPercent()[0])
+                when "长期股权投资"
+                    assets = Number(@_balanceObj[stockCode].getChangeQiGuQuanPercent()[0])
+                when "固定资产"
+                    assets = Number(@_balanceObj[stockCode].getFixedAssetsWithTotalAssetsRatio()[0])
+                when "在建工程"
+                    assets = Number(@_balanceObj[stockCode].getZaiJiangPercent()[0])
+                when "无形资产"
+                    assets = Number(@_balanceObj[stockCode].getWuXingPercent()[0])
+                when "商誉"
+                    assets = Number(@_balanceObj[stockCode].getShangYuPercent()[0])
+                when "长期待摊费用"
+                    assets = Number(@_balanceObj[stockCode].getChangQiDaiTanPercent()[0])
+                when "其他非流动资产"
+                    assets = Number(@_balanceObj[stockCode].getQiTaFeiLiuDongPercent()[0])
+                when "短期借款"
+                    assets = Number(@_balanceObj[stockCode].getDuanQiJieKuanPercent()[0])
+                when "应付账款"
+                    assets = Number(@_balanceObj[stockCode].getYingFuPercent()[0])
+                when "预收账款"
+                    assets = Number(@_balanceObj[stockCode].getAdvanceReceiptsPercent()[0])
+                when "其他应付款"
+                    assets = Number(@_balanceObj[stockCode].getQiTaYingFuPercent()[0])
+                when "长期借款"
+                    assets = Number(@_balanceObj[stockCode].getChangeQiJieKuanPercent()[0])
+                when "未分配利润"
+                    assets = Number(@_balanceObj[stockCode].getWeiFenPeiPercent()[0])
+                when "权益乘数"
+                    assets = Number(@_balanceObj[stockCode].getFinancialLeverage()[0])
+                when "有息负债"
+                    assets = Number(@_balanceObj[stockCode].getInterestDebt()[0])
+                when "营收含金量"
+                    assets = Number(@_getIncomeQuality(stockCode)[0])
+                when "核心利润占比"
+                    assets = Number(@_profitObj[stockCode].getCoreProfitRatio()[0])
+                when "ROE"
+                    assets = Number(@_getROE(stockCode)[0])
+            if isNaN(assets)
                 assets = 0
                 cc.log("ERROR, assets is 0")
                 return
@@ -308,19 +369,29 @@ cc.Class {
             total = 0
             for asset in assetTable
                 total += asset
+            continue if assetTable.length is 0
             cc.log("ASSETS assetName:#{assetName}, length:#{assetTable.length}, #{total / assetTable.length}")
         return
-        
+
+    _lookAllStock: ->
+        @_assetsTotalObject = {}
+        for stockCode in utils.getStockTable("allA")
+            stockCode = stockCode.slice(2, 8)
+            continue unless @_isAllTableLoadFinish(stockCode)
+            # @_getAssetsPercent(stockCode)
+            @_getScore(stockCode, [])
+        return
+
     _getIndustryAverage: (stockCode, type) ->
         industry = @_balanceObj[stockCode].getIndustry()
         sameIndustryInfo = []
         sameIndustryStockCode = []
         sameIndustryInfoObj = {}
-        @_assetsTotalObject = {}
+        
         for stockCode in utils.getStockTable("allA")
             stockCode = stockCode.slice(2, 8)
             continue unless @_isAllTableLoadFinish(stockCode)
-            @_getAssetsPercent(stockCode)
+            
             if (@_balanceObj[stockCode].getIndustry() is industry)
                 sameIndustryStockCode.push stockCode
                 switch type
@@ -530,4 +601,133 @@ cc.Class {
         @_loadTableByType("zz1000")
     onLoadAll: ->
         @_loadTableByType("allA")
+
+    _calcScore: (itemName, selfNum, average, infoTable) ->
+        moreIsGoodItem = ["货币资金", "交易性金融资产", "预收账款", "应付账款", "营收含金量", "核心利润占比", "ROE" ]
+        middleItem = ["长期股权投资", "在建工程", "权益乘数", "未分配利润"]
+    
+        disNum = selfNum - average
+        score = 0
+        if Math.abs(disNum) < 3 and not (itemName in middleItem)
+            score += 5
+            infoTable.push "\n#{itemName} 正常 + 5"
+        else if itemName in moreIsGoodItem
+            if disNum > 0
+                score += disNum
+                infoTable.push "\n#{itemName} 比平均多, 加分（#{disNum.toFixed(2)})----------"
+            else
+                score -= Math.abs(disNum)
+                infoTable.push("\n#{itemName} 比平均少，减分 (-#{Math.abs(disNum.toFixed(2))})----------")
+        else if itemName in middleItem
+            score += 0
+            if disNum > 0
+                infoTable.push("\n#{itemName} 需要观察，比平均多 (#{disNum.toFixed(2)})----------")
+            else
+                infoTable.push("\n#{itemName} 需要观察，比平均少 (#{Math.abs(disNum.toFixed(2))})----------")
+        else
+            if disNum < 0
+                score += Math.abs(disNum)
+                infoTable.push("\n#{itemName} 比平均少， 加分 (#{Math.abs(disNum).toFixed(2)})----------")
+            else
+                score -= disNum
+                infoTable.push("\n#{itemName} 比平均多, 减分 (-#{Math.abs(disNum.toFixed(2))})----------")
+        return score
+
+
+    _getScore: (stockCode, infoTable) ->
+        infoTable.push "\n\n财务报表评分"
+        marketAverageObj = {
+            "货币资金": 15.30
+            "应收账款": 7.37
+            "交易性金融资产": 1.41
+            "预付款项": 1.51
+            "其他应收款": 1.41
+            "存货": 11.59
+            "长期股权投资": 5.51
+            "固定资产": 15.53
+            "在建工程": 2.83
+            "无形资产": 3.98
+            "商誉": 2.45
+            "长期待摊费用": 0.44
+            "其他非流动资产": 1.60
+            "短期借款": 6.63
+            "应付账款": 8.19
+            "预收账款": 3.40
+            "其他应付款": 2.85
+            "长期借款": 5.94
+            "未分配利润": 13.87
+            "权益乘数": 3.52
+            "有息负债": 18.11
+            "营收含金量": 104
+            "核心利润占比": 65
+            "ROE": 17
+        }
+
+        assetsNameTable = ["货币资金", "应收账款", "交易性金融资产", "预付款项", "其他应收款", "存货",
+            "长期股权投资", "固定资产", "在建工程", "无形资产", "商誉", "长期待摊费用",
+            "其他非流动资产", "短期借款", "应付账款", "预收账款", "其他应付款", "长期借款",
+             "权益乘数", "有息负债", "营收含金量", "核心利润占比", "ROE"
+            ]
+        totalScore = 0
+        for assetName in assetsNameTable
+            switch assetName
+                when "货币资金"
+                    assetsNum = Number(@_balanceObj[stockCode].getCashValuePercent()[0])
+                when "应收账款"
+                    assetsNum = Number(@_balanceObj[stockCode].getYingShouPercent()[0])
+                when "交易性金融资产"
+                    assetsNum = Number(@_balanceObj[stockCode].getStockAssetsInTotalAssets()[0])
+                when "预付款项"
+                    assetsNum = Number(@_balanceObj[stockCode].getYuFuPercent()[0])
+                when "其他应收款"
+                    assetsNum = Number(@_balanceObj[stockCode].getQiTaYingShouPercent()[0])
+                when "存货"
+                    assetsNum = Number(@_balanceObj[stockCode].getChunHuoPercent()[0])
+                when "长期股权投资"
+                    assetsNum = Number(@_balanceObj[stockCode].getChangeQiGuQuanPercent()[0])
+                when "固定资产"
+                    assetsNum = Number(@_balanceObj[stockCode].getFixedAssetsWithTotalAssetsRatio()[0])
+                when "在建工程"
+                    assetsNum = Number(@_balanceObj[stockCode].getZaiJiangPercent()[0])
+                when "无形资产"
+                    assetsNum = Number(@_balanceObj[stockCode].getWuXingPercent()[0])
+                when "商誉"
+                    assetsNum = Number(@_balanceObj[stockCode].getShangYuPercent()[0])
+                when "长期待摊费用"
+                    assetsNum = Number(@_balanceObj[stockCode].getChangQiDaiTanPercent()[0])
+                when "其他非流动资产"
+                    assetsNum = Number(@_balanceObj[stockCode].getQiTaFeiLiuDongPercent()[0])
+                when "短期借款"
+                    assetsNum = Number(@_balanceObj[stockCode].getDuanQiJieKuanPercent()[0])
+                when "应付账款"
+                    assetsNum = Number(@_balanceObj[stockCode].getYingFuPercent()[0])
+                when "预收账款"
+                    assetsNum = Number(@_balanceObj[stockCode].getAdvanceReceiptsPercent()[0])
+                when "其他应付款"
+                    assetsNum = Number(@_balanceObj[stockCode].getQiTaYingFuPercent()[0])
+                when "长期借款"
+                    assetsNum = Number(@_balanceObj[stockCode].getChangeQiJieKuanPercent()[0])
+                when "未分配利润"
+                    assetsNum = Number(@_balanceObj[stockCode].getWeiFenPeiPercent()[0])
+                when "权益乘数"
+                    assetsNum = Number(@_balanceObj[stockCode].getFinancialLeverage()[0])
+                when "有息负债"
+                    assetsNum = Number(@_balanceObj[stockCode].getInterestDebt()[0])
+                when "营收含金量"
+                    assetsNum = Number(@_getIncomeQuality(stockCode)[0])
+                    assetsNum = 150 if assetsNum > 150
+                when "核心利润占比"
+                    assetsNum = Number(@_profitObj[stockCode].getCoreProfitRatio()[0])
+                    assetsNum = 100 if assetsNum > 100
+                    assetsNum = 30 if assetsNum < 30
+                when "ROE"
+                    assetsNum = Number(@_getROE(stockCode)[0])
+                    assetsNum = 50 if assetsNum > 50
+                    assetsNum = 0 if assetsNum < 0
+            continue if isNaN(assetsNum)
+            totalScore += @_calcScore(assetName, assetsNum, marketAverageObj[assetName], infoTable)
+
+        infoTable.push "\n总得分 :#{totalScore.toFixed(2)}\n\n"
+        cc.log("#{stockCode}:总得分 :#{totalScore.toFixed(2)}") if totalScore > 150
+        return
 }
