@@ -288,27 +288,35 @@ cc.Class {
         return (captialSummation / netProfitSummation * 100).toFixed(2)
 
     _getAssetsPercent: (stockCode) ->
-        @_assetsTotal ?= []
-        assets = Number(@_balanceObj[stockCode].getCashValuePercent()[0])
-        unless assets?
-            assets = 0
-            cc.log("ERROR, assets is 0")
-            return
-        @_assetsTotal.push assets
+        assetsNameTable = ["货币资金", "应收账款"]
+        for assetName in assetsNameTable
+            @_assetsTotalObject[assetName] ?= []
+            switch assetName
+                when "货币资金"
+                    assets = Number(@_balanceObj[stockCode].getCashValuePercent()[0])
+                when "应收账款"
+                    assets = Number(@_balanceObj[stockCode].getYingShouPercent()[0])
+            unless assets?
+                assets = 0
+                cc.log("ERROR, assets is 0")
+                return
+            @_assetsTotalObject[assetName].push assets
+        return
 
     _calcAverage: ->
-        total = 0
-
-        for asset in @_assetsTotal
-            total += asset
-        cc.log("ASSETS @_assetsTotal.length:#{@_assetsTotal.length}, #{total / @_assetsTotal.length}")
-
+        for assetName, assetTable of @_assetsTotalObject
+            total = 0
+            for asset in assetTable
+                total += asset
+            cc.log("ASSETS assetName:#{assetName}, length:#{assetTable.length}, #{total / assetTable.length}")
+        return
+        
     _getIndustryAverage: (stockCode, type) ->
         industry = @_balanceObj[stockCode].getIndustry()
         sameIndustryInfo = []
         sameIndustryStockCode = []
         sameIndustryInfoObj = {}
-        @_assetsTotal = []
+        @_assetsTotalObject = {}
         for stockCode in utils.getStockTable("allA")
             stockCode = stockCode.slice(2, 8)
             continue unless @_isAllTableLoadFinish(stockCode)
