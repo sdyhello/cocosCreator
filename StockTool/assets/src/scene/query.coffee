@@ -217,7 +217,7 @@ cc.Class {
         cocosAnalytics?.CAEvent?.onEvent({eventName:"查询个股", info: @_profitObj[stockCode].getBaseInfo()})
         
         console.log(infoTable)
-        @_lookAllStock()
+        # @_lookAllStock()
         infoTable
 
     _getStaffInfo: (stockCode, isGetNumber)->
