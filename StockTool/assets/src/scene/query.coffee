@@ -83,15 +83,15 @@ cc.Class {
         stockCode = @_stockCode
         @m_industry_info.string = ""
         @_getIndustryAverage(stockCode, "财务评分")
-        # @_getIndustryAverage(stockCode, "预收账款")
-        # @_getIndustryAverage(stockCode, "应收账款")
-        # @_getIndustryAverage(stockCode, "存货")
-        # # @_getIndustryAverage(stockCode, "应付账款")
+        @_getIndustryAverage(stockCode, "预收账款")
+        @_getIndustryAverage(stockCode, "应收账款")
+        @_getIndustryAverage(stockCode, "存货")
+        # @_getIndustryAverage(stockCode, "应付账款")
         @_getIndustryAverage(stockCode, "现金周转")
         # @_getIndustryAverage(stockCode, "毛利率")
-        # @_getIndustryAverage(stockCode, "净利率")
-        @_getIndustryAverage(stockCode, "核心利润率")
-        # @_getIndustryAverage(stockCode, "费用率")
+        @_getIndustryAverage(stockCode, "净利率")
+        # @_getIndustryAverage(stockCode, "核心利润率")
+        @_getIndustryAverage(stockCode, "费用率")
         # @_getIndustryAverage(stockCode, "平均月薪")
         @m_industry_info.string = JSON.stringify(@_industryInfo, null, 4)
 
