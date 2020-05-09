@@ -767,6 +767,7 @@ cc.Class {
         infoTable.push "\n若发现统计资产占比非常低，就说明不适合这套算法。已知不匹配行业：银行，保险，地产"
         infoTable.push "\n"
 
+
         returnInfo = ""
         if @_stockCode < 1000
             maxScore = @_stockCode
