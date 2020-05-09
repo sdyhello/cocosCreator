@@ -746,14 +746,14 @@ cc.Class {
                 when "有息负债"
                     assetsNum = Number(@_balanceObj[stockCode].getInterestDebt()[0])
                 when "营收含金量"
-                    assetsNum = Number(@_getIncomeQuality(stockCode)[0])
+                    assetsNum = Number(utils.getAverage(@_getIncomeQuality(stockCode)))
                     assetsNum = 150 if assetsNum > 150
                 when "核心利润占比"
-                    assetsNum = Number(@_profitObj[stockCode].getCoreProfitRatio()[0])
+                    assetsNum = Number(utils.getAverage(@_profitObj[stockCode].getCoreProfitRatio()))
                     assetsNum = 100 if assetsNum > 100
                     assetsNum = 30 if assetsNum < 30
                 when "ROE"
-                    assetsNum = Number(@_getROE(stockCode)[0])
+                    assetsNum = Number(utils.getAverage(@_getROE(stockCode)))
                     assetsNum = 50 if assetsNum > 50
                     assetsNum = 0 if assetsNum < 0
             continue if isNaN(assetsNum)

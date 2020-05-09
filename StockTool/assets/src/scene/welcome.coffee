@@ -20,10 +20,7 @@ cc.Class {
     onLoad: ->
         TDGA?.onEvent("welcome")
         cocosAnalytics?.CAEvent?.onEvent({eventName:"打开欢迎界面"})
-        if cc.sys.isNative
-            @m_exit_node.active = true
-        else
-            @m_exit_node.active = false
+        @m_exit_node.active = false
         StockInfoTable.preloadCsv()
 
     onQuery: ->
@@ -34,4 +31,4 @@ cc.Class {
         cc.director.loadScene('help')
     onExit: ->
         cc.director.popScene()
-}       
+}
