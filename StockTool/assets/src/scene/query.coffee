@@ -25,6 +25,7 @@ cc.Class {
         m_industry_info: cc.Label,
         m_baseInfo_node: cc.Node,
         m_baseInfo_info: cc.Label,
+        m_ad_icon: cc.Node,
     }
  
     onLoad: ->
@@ -44,6 +45,9 @@ cc.Class {
         @_stockCode = cc.sys.localStorage.getItem("stockCode_new") or "600519"
         @m_input_time.placeholder = global.year
         @m_input_code.placeholder = @_stockCode
+        if global.isNoAd is true
+            @m_info.string = "输入  -----“股票代码”-----  后，点击 ----- “获取信息” ----- 查看..."
+            @m_ad_icon.active = false
 
     _addEditBoxEventHandler: (editboxObj, type)->
         editboxEventHandler = new cc.Component.EventHandler()
