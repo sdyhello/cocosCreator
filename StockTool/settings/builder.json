@@ -38,7 +38,7 @@
     "subContext": ""
   },
   "android-instant": {
-    "REMOTE_SERVER_ROOT": "",
+    "REMOTE_SERVER_ROOT": "http://192.168.8.21:7456/preview-android-instant/",
     "host": "",
     "packageName": "org.cocos2d.readCsv",
     "pathPattern": "",
@@ -56,5 +56,6 @@
   "mac": {
     "packageName": "org.cocos2d.readCsv"
   },
-  "win32": {}
+  "win32": {},
+  "includeAnySDK": false
 }
