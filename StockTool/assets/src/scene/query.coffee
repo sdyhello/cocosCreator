@@ -185,9 +185,11 @@ cc.Class {
             return "\n\n\n\n\n\n\t\t\t\t\t加载了------#{stockCode}------所需文件，请重新点击----“获取信息”-----来查看信息！"
         infoTable.push "基本信息:   " + @_profitObj[stockCode].getBaseInfo()
         # infoTable.push "\n折现估值：#{@_getArkadValuePercent(stockCode)}, #{@_getIndustryAverage(stockCode, "估值比")}"
-        infoTable.push "\nPE:   " + @_profitObj[stockCode].getPE() + "\t对应股价:#{@_profitObj[stockCode].getSharePrice()}"
-        infoTable.push "\n总资产：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalAssets()[0])}"
-        infoTable.push "\n总市值：#{utils.getValueDillion(@_balanceObj[stockCode].getTotalMarketValue() / 10000)}"
+        PE = @_profitObj[stockCode].getPE()
+        stockPrice = @_profitObj[stockCode].getSharePrice()
+        totalAssets = utils.getValueDillion(@_balanceObj[stockCode].getTotalAssets()[0])
+        totalStockValue = utils.getValueDillion(@_balanceObj[stockCode].getTotalMarketValue() / 10000)
+        infoTable.push "\nPE:#{PE}" + "\t对应股价:#{stockPrice}, 总资产：#{totalAssets}， 总市值：#{totalStockValue}"
         # infoTable.push "\n资产负债表Top10: #{@_balanceObj[stockCode].getTop10()}"
         @_getScore(stockCode, infoTable)
         infoTable.push "\n投资性资产占比: " + @_balanceObj[stockCode].getInvestAssets() + "%"
@@ -610,6 +612,9 @@ cc.Class {
         middleItem = ["长期股权投资", "在建工程", "权益乘数", "未分配利润", "应收票据"]
     
         disNum = selfNum - average
+        originDisNum = (selfNum - average).toFixed(2)
+        if itemName is "ROE"
+            disNum = disNum * 3
         score = 0
         if Math.abs(disNum) < 3 and not (itemName in middleItem)
             score += 5
@@ -617,23 +622,23 @@ cc.Class {
         else if itemName in moreIsGoodItem
             if disNum > 0
                 score += disNum
-                infoTable.push "\n#{itemName}(#{average}) 比平均多, 加分（#{disNum.toFixed(2)})----------"
+                infoTable.push "\n#{itemName}(#{average}) 比平均多(#{originDisNum}), 加分（#{disNum.toFixed(2)})----------"
             else
                 score -= Math.abs(disNum)
-                infoTable.push("\n#{itemName}(#{average}) 比平均少，减分 (-#{Math.abs(disNum.toFixed(2))})----------")
+                infoTable.push("\n#{itemName}(#{average}) 比平均少(#{originDisNum})，减分 (-#{Math.abs(disNum.toFixed(2))})----------")
         else if itemName in middleItem
             score += 0
             if disNum > 0
-                infoTable.push("\n#{itemName}(#{average}) 需要观察，比平均多 (#{disNum.toFixed(2)})----------")
+                infoTable.push("\n#{itemName}(#{average}) 需要观察，比平均多 (#{originDisNum})----------")
             else
-                infoTable.push("\n#{itemName}(#{average}) 需要观察，比平均少 (#{Math.abs(disNum.toFixed(2))})----------")
+                infoTable.push("\n#{itemName}(#{average}) 需要观察，比平均少 (#{originDisNum})----------")
         else
             if disNum < 0
                 score += Math.abs(disNum)
-                infoTable.push("\n#{itemName}(#{average}) 比平均少， 加分 (#{Math.abs(disNum).toFixed(2)})----------")
+                infoTable.push("\n#{itemName}(#{average}) 比平均少(#{originDisNum})， 加分 (#{Math.abs(disNum).toFixed(2)})----------")
             else
                 score -= disNum
-                infoTable.push("\n#{itemName}(#{average}) 比平均多, 减分 (-#{Math.abs(disNum.toFixed(2))})----------")
+                infoTable.push("\n#{itemName}(#{average}) 比平均多(#{originDisNum}), 减分 (-#{Math.abs(disNum.toFixed(2))})----------")
         return score
 
 
@@ -754,14 +759,14 @@ cc.Class {
             continue if isNaN(assetsNum)
             totalScore += @_calcScore(assetName, assetsNum, marketAverageObj[assetName], infoTable)
 
-        infoTable.push "\n总得分 :#{totalScore.toFixed(2)}"
+        infoTable.push "\n总得分 :#{totalScore.toFixed(2)}分"
         infoTable.push "\n统计资产占比:#{assetsTotalPercent.toFixed(2)}%"
         debtPercent = debtTotalPercent /  @_balanceObj[stockCode].getFuZhaiHeJi()[0]
         debtPercent = (debtPercent * 100).toFixed(2)
         infoTable.push "\n统计负债占总负债:#{debtPercent}%"
         infoTable.push "\n特别提示：因各个行业的资产负债结构不同，故某些行业无法作出正确评分"
         infoTable.push "\n若发现统计资产占比非常低，就说明不适合这套算法。已知不匹配行业：银行，保险，地产"
-        infoTable.push "\n\n"
+        infoTable.push "\n"
 
         returnInfo = ""
         if @_stockCode < 1000
