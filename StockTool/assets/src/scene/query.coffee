@@ -81,16 +81,18 @@ cc.Class {
         @m_baseInfo_node.active = false
         @onClickButton()
         stockCode = @_stockCode
-        @_getIndustryAverage(stockCode, "预收账款")
-        @_getIndustryAverage(stockCode, "应收账款")
-        @_getIndustryAverage(stockCode, "存货")
-        @_getIndustryAverage(stockCode, "应付账款")
+        @m_industry_info.string = ""
+        @_getIndustryAverage(stockCode, "财务评分")
+        # @_getIndustryAverage(stockCode, "预收账款")
+        # @_getIndustryAverage(stockCode, "应收账款")
+        # @_getIndustryAverage(stockCode, "存货")
+        # # @_getIndustryAverage(stockCode, "应付账款")
         @_getIndustryAverage(stockCode, "现金周转")
-        @_getIndustryAverage(stockCode, "毛利率")
-        @_getIndustryAverage(stockCode, "净利率")
+        # @_getIndustryAverage(stockCode, "毛利率")
+        # @_getIndustryAverage(stockCode, "净利率")
         @_getIndustryAverage(stockCode, "核心利润率")
-        @_getIndustryAverage(stockCode, "费用率")
-        @_getIndustryAverage(stockCode, "平均月薪")
+        # @_getIndustryAverage(stockCode, "费用率")
+        # @_getIndustryAverage(stockCode, "平均月薪")
         @m_industry_info.string = JSON.stringify(@_industryInfo, null, 4)
 
     onIndustryReturn: ->
@@ -451,6 +453,10 @@ cc.Class {
                         value = @_getArkadValuePercent(stockCode)
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
+                    when "财务评分"
+                        value = @_getScore(stockCode, [], true)
+                        sameIndustryInfoObj[stockCode] = value.toFixed(2)
+                        sameIndustryInfo.push value
         info1 = "\t#{sameIndustryInfo.length}家同行"
         info2 = "平均值：" + utils.getAverage(sameIndustryInfo)
         sortedObjKeys = Object.keys(sameIndustryInfoObj).sort(
@@ -647,7 +653,7 @@ cc.Class {
         return score
 
 
-    _getScore: (stockCode, infoTable) ->
+    _getScore: (stockCode, infoTable, needScore) ->
         infoTable.push "\n\n-------------财务面评分------------"
         marketAverageObj = {
             "货币资金": 15.30
@@ -778,5 +784,8 @@ cc.Class {
             maxScore = 100
         if totalScore > maxScore
             returnInfo = "\n#{@_balanceObj[stockCode].getBaseInfo()}:总得分 :#{totalScore.toFixed(2)}"
-        return returnInfo
+        if needScore
+            return totalScore
+        else
+            return returnInfo
 }
