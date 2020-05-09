@@ -65,9 +65,9 @@ cc.Class {
         return
 
     onReturn: ->
-        stockInfo = []
-        @m_info.string = @_lookAllStock(stockInfo)
-        # cc.director.loadScene('welcome')
+        # stockInfo = []
+        # @m_info.string = @_lookAllStock(stockInfo)
+        cc.director.loadScene('welcome')
 
     onLookIndustryInfo: ->
         TDGA?.onEvent("lookIndustryInfo")

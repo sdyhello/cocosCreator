@@ -180,7 +180,7 @@
       "array": [
         0,
         0,
-        519.6152422706632,
+        508.4632450435584,
         0,
         0,
         0,
@@ -2082,8 +2082,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "多变按钮",
-    "_N$string": "多变按钮",
+    "_string": "返回",
+    "_N$string": "返回",
     "_fontSize": 40,
     "_lineHeight": 40,
     "_enableWrapText": false,
@@ -4516,7 +4516,7 @@
         "__id__": 114
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [],
     "_prefab": null,
     "_opacity": 255,
