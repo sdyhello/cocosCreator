@@ -65,7 +65,9 @@ cc.Class {
         return
 
     onReturn: ->
-        cc.director.loadScene('welcome')
+        stockInfo = []
+        @m_info.string = @_lookAllStock(stockInfo)
+        # cc.director.loadScene('welcome')
 
     onLookIndustryInfo: ->
         TDGA?.onEvent("lookIndustryInfo")
@@ -217,7 +219,6 @@ cc.Class {
         cocosAnalytics?.CAEvent?.onEvent({eventName:"查询个股", info: @_profitObj[stockCode].getBaseInfo()})
         
         console.log(infoTable)
-        # @_lookAllStock()
         infoTable
 
     _getStaffInfo: (stockCode, isGetNumber)->
@@ -373,14 +374,14 @@ cc.Class {
             cc.log("ASSETS assetName:#{assetName}, length:#{assetTable.length}, #{total / assetTable.length}")
         return
 
-    _lookAllStock: ->
+    _lookAllStock: (stockInfo) ->
         @_assetsTotalObject = {}
         for stockCode in utils.getStockTable("allA")
             stockCode = stockCode.slice(2, 8)
             continue unless @_isAllTableLoadFinish(stockCode)
             # @_getAssetsPercent(stockCode)
-            @_getScore(stockCode, [])
-        return
+            stockInfo.push @_getScore(stockCode, [])
+        return stockInfo
 
     _getIndustryAverage: (stockCode, type) ->
         industry = @_balanceObj[stockCode].getIndustry()
@@ -728,6 +729,13 @@ cc.Class {
             totalScore += @_calcScore(assetName, assetsNum, marketAverageObj[assetName], infoTable)
 
         infoTable.push "\n总得分 :#{totalScore.toFixed(2)}\n\n"
-        cc.log("#{stockCode}:总得分 :#{totalScore.toFixed(2)}") if totalScore > 150
-        return
+
+        returnInfo = ""
+        if @_stockCode < 1000
+            maxScore = @_stockCode
+        else
+            maxScore = 100
+        if totalScore > maxScore
+            returnInfo = "\n#{@_balanceObj[stockCode].getBaseInfo()}:总得分 :#{totalScore.toFixed(2)}"
+        return returnInfo
 }
