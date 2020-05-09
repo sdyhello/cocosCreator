@@ -221,6 +221,7 @@ cc.Class {
         cocosAnalytics?.CAEvent?.onEvent({eventName:"查询个股", info: @_profitObj[stockCode].getBaseInfo()})
         
         console.log(infoTable)
+        infoTable.push "\n扫一扫，关注微信公众号，关注后可以下载安卓版，提供建议，获取新版本等"
         infoTable
 
     _getStaffInfo: (stockCode, isGetNumber)->
@@ -759,11 +760,9 @@ cc.Class {
             continue if isNaN(assetsNum)
             totalScore += @_calcScore(assetName, assetsNum, marketAverageObj[assetName], infoTable)
 
-        infoTable.push "\n总得分 :#{totalScore.toFixed(2)}分"
-        infoTable.push "\n统计资产占比:#{assetsTotalPercent.toFixed(2)}%"
         debtPercent = debtTotalPercent /  @_balanceObj[stockCode].getFuZhaiHeJi()[0]
         debtPercent = (debtPercent * 100).toFixed(2)
-        infoTable.push "\n统计负债占总负债:#{debtPercent}%"
+        infoTable.push "\n总得分 :#{totalScore.toFixed(2)}分, 统计资产占比:#{assetsTotalPercent.toFixed(2)}%, 统计负债占总负债:#{debtPercent}%"
         infoTable.push "\n特别提示：因各个行业的资产负债结构不同，故某些行业无法作出正确评分"
         infoTable.push "\n若发现统计资产占比非常低，就说明不适合这套算法。已知不匹配行业：银行，保险，地产"
         infoTable.push "\n"
