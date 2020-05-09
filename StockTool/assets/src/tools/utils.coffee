@@ -7,6 +7,12 @@ utils =
             ratioTable.push ratio
         ratioTable
 
+    addTable: (leftTable, rightTable) ->
+        sumTable = []
+        for item, index in leftTable
+            sumTable.push(item + rightTable[index])
+        return sumTable
+
     getAddRatioTable: (dataTable)->
         addRatio = []
         for data, index in dataTable

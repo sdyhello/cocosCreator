@@ -302,7 +302,7 @@ cc.Class {
         return (captialSummation / netProfitSummation * 100).toFixed(2)
 
     _getAssetsPercent: (stockCode) ->
-        assetsNameTable = ["货币资金", "应收账款", "交易性金融资产", "预付款项", "其他应收款", "存货",
+        assetsNameTable = ["货币资金", "应收票据", "应收账款", "交易性金融资产", "预付款项", "其他应收款", "存货",
             "长期股权投资", "固定资产", "在建工程", "无形资产", "商誉", "长期待摊费用",
             "其他非流动资产", "短期借款", "应付账款", "预收账款", "其他应付款", "长期借款",
             "未分配利润", "权益乘数", "有息负债", "营收含金量", "核心利润占比", "ROE"
@@ -312,6 +312,8 @@ cc.Class {
             switch assetName
                 when "货币资金"
                     assets = Number(@_balanceObj[stockCode].getCashValuePercent()[0])
+                when "应收票据"
+                    assets = Number(@_balanceObj[stockCode].getYingShouPiaoJuPercent()[0])
                 when "应收账款"
                     assets = Number(@_balanceObj[stockCode].getYingShouPercent()[0])
                 when "交易性金融资产"
@@ -379,8 +381,9 @@ cc.Class {
         for stockCode in utils.getStockTable("allA")
             stockCode = stockCode.slice(2, 8)
             continue unless @_isAllTableLoadFinish(stockCode)
-            # @_getAssetsPercent(stockCode)
+            @_getAssetsPercent(stockCode)
             stockInfo.push @_getScore(stockCode, [])
+        @_calcAverage()
         return stockInfo
 
     _getIndustryAverage: (stockCode, type) ->
@@ -441,7 +444,6 @@ cc.Class {
                         value = @_getArkadValuePercent(stockCode)
                         sameIndustryInfoObj[stockCode] = value
                         sameIndustryInfo.push value
-        @_calcAverage()
         info1 = "\t#{sameIndustryInfo.length}家同行"
         info2 = "平均值：" + utils.getAverage(sameIndustryInfo)
         sortedObjKeys = Object.keys(sameIndustryInfoObj).sort(
@@ -605,40 +607,41 @@ cc.Class {
 
     _calcScore: (itemName, selfNum, average, infoTable) ->
         moreIsGoodItem = ["货币资金", "交易性金融资产", "预收账款", "应付账款", "营收含金量", "核心利润占比", "ROE" ]
-        middleItem = ["长期股权投资", "在建工程", "权益乘数", "未分配利润"]
+        middleItem = ["长期股权投资", "在建工程", "权益乘数", "未分配利润", "应收票据"]
     
         disNum = selfNum - average
         score = 0
         if Math.abs(disNum) < 3 and not (itemName in middleItem)
             score += 5
-            infoTable.push "\n#{itemName} 正常 + 5"
+            infoTable.push "\n#{itemName}(#{average}) 正常 + 5"
         else if itemName in moreIsGoodItem
             if disNum > 0
                 score += disNum
-                infoTable.push "\n#{itemName} 比平均多, 加分（#{disNum.toFixed(2)})----------"
+                infoTable.push "\n#{itemName}(#{average}) 比平均多, 加分（#{disNum.toFixed(2)})----------"
             else
                 score -= Math.abs(disNum)
-                infoTable.push("\n#{itemName} 比平均少，减分 (-#{Math.abs(disNum.toFixed(2))})----------")
+                infoTable.push("\n#{itemName}(#{average}) 比平均少，减分 (-#{Math.abs(disNum.toFixed(2))})----------")
         else if itemName in middleItem
             score += 0
             if disNum > 0
-                infoTable.push("\n#{itemName} 需要观察，比平均多 (#{disNum.toFixed(2)})----------")
+                infoTable.push("\n#{itemName}(#{average}) 需要观察，比平均多 (#{disNum.toFixed(2)})----------")
             else
-                infoTable.push("\n#{itemName} 需要观察，比平均少 (#{Math.abs(disNum.toFixed(2))})----------")
+                infoTable.push("\n#{itemName}(#{average}) 需要观察，比平均少 (#{Math.abs(disNum.toFixed(2))})----------")
         else
             if disNum < 0
                 score += Math.abs(disNum)
-                infoTable.push("\n#{itemName} 比平均少， 加分 (#{Math.abs(disNum).toFixed(2)})----------")
+                infoTable.push("\n#{itemName}(#{average}) 比平均少， 加分 (#{Math.abs(disNum).toFixed(2)})----------")
             else
                 score -= disNum
-                infoTable.push("\n#{itemName} 比平均多, 减分 (-#{Math.abs(disNum.toFixed(2))})----------")
+                infoTable.push("\n#{itemName}(#{average}) 比平均多, 减分 (-#{Math.abs(disNum.toFixed(2))})----------")
         return score
 
 
     _getScore: (stockCode, infoTable) ->
-        infoTable.push "\n\n财务报表评分"
+        infoTable.push "\n\n-------------财务报表评分------------"
         marketAverageObj = {
             "货币资金": 15.30
+            "应收票据": 1.14
             "应收账款": 7.37
             "交易性金融资产": 1.41
             "预付款项": 1.51
@@ -664,50 +667,73 @@ cc.Class {
             "ROE": 17
         }
 
-        assetsNameTable = ["货币资金", "应收账款", "交易性金融资产", "预付款项", "其他应收款", "存货",
+        assetsNameTable = ["货币资金", "应收票据", "应收账款", "交易性金融资产", "预付款项", "其他应收款", "存货",
             "长期股权投资", "固定资产", "在建工程", "无形资产", "商誉", "长期待摊费用",
             "其他非流动资产", "短期借款", "应付账款", "预收账款", "其他应付款", "长期借款",
              "权益乘数", "有息负债", "营收含金量", "核心利润占比", "ROE"
             ]
         totalScore = 0
+        assetsTotalPercent = 0
+        debtTotalPercent = 0
         for assetName in assetsNameTable
             switch assetName
                 when "货币资金"
                     assetsNum = Number(@_balanceObj[stockCode].getCashValuePercent()[0])
+                    assetsTotalPercent += assetsNum
+                when "应收票据"
+                    assetsNum = Number(@_balanceObj[stockCode].getYingShouPiaoJuPercent()[0])
+                    assetsTotalPercent += assetsNum
                 when "应收账款"
                     assetsNum = Number(@_balanceObj[stockCode].getYingShouPercent()[0])
+                    assetsTotalPercent += assetsNum
                 when "交易性金融资产"
                     assetsNum = Number(@_balanceObj[stockCode].getStockAssetsInTotalAssets()[0])
+                    assetsTotalPercent += assetsNum
                 when "预付款项"
                     assetsNum = Number(@_balanceObj[stockCode].getYuFuPercent()[0])
+                    assetsTotalPercent += assetsNum
                 when "其他应收款"
                     assetsNum = Number(@_balanceObj[stockCode].getQiTaYingShouPercent()[0])
+                    assetsTotalPercent += assetsNum
                 when "存货"
                     assetsNum = Number(@_balanceObj[stockCode].getChunHuoPercent()[0])
+                    assetsTotalPercent += assetsNum
                 when "长期股权投资"
                     assetsNum = Number(@_balanceObj[stockCode].getChangeQiGuQuanPercent()[0])
+                    assetsTotalPercent += assetsNum
                 when "固定资产"
                     assetsNum = Number(@_balanceObj[stockCode].getFixedAssetsWithTotalAssetsRatio()[0])
+                    assetsTotalPercent += assetsNum
                 when "在建工程"
                     assetsNum = Number(@_balanceObj[stockCode].getZaiJiangPercent()[0])
+                    assetsTotalPercent += assetsNum
                 when "无形资产"
                     assetsNum = Number(@_balanceObj[stockCode].getWuXingPercent()[0])
+                    assetsTotalPercent += assetsNum
                 when "商誉"
                     assetsNum = Number(@_balanceObj[stockCode].getShangYuPercent()[0])
+                    assetsTotalPercent += assetsNum
                 when "长期待摊费用"
                     assetsNum = Number(@_balanceObj[stockCode].getChangQiDaiTanPercent()[0])
+                    assetsTotalPercent += assetsNum
                 when "其他非流动资产"
                     assetsNum = Number(@_balanceObj[stockCode].getQiTaFeiLiuDongPercent()[0])
+                    assetsTotalPercent += assetsNum
                 when "短期借款"
                     assetsNum = Number(@_balanceObj[stockCode].getDuanQiJieKuanPercent()[0])
+                    debtTotalPercent += assetsNum
                 when "应付账款"
                     assetsNum = Number(@_balanceObj[stockCode].getYingFuPercent()[0])
+                    debtTotalPercent += assetsNum
                 when "预收账款"
                     assetsNum = Number(@_balanceObj[stockCode].getAdvanceReceiptsPercent()[0])
+                    debtTotalPercent += assetsNum
                 when "其他应付款"
                     assetsNum = Number(@_balanceObj[stockCode].getQiTaYingFuPercent()[0])
+                    debtTotalPercent += assetsNum
                 when "长期借款"
                     assetsNum = Number(@_balanceObj[stockCode].getChangeQiJieKuanPercent()[0])
+                    debtTotalPercent += assetsNum
                 when "未分配利润"
                     assetsNum = Number(@_balanceObj[stockCode].getWeiFenPeiPercent()[0])
                 when "权益乘数"
@@ -728,7 +754,12 @@ cc.Class {
             continue if isNaN(assetsNum)
             totalScore += @_calcScore(assetName, assetsNum, marketAverageObj[assetName], infoTable)
 
-        infoTable.push "\n总得分 :#{totalScore.toFixed(2)}\n\n"
+        infoTable.push "\n总得分 :#{totalScore.toFixed(2)}"
+        infoTable.push "\n统计资产占比:#{assetsTotalPercent.toFixed(2)}%"
+        debtPercent = debtTotalPercent /  @_balanceObj[stockCode].getFuZhaiHeJi()[0]
+        debtPercent = (debtPercent * 100).toFixed(2)
+        infoTable.push "\n统计负债占总负债:#{debtPercent}%"
+        infoTable.push "\n\n"
 
         returnInfo = ""
         if @_stockCode < 1000

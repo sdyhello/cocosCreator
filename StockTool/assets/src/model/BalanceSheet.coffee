@@ -169,13 +169,21 @@ class BalanceSheet extends TableBase
 	#货币资金占比（15.92%）
 	getCashValuePercent: ->
 		cash = @getCashValue()
+		chaiChuZiJing = @getValue(@_data["拆出资金(万元)"])
+		cash = utils.addTable(cash, chaiChuZiJing)
 		totalAssets = @getTotalAssets()
 		utils.getRatioTable(cash, totalAssets)
+
+	getYingShouPiaoJuPercent: ->
+		singleData  = @getValue(@_data["应收票据(万元)"])
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(singleData, totalAssetsTable)
 	
 	#交易性金融资产占比
 	getStockAssetsInTotalAssets: ->
 		stockAssets = @getValue(@_data["交易性金融资产(万元)"])
-		return (stockAssets[0] / @getTotalAssets()[0] * 100).toFixed(2)
+		totalAssetsTable = @getTotalAssets()
+		utils.getRatioTable(stockAssets, totalAssetsTable)
 
 	#应收账款
 	getYingShouPercent: ->
@@ -280,6 +288,11 @@ class BalanceSheet extends TableBase
 			debtTable.push value1[index] + value2[index] + value3[index]
 		utils.getRatioTable(debtTable, totalAssets)
 
+	#负债合计
+	getFuZhaiHeJi: ->
+		value1 = @getValue(@_data["负债合计(万元)"])
+		totalAssets = @getTotalAssets()
+		utils.getRatioTable(value1, totalAssets)
 	
 
 module.exports = BalanceSheet

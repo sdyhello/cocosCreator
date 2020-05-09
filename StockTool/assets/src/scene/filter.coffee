@@ -321,8 +321,8 @@ cc.Class {
 
     _filterStockAsstes: (stockCode, need) ->
         return true if need is -1
-        cc.log("stock :#{[Number(@_balanceObj[stockCode].getStockAssetsInTotalAssets())]}")
-        if Number(@_balanceObj[stockCode].getStockAssetsInTotalAssets()) > need
+        cc.log("stock :#{[Number(@_balanceObj[stockCode].getStockAssetsInTotalAssets()[0])]}")
+        if Number(@_balanceObj[stockCode].getStockAssetsInTotalAssets()[0]) > need
             return true
         return false
 
@@ -402,7 +402,7 @@ cc.Class {
             utils.addTab("平均核利增率:#{utils.getAverage(coreProfitAddRatio)}") +
             utils.addTab("平毛利率:#{utils.getAverage(@_profitObj[stockCode].getGrossProfitRatio())}") +
             utils.addTab("平均有息负债率:#{utils.getAverage(@_balanceObj[stockCode].getInterestDebt())}") +
-            utils.addTab("交易金融占比:#{@_balanceObj[stockCode].getStockAssetsInTotalAssets()}") +
+            utils.addTab("交易金融占比:#{@_balanceObj[stockCode].getStockAssetsInTotalAssets()[0]}") +
             utils.addTab("roe:#{aveRoe}") +
             utils.addTab("PE:#{ PE }") +
             # utils.addTab("应:#{@_getReceivableTurnOverDays(stockCode)}") +
