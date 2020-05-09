@@ -762,8 +762,8 @@ cc.Class {
 
         debtPercent = debtTotalPercent /  @_balanceObj[stockCode].getFuZhaiHeJi()[0]
         debtPercent = (debtPercent * 100).toFixed(2)
-        infoTable.push "\n总得分 :#{totalScore.toFixed(2)}分, 统计资产占比:#{assetsTotalPercent.toFixed(2)}%, 统计负债占总负债:#{debtPercent}%"
-        infoTable.push "\n特别提示：因各个行业的资产负债结构不同，故某些行业无法作出正确评分"
+        infoTable.push "\n总得分 :#{totalScore.toFixed(2)}分, \t\t\t\t统计资产占比:#{assetsTotalPercent.toFixed(2)}%, \t\t\t\t统计负债占总负债:#{debtPercent}%"
+        infoTable.push "\n\n特别提示：因各个行业的资产负债结构不同，故某些行业无法作出正确评分"
         infoTable.push "\n若发现统计资产占比非常低，就说明不适合这套算法。已知不匹配行业：银行，保险，地产"
         infoTable.push "\n"
 
